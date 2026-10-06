@@ -1,7 +1,9 @@
 """Storage Manager for SSD disk usage monitoring, safe evidence pruning, and USB export."""
 
+import json
 import logging
 import shutil
+import time
 from pathlib import Path
 
 from driving_eval.core.config_schema import StorageConfig
@@ -11,7 +13,7 @@ logger = logging.getLogger("driving_eval.evidence.storage")
 
 
 class StorageManager:
-    """Monitors disk space, handles safe pruning, and manages USB bundle export."""
+    """Monitors disk space, handles safe pruning, and manages USB bundle export with cryptographic manifests."""
 
     def __init__(self, config: StorageConfig, repository: DatabaseRepository):
         self.config = config
@@ -30,20 +32,45 @@ class StorageManager:
         return self.get_free_space_gb() < self.config.prune_threshold_gb
 
     def export_session_to_usb(self, session_id: str, usb_target_path: str | Path) -> Path:
-        """Exports full session evidence, metadata, and reports to USB drive."""
+        """Exports full session evidence, metadata, and signed manifest to USB drive."""
         usb_dest = Path(usb_target_path) / f"EXAM_EXPORT_{session_id}"
         usb_dest.mkdir(parents=True, exist_ok=True)
 
         session_evidence_dir = self.evidence_dir / session_id
+        exported_files: list[dict[str, str]] = []
+
         if session_evidence_dir.exists():
-            shutil.copytree(session_evidence_dir, usb_dest / "evidence", dirs_exist_ok=True)
+            evidence_dest = usb_dest / "evidence"
+            shutil.copytree(session_evidence_dir, evidence_dest, dirs_exist_ok=True)
+
+            # Compute manifest hashes for all exported files
+            for p in evidence_dest.rglob("*"):
+                if p.is_file():
+                    h = self.repository.compute_file_sha256(p)
+                    rel_p = str(p.relative_to(usb_dest)).replace("\\", "/")
+                    exported_files.append({"path": rel_p, "sha256": h})
+
+        session_info = self.repository.get_session(session_id) or {}
+
+        # Write export_manifest.json
+        manifest = {
+            "session_id": session_id,
+            "exported_at": time.time(),
+            "exported_iso": time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime()),
+            "session_info": session_info,
+            "files_count": len(exported_files),
+            "files": exported_files,
+        }
+        manifest_path = usb_dest / "export_manifest.json"
+        with open(manifest_path, "w", encoding="utf-8") as f:
+            json.dump(manifest, f, indent=2, ensure_ascii=False)
 
         # Log admin audit
         self.repository.log_admin_action(
             admin_user="INSPECTOR",
             action="EXPORT_USB",
             target=session_id,
-            details=f"Sessiya dalillari USB ga nusxalandi: {usb_dest}",
+            details=f"Sessiya dalillari va manifesti USB ga nusxalandi: {usb_dest} ({len(exported_files)} ta fayl)",
         )
         logger.info("Sessiya %s USB ga eksport qilindi: %s", session_id, usb_dest)
         return usb_dest
@@ -64,7 +91,6 @@ class StorageManager:
         )
 
         pruned_count = 0
-        # List subdirectories in evidence dir
         for session_folder in self.evidence_dir.iterdir():
             if not session_folder.is_dir():
                 continue

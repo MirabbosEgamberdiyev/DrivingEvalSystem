@@ -285,6 +285,19 @@ class DatabaseRepository:
             )
             conn.commit()
 
+    def get_evidence(self, evidence_id: str) -> dict[str, Any] | None:
+        """Retrieves evidence record by its primary key ID."""
+        with self.get_connection() as conn:
+            cursor = conn.execute("SELECT * FROM evidence WHERE id = ?", (evidence_id,))
+            row = cursor.fetchone()
+            return dict(row) if row else None
+
+    def get_evidence_by_violation(self, violation_id: str) -> list[dict[str, Any]]:
+        """Retrieves all evidence records linked to a specific violation."""
+        with self.get_connection() as conn:
+            cursor = conn.execute("SELECT * FROM evidence WHERE violation_id = ?", (violation_id,))
+            return [dict(r) for r in cursor.fetchall()]
+
     def finalize_test_result(
         self,
         session_id: str,

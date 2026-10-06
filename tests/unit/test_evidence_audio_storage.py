@@ -23,12 +23,15 @@ def test_evidence_recorder_creates_full_package_with_hashes(tmp_path, repo):
     evidence_dir = tmp_path / "evidence"
     recorder = EvidenceRecorder(evidence_dir, repo, buffer_duration_seconds=2.0, fps=10)
 
-    # Push 15 frames into buffer
+    # Push 15 frames into buffer for FRONT and REAR cameras
     for i in range(15):
         img = np.zeros((720, 1280, 3), dtype=np.uint8)
         f_bundle = FrameBundle(
             timestamp=100.0 + i * 0.1,
-            frames={"FRONT": CameraFrame("FRONT", img, 100.0 + i * 0.1, i, (1280, 720))},
+            frames={
+                "FRONT": CameraFrame("FRONT", img, 100.0 + i * 0.1, i, (1280, 720)),
+                "REAR": CameraFrame("REAR", img, 100.0 + i * 0.1, i, (1280, 720)),
+            },
             is_synchronized=True,
             max_jitter_ms=5.0,
         )
@@ -65,6 +68,7 @@ def test_evidence_recorder_creates_full_package_with_hashes(tmp_path, repo):
     assert (pkg_dir / "before.jpg").exists()
     assert (pkg_dir / "event.jpg").exists()
     assert (pkg_dir / "after.jpg").exists()
+    assert (pkg_dir / "composite.jpg").exists()
     assert (pkg_dir / "event.mp4").exists()
     assert (pkg_dir / "metadata.json").exists()
 
@@ -72,9 +76,20 @@ def test_evidence_recorder_creates_full_package_with_hashes(tmp_path, repo):
     with repo.get_connection() as conn:
         cur = conn.execute("SELECT * FROM evidence WHERE session_id = ?", (session_id,))
         records = cur.fetchall()
-        assert len(records) == 5  # 3 images + 1 video + 1 json
+        assert len(records) == 6  # 3 images + 1 composite + 1 video + 1 json
         for r in records:
             assert len(r["sha256_hash"]) == 64
+
+    # Verify package integrity
+    passed, errors = recorder.verify_package_integrity(session_id, event.violation_id)
+    assert passed is True
+    assert len(errors) == 0
+
+    # Tamper with file to verify detection
+    (pkg_dir / "event.jpg").write_bytes(b"tampered image content")
+    tampered_pass, tampered_errors = recorder.verify_package_integrity(session_id, event.violation_id)
+    assert tampered_pass is False
+    assert any("soxtalashtirilgan" in err for err in tampered_errors)
 
 
 def test_audio_service_sequential_and_fallback(tmp_path):
@@ -99,6 +114,36 @@ def test_audio_service_sequential_and_fallback(tmp_path):
         assert service.played_history[1] == "test1.wav"
     finally:
         service.stop()
+
+
+def test_audio_service_multilingual_resolution():
+    cfg = AudioConfig(
+        enabled=True,
+        backend="wav_primary",
+        audio_dir="data/audio",
+        volume=1.0,
+    )
+    service = AudioService(cfg, default_language="uz-Latn", simulate_playback=True)
+
+    # 1. uz-Latn resolution
+    path_latn = service.resolve_audio_file("cone_touch.wav", language="uz-Latn")
+    assert path_latn is not None
+    assert "uz-Latn" in str(path_latn)
+
+    # 2. uz-Cyrl resolution
+    path_cyrl = service.resolve_audio_file("cone_touch.wav", language="uz-Cyrl")
+    assert path_cyrl is not None
+    assert "uz-Cyrl" in str(path_cyrl)
+
+    # 3. ru resolution
+    path_ru = service.resolve_audio_file("cone_touch.wav", language="ru")
+    assert path_ru is not None
+    assert "ru" in str(path_ru)
+
+    # 4. Fallback when requested language doesn't have the file
+    service.set_language("fr")  # Non-existent language
+    fallback_path = service.resolve_audio_file("cone_touch.wav")
+    assert fallback_path is not None  # Falls back to uz-Latn!
 
 
 def test_storage_manager_export_and_prune(tmp_path, repo):
@@ -129,6 +174,7 @@ def test_storage_manager_export_and_prune(tmp_path, repo):
     usb_target = tmp_path / "usb_drive"
     exported_dir = mgr.export_session_to_usb(session_id, usb_target)
     assert (exported_dir / "evidence" / "test.jpg").exists()
+    assert (exported_dir / "export_manifest.json").exists()
 
     # 2. Finalize session in DB so it's eligible for pruning
     repo.finalize_test_result(session_id, 100, "PASS", 0, 0)
