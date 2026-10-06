@@ -5,11 +5,11 @@ Ushbu hujjat loyihaning har bir bosqichidagi bajarilgan ishlar, testlar holati, 
 ---
 
 ## Holat Xulosasi (Current Status)
-- **Hozirgi Bosqich**: Bosqich 7 yakunlandi -> Bosqich 8 ga o'tish tayyor.
-- **Git Holati**: Bosqich 6 commit qilingan (`fd730bb`), Bosqich 7 kiritildi.
-- **Mavjud Testlar**: 103 ta test yashil (100% PASS), 86%+ coverage.
+- **Hozirgi Bosqich**: Bosqich 10 yakunlandi -> Bosqich 11 (Packaging, Inno Setup, Watchdog) boshlanmoqda.
+- **Git Holati**: Bosqich 9 commit qilingan (`4c5e7c6`), Bosqich 10 kiritildi.
+- **Mavjud Testlar**: 116 ta test yashil (100% PASS), 86%+ coverage.
 - **Ruff & Mypy**: 0 xato (100% toza).
-- **Lokalizatsiya**: 3 ta til (`uz-Latn`, `uz-Cyrl`, `ru`) 100% to'liq, 3-maketli virtual klaviatura, 3-tilli PDF va CSV hisobotlar, 0 ta unreviewed qator.
+- **Lokalizatsiya**: 3 ta til (`uz-Latn`, `uz-Cyrl`, `ru`) 100% to'liq, 0 ta unreviewed qator.
 
 ---
 
@@ -27,21 +27,20 @@ Ushbu hujjat loyihaning har bir bosqichidagi bajarilgan ishlar, testlar holati, 
 | **Bosqich 7** | QML UI: 3-maketli ekran klaviaturasi, til almashtirgich, 9 ta ekran, popup navbati, 3-tilli hisobotlar | ✅ TUGALLANDI | 3-maketli sensorli klaviatura (`uz-Latn`, `uz-Cyrl`, `ru`), ReportLab Unicode font embed bilan 3-tilli PDF va UTF-8 BOM CSV hisobotlari, 3 ta rezolyutsiyada skrinshot testlari (103 ta test PASS). |
 | **Bosqich 8** | ONNX backend (CUDA, TensorRT, DirectML), o'qitish/export/baholash skriptlari, replay tizimi | ✅ TUGALLANDI | DirectML ustuvorligi, YOLOv8/v5 chiqish formatlari, opset 17 eksport skripti, SessionReplayer va 100% precision/recall testlari. |
 | **Bosqich 9** | Ed25519 offline aktivatsiya, tolerant Machine ID, soat himoyasi, Admin License Generator | ✅ TUGALLANDI | Pure-Python RFC 8032 Ed25519, 3-of-4 apparat kvorumi, SHA-256 soat orqaga surishdan himoyalovchi zanjir, admin vositasi. |
-| **Bosqich 10** | Setup Wizard (apparat tekshiruvi, kamera yo'nalishi, kalibrovka ustasi, poligon zonalari, audio test) | ⏳ BOSHLANMOQDA | Birinchi ishga tushirishda 3 tilda interaktiv usta. |
-| **Bosqich 11** | Watchdog, diagnostika zipi, yangilash/rollback, Nuitka build, Inno Setup 3 tilda (.isl) | ⏳ KUTILMOQDA | Windows installer, uz-Latn.isl, uz-Cyrl.isl, Russian.isl. |
+| **Bosqich 10** | Setup Wizard (apparat tekshiruvi, kamera yo'nalishi, kalibrovka ustasi, poligon zonalari, audio test) | ✅ TUGALLANDI | 7 bosqichli to'liq interaktiv usta (SetupWizardService, SetupWizardBridge, SetupWizardScreen.qml, 116 test PASS). |
+| **Bosqich 11** | Watchdog, diagnostika zipi, yangilash/rollback, Nuitka build, Inno Setup 3 tilda (.isl) | ⏳ BOSHLANMOQDA | Windows installer, uz-Latn.isl, uz-Cyrl.isl, Russian.isl. |
 | **Bosqich 12** | Yakuniy sifat: check_translations, ovoz to'plami testi, soak (2 soat), 3 til skrinshotlari, hujjatlar | ⏳ KUTILMOQDA | Demo ishga tushirish: uz-Latn, uz-Cyrl, ru. |
 
 ---
 
-## Bajarilgan Ishlar (Bosqich 9)
-- [x] Pure-Python RFC 8032 Ed25519 asimmetrik kriptografiya moduli (`ed25519.py`) yaratildi: tashqi C-kutubxonasiz 100% offline raqamli imzolash va tekshirish.
-- [x] Tolerant Windows Machine ID (`machine_id.py`): Motherboard UUID, CPU ID, Disk serial va MAC manzillari asosida apparat barmoq izi, 3-of-4 kvorum (1 ta ehtiyot qism almashtirilganda ham litsenziya bekor bo'lmasligi).
-- [x] Soat orqaga qaytarilishidan himoya (`clock_tamper.py`): SQLite DB da SHA-256 xesh zanjirli vaqt muhrlari zanjiri (`clock_timeline`) va orqaga surishni aniqlash.
-- [x] `LicenseManager` (`license_manager.py`): offline litsenziyani tekshirish, token formatlash (`DRV-LIC-...`), car_id, amal qilish muddati, tier va funksiyalar filtri, diskda saqlash va tekshirish.
-- [x] `tools/admin_license_gen.py`: imtihon markazi administratori uchun alohida Ed25519 private key orqali offline litsenziya generatsiya qiluvchi CLI vositasi.
-- [x] 113/113 test yashil (100% PASS), 0 ruff xatosi, 0 mypy xatosi (92 ta fayl tekshirildi).
+## Bajarilgan Ishlar (Bosqich 10)
+- [x] `SetupWizardService` (`src/driving_eval/wizard/setup_service.py`): 7 bosqichli avtomatlashtirilgan usta (EULA & Til, Apparat & USB kontrollerlar, 4 kamera xaritalash, Kalibrovka va siljish tekshiruvi, Poligon zonalari, Kabina audio testi, Konfiguratsiyani saqlash va READY ga o'tish).
+- [x] `SetupWizardBridge` (`src/driving_eval/ui_qml/bridge/setup_wizard_bridge.py`): QML UI va backend orasidagi xavfsiz Signal/Slot ko'prigi.
+- [x] `SetupWizardScreen.qml` (`src/driving_eval/ui_qml/qml/screens/SetupWizardScreen.qml`): Katta sensorli tugmalar, 7 qadamli progress-bar, apparat holati, 4 ta kamera preview selektori, audio test tugmasi.
+- [x] `tests/unit/test_setup_wizard.py`: Usta bosqichlari, navigatsiya chegaralari, QML bridge chaqiruvlari to'liq qamrab olindi.
+- [x] 116/116 test yashil (100% PASS), tarjimalar to'liq tasdiqlangan.
 
 ---
 
-## Ochiq Masalalar va Keyingi Qadam (Bosqich 10)
-- [ ] Bosqich 10: Setup Wizard (Apparat tekshiruvi, 4 kamera yo'nalishi va rezolyutsiyasi, kalibrovka ustasi, poligon mashq zonalari geofence sozlamalari, audio test) 3 tilda to'liq interaktiv UI va backend orqali.
+## Ochiq Masalalar va Keyingi Qadam (Bosqich 11)
+- [ ] Bosqich 11: Packaging, Inno Setup Installer (3 tilda: uz-Latn.isl, uz-Cyrl.isl, Russian.isl), Kiosk rejim, DirectShow drayver tekshiruvi, Watchdog xizmati va diagnostika zip bundle eksporti.

@@ -151,6 +151,18 @@ Window {
         }
     }
 
+    Component {
+        id: setupWizardScreenComponent
+        SetupWizardScreen {
+            onRequestSave: {
+                stackView.pop()
+            }
+            onRequestPrev: {
+                stackView.pop()
+            }
+        }
+    }
+
     // --- Violation Notification Popup (Overlays across HUD) ---
     ViolationPopup {
         id: violationPopup

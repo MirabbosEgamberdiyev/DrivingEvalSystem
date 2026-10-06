@@ -42,6 +42,7 @@ def test_individual_screens_compile(qapp):
         "screens/ViolationsListScreen.qml",
         "screens/EvidenceScreen.qml",
         "screens/SettingsScreen.qml",
+        "screens/SetupWizardScreen.qml",
         "components/PasswordPad.qml",
         "components/VirtualKeyboard.qml",
     ]
