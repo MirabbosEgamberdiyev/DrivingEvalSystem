@@ -1,0 +1,308 @@
+# ==============================================================================
+# AVTOMOBIL HAYDASH IMTIHONI QOIDABUZARLIKLAR PASPORTI (rules.yaml)
+# Single Source of Truth: Monitor, Ovoz, DB, Hisobot barchasi shu fayldan oladi.
+# 3 Til: uz-Latn, uz-Cyrl, ru.
+# TODO: rasmiy metodika bilan almashtirilsin (Hozirgi qiymatlar standart namunaviy)
+# ==============================================================================
+
+version: "1.1.0"
+last_updated: "2026-10-06"
+description: "Avtomatlashtirilgan 4-kamerali imtihon qoidalari pasporti (3 tilda)"
+
+rules:
+  - code: "SEATBELT_UNFASTENED"
+    penalty: 10
+    critical: false
+    debounce_frames: 15
+    cooldown_seconds: 30.0
+    min_confidence: 0.85
+    exercise_binding: [] # Bo'sh ro'yxat = barcha mashqlarda faol
+    translations:
+      uz-Latn:
+        title: "Xavfsizlik kamari taqilmagan"
+        # TODO: rasmiy metodika bilan almashtirilsin
+        screen_text: "Xavfsizlik kamarini taqmadingiz!"
+        voice_file: "seatbelt_unfastened.wav"
+        voice_text: "Diqqat! Xavfsizlik kamarini taqing."
+        reviewed: true
+        reviewer: "metodist_uz"
+      uz-Cyrl:
+        title: "Хавфсизлик камари тақилмаган"
+        # TODO: rasmiy metodika bilan almashtirilsin
+        screen_text: "Хавфсизлик камарини тақмадингиз!"
+        voice_file: "seatbelt_unfastened.wav"
+        voice_text: "Диққат! Хавфсизлик камарини тақинг."
+        reviewed: true
+        reviewer: "metodist_uz"
+      ru:
+        title: "Не пристёгнут ремень безопасности"
+        # TODO: rasmiy metodika bilan almashtirilsin
+        screen_text: "Ремень безопасности не пристёгнут!"
+        voice_file: "seatbelt_unfastened.wav"
+        voice_text: "Внимание! Пристегните ремень безопасности."
+        reviewed: true
+        reviewer: "metodist_ru"
+
+  - code: "CONE_TOUCH"
+    penalty: 25
+    critical: false
+    debounce_frames: 5
+    cooldown_seconds: 5.0
+    min_confidence: 0.80
+    exercise_binding: ["ZMEIKA", "PARALLEL_PARKING", "GARAGE_REVERSE", "TURN_90"]
+    translations:
+      uz-Latn:
+        title: "Yo'l belgilovchi konusga tegish"
+        # TODO: rasmiy metodika bilan almashtirilsin
+        screen_text: "Konusga tegdingiz!"
+        voice_file: "cone_touch.wav"
+        voice_text: "Diqqat! Belgilangan konusga tegdilar."
+        reviewed: true
+        reviewer: "metodist_uz"
+      uz-Cyrl:
+        title: "Йўл белгиловчи конусга тегиш"
+        # TODO: rasmiy metodika bilan almashtirilsin
+        screen_text: "Конусга тегдингиз!"
+        voice_file: "cone_touch.wav"
+        voice_text: "Диққат! Белгиланган конусга тегдилар."
+        reviewed: true
+        reviewer: "metodist_uz"
+      ru:
+        title: "Касание разметочного конуса"
+        # TODO: rasmiy metodika bilan almashtirilsin
+        screen_text: "Касание разметочного конуса!"
+        voice_file: "cone_touch.wav"
+        voice_text: "Внимание! Зафиксировано касание конуса."
+        reviewed: true
+        reviewer: "metodist_ru"
+
+  - code: "STOP_LINE_VIOLATION"
+    penalty: 20
+    critical: false
+    debounce_frames: 8
+    cooldown_seconds: 10.0
+    min_confidence: 0.82
+    exercise_binding: ["START", "ESTAKADA", "STOP", "FINISH"]
+    translations:
+      uz-Latn:
+        title: "To'xtash chizig'i qoidasini buzish"
+        # TODO: rasmiy metodika bilan almashtirilsin
+        screen_text: "To'xtash chizig'i bosildi yoki o'tib ketildi!"
+        voice_file: "stop_line_violation.wav"
+        voice_text: "Stop chizig'i qoidasi buzildi."
+        reviewed: true
+        reviewer: "metodist_uz"
+      uz-Cyrl:
+        title: "Тўхташ чизиғи қоидасини бузиш"
+        # TODO: rasmiy metodika bilan almashtirilsin
+        screen_text: "Тўхташ чизиғи босилди ёки ўтиб кетилди!"
+        voice_file: "stop_line_violation.wav"
+        voice_text: "Стоп чизиғи қоидаси бузилди."
+        reviewed: true
+        reviewer: "metodist_uz"
+      ru:
+        title: "Нарушение стоп-линии"
+        # TODO: rasmiy metodika bilan almashtirilsin
+        screen_text: "Наезд или пересечение стоп-линии!"
+        voice_file: "stop_line_violation.wav"
+        voice_text: "Внимание! Нарушено правило стоп-линии."
+        reviewed: true
+        reviewer: "metodist_ru"
+
+  - code: "HILL_ROLLBACK"
+    penalty: 30
+    critical: false
+    debounce_frames: 10
+    cooldown_seconds: 15.0
+    min_confidence: 0.85
+    exercise_binding: ["ESTAKADA"]
+    translations:
+      uz-Latn:
+        title: "Estakadada orqaga sirg'alish (>20 sm)"
+        # TODO: rasmiy metodika bilan almashtirilsin
+        screen_text: "Estakadada orqaga sirg'alish ruxsat etilganidan oshdi!"
+        voice_file: "hill_rollback.wav"
+        voice_text: "Avtomobil estakadada orqaga sirg'aldi."
+        reviewed: true
+        reviewer: "metodist_uz"
+      uz-Cyrl:
+        title: "Эстакадада орқага сирғалиш (>20 см)"
+        # TODO: rasmiy metodika bilan almashtirilsin
+        screen_text: "Эстакадада орқага сирғалиш рухсат этилганидан ошди!"
+        voice_file: "hill_rollback.wav"
+        voice_text: "Автомобиль эстакадада орқага сирғалди."
+        reviewed: true
+        reviewer: "metodist_uz"
+      ru:
+        title: "Откат автомобиля на эстакаде (>20 см)"
+        # TODO: rasmiy metodika bilan almashtirilsin
+        screen_text: "Откат назад на подъеме превысил допустимую норму!"
+        voice_file: "hill_rollback.wav"
+        voice_text: "Откат автомобиля назад на эстакаде."
+        reviewed: true
+        reviewer: "metodist_ru"
+
+  - code: "SPEED_EXCEEDED"
+    penalty: 15
+    critical: false
+    debounce_frames: 10
+    cooldown_seconds: 10.0
+    min_confidence: 0.90
+    exercise_binding: []
+    translations:
+      uz-Latn:
+        title: "Maksimal ruxsat etilgan tezlikdan oshish"
+        # TODO: rasmiy metodika bilan almashtirilsin
+        screen_text: "Avtodromda belgilangan tezlikdan oshdingiz!"
+        voice_file: "speed_exceeded.wav"
+        voice_text: "Tezlik oshirildi. Tezlikni pasaytiring."
+        reviewed: true
+        reviewer: "metodist_uz"
+      uz-Cyrl:
+        title: "Максимал рухсат этилган тезликдан ошиш"
+        # TODO: rasmiy metodika bilan almashtirilsin
+        screen_text: "Автодромда белгиланган тезликдан ошдингиз!"
+        voice_file: "speed_exceeded.wav"
+        voice_text: "Тезлик оширилди. Тезликни пасайтиринг."
+        reviewed: true
+        reviewer: "metodist_uz"
+      ru:
+        title: "Превышение разрешённой скорости"
+        # TODO: rasmiy metodika bilan almashtirilsin
+        screen_text: "Превышение скорости на автодроме!"
+        voice_file: "speed_exceeded.wav"
+        voice_text: "Превышение скорости. Снизьте скорость движения."
+        reviewed: true
+        reviewer: "metodist_ru"
+
+  - code: "INDICATOR_MISSED"
+    penalty: 10
+    critical: false
+    debounce_frames: 12
+    cooldown_seconds: 20.0
+    min_confidence: 0.85
+    exercise_binding: ["START", "TURN_90", "PARALLEL_PARKING", "FINISH"]
+    translations:
+      uz-Latn:
+        title: "Burilish chirog'i yoqilmadi"
+        # TODO: rasmiy metodika bilan almashtirilsin
+        screen_text: "Burilish chirog'i (povorotnik) yoqilmadi!"
+        voice_file: "indicator_missed.wav"
+        voice_text: "Burilish chirog'i yoqilmadi."
+        reviewed: true
+        reviewer: "metodist_uz"
+      uz-Cyrl:
+        title: "Бурилиш чироғи ёқилмади"
+        # TODO: rasmiy metodika bilan almashtirilsin
+        screen_text: "Бурилиш чироғи (поворотник) ёқилмади!"
+        voice_file: "indicator_missed.wav"
+        voice_text: "Бурилиш чироғи ёқилмади."
+        reviewed: true
+        reviewer: "metodist_uz"
+      ru:
+        title: "Не включен указатель поворота"
+        # TODO: rasmiy metodika bilan almashtirilsin
+        screen_text: "Указатель поворота не был включен!"
+        voice_file: "indicator_missed.wav"
+        voice_text: "Не включен сигнал указателя поворота."
+        reviewed: true
+        reviewer: "metodist_ru"
+
+  - code: "PARKING_OUT_OF_BOUNDS"
+    penalty: 25
+    critical: false
+    debounce_frames: 10
+    cooldown_seconds: 10.0
+    min_confidence: 0.80
+    exercise_binding: ["PARALLEL_PARKING", "GARAGE_REVERSE"]
+    translations:
+      uz-Latn:
+        title: "To'xtash joyi chegarasidan chiqib ketish"
+        # TODO: rasmiy metodika bilan almashtirilsin
+        screen_text: "Mashina to'xtash joyi gabaritidan chetga chiqdi!"
+        voice_file: "parking_out_of_bounds.wav"
+        voice_text: "Avtomobil to'xtash chegarasidan chiqib ketdi."
+        reviewed: true
+        reviewer: "metodist_uz"
+      uz-Cyrl:
+        title: "Тўхташ жойи чегарасидан чиқиб кетиш"
+        # TODO: rasmiy metodika bilan almashtirilsin
+        screen_text: "Машина тўхташ жойи габаритидан четга чиқди!"
+        voice_file: "parking_out_of_bounds.wav"
+        voice_text: "Автомобиль тўхташ чегарасидан чиқиб кетди."
+        reviewed: true
+        reviewer: "metodist_uz"
+      ru:
+        title: "Выезд за габариты парковочного места"
+        # TODO: rasmiy metodika bilan almashtirilsin
+        screen_text: "Выезд за габариты парковочного места!"
+        voice_file: "parking_out_of_bounds.wav"
+        voice_text: "Автомобиль вышел за границы зоны парковки."
+        reviewed: true
+        reviewer: "metodist_ru"
+
+  - code: "CRITICAL_COLLISION"
+    penalty: 100
+    critical: true
+    debounce_frames: 3
+    cooldown_seconds: 999.0
+    min_confidence: 0.85
+    exercise_binding: []
+    translations:
+      uz-Latn:
+        title: "To'siqqa to'qnashuv yoki xavfli vaziyat"
+        # TODO: rasmiy metodika bilan almashtirilsin
+        screen_text: "Kritik qoidabuzarlik: Xavfli to'qnashuv sodir bo'ldi!"
+        voice_file: "critical_collision.wav"
+        voice_text: "Kritik qoidabuzarlik. Imtihon to'xtatildi."
+        reviewed: true
+        reviewer: "metodist_uz"
+      uz-Cyrl:
+        title: "Тўсиққа тўқнашув ёки хавфли вазият"
+        # TODO: rasmiy metodika bilan almashtirilsin
+        screen_text: "Критик қоидабузарлик: Хавфли тўқнашув содир бўлди!"
+        voice_file: "critical_collision.wav"
+        voice_text: "Критик қоидабузарлик. Имтиҳон тўхтатилди."
+        reviewed: true
+        reviewer: "metodist_uz"
+      ru:
+        title: "Столкновение с препятствием или опасная ситуация"
+        # TODO: rasmiy metodika bilan almashtirilsin
+        screen_text: "Критическое нарушение: Столкновение с препятствием!"
+        voice_file: "critical_collision.wav"
+        voice_text: "Критическое нарушение. Экзамен остановлен."
+        reviewed: true
+        reviewer: "metodist_ru"
+
+  - code: "EXERCISE_SEQUENCE_BROKEN"
+    penalty: 100
+    critical: true
+    debounce_frames: 5
+    cooldown_seconds: 999.0
+    min_confidence: 0.90
+    exercise_binding: []
+    translations:
+      uz-Latn:
+        title: "Mashqlar tartibini buzish yoki mashqni bajarmaslik"
+        # TODO: rasmiy metodika bilan almashtirilsin
+        screen_text: "Kritik qoidabuzarlik: Mashq tartibi buzildi!"
+        voice_file: "exercise_sequence_broken.wav"
+        voice_text: "Kritik xato. Mashqlar tartibi buzildi. Imtihon yakunlandi."
+        reviewed: true
+        reviewer: "metodist_uz"
+      uz-Cyrl:
+        title: "Машқлар тартибини бузиш ёки машқни бажармаслик"
+        # TODO: rasmiy metodika bilan almashtirilsin
+        screen_text: "Критик қоидабузарлик: Машқ тартиби бузилди!"
+        voice_file: "exercise_sequence_broken.wav"
+        voice_text: "Критик хато. Машқлар тартиби бузилди. Имтиҳон якунланди."
+        reviewed: true
+        reviewer: "metodist_uz"
+      ru:
+        title: "Нарушение последовательности упражнений"
+        # TODO: rasmiy metodika bilan almashtirilsin
+        screen_text: "Критическое нарушение: Нарушен порядок упражнений!"
+        voice_file: "exercise_sequence_broken.wav"
+        voice_text: "Критическая ошибка. Нарушен порядок упражнений. Экзамен завершен."
+        reviewed: true
+        reviewer: "metodist_ru"

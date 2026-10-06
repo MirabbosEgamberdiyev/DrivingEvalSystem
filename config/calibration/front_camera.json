@@ -1,0 +1,21 @@
+{
+  "camera_name": "FRONT",
+  "resolution": [1280, 720],
+  "camera_matrix": [
+    [850.5, 0.0, 640.0],
+    [0.0, 850.5, 360.0],
+    [0.0, 0.0, 1.0]
+  ],
+  "dist_coeffs": [-0.28, 0.09, 0.001, -0.001, 0.0],
+  "homography_matrix": [
+    [1.15, -0.02, -120.0],
+    [0.01, 2.35, -450.0],
+    [0.00002, -0.0008, 1.0]
+  ],
+  "reference_fiducials": [
+    {"name": "hood_left_corner", "expected_px": [320, 680], "tolerance_px": 15},
+    {"name": "hood_right_corner", "expected_px": [960, 680], "tolerance_px": 15}
+  ],
+  "pixels_per_meter": 42.5,
+  "last_calibrated_at": "2026-10-06T10:00:00Z"
+}

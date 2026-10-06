@@ -1,0 +1,20 @@
+{
+  "camera_name": "LEFT",
+  "resolution": [1280, 720],
+  "camera_matrix": [
+    [800.0, 0.0, 640.0],
+    [0.0, 800.0, 360.0],
+    [0.0, 0.0, 1.0]
+  ],
+  "dist_coeffs": [-0.32, 0.11, 0.0, 0.0, 0.0],
+  "homography_matrix": [
+    [1.05, 0.0, -80.0],
+    [0.0, 2.05, -350.0],
+    [0.0, -0.0005, 1.0]
+  ],
+  "reference_fiducials": [
+    {"name": "mirror_base_left", "expected_px": [200, 650], "tolerance_px": 15}
+  ],
+  "pixels_per_meter": 38.0,
+  "last_calibrated_at": "2026-10-06T10:00:00Z"
+}

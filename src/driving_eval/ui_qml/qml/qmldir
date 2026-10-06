@@ -1,0 +1,11 @@
+module DrivingEval.UI
+singleton Theme 1.0 Theme.qml
+BigButton 1.0 components/BigButton.qml
+StatusRow 1.0 components/StatusRow.qml
+PenaltyBadge 1.0 components/PenaltyBadge.qml
+ViolationCard 1.0 components/ViolationCard.qml
+TopBar 1.0 components/TopBar.qml
+BottomBar 1.0 components/BottomBar.qml
+ModalPopup 1.0 components/ModalPopup.qml
+PasswordPad 1.0 components/PasswordPad.qml
+ViolationPopup 1.0 components/ViolationPopup.qml

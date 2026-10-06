@@ -1,0 +1,134 @@
+# ==============================================================================
+# ASOSIY TIZIM KONFIGURATSIYASI (config.yaml)
+# Hech qanday threshold yoki cheklov kodda qattiq yozilmagan.
+# Pydantic schema orqali validatsiya qilinadi.
+# ==============================================================================
+
+app:
+  name: "Standalone 4-Camera Offline AI Driving Evaluation System"
+  version: "1.0.0"
+  rules_version: "1.0.0"
+  environment: "production" # "production" yoki "simulation"
+  log_level: "INFO"
+  log_file: "data/logs/system.log"
+  supported_languages:
+    - "uz-Latn"
+    - "uz-Cyrl"
+    - "ru"
+  default_language: "uz-Latn"
+
+scoring:
+  start_score: 100
+  pass_score: 80
+  max_critical_allowed: 0
+  allow_suspect_penalty: false # SUSPECT xatolar uchun jarima yozilmaydi
+
+cameras:
+  sync_tolerance_ms: 66.0 # ~2 frames at 30 fps
+  min_operational_fps: 20.0
+  max_drift_threshold_px: 15.0 # Kalibrovka siljishi chegarasi
+  devices:
+    front:
+      name: "FRONT"
+      device_index: 0
+      stream_uri: "" # Real kamera uchun masalan: /dev/video0 yoki RTSP
+      sim_video_path: "data/test_videos/front_sim.mp4"
+      width: 1280
+      height: 720
+      fps: 30
+      required: true
+    rear:
+      name: "REAR"
+      device_index: 1
+      stream_uri: ""
+      sim_video_path: "data/test_videos/rear_sim.mp4"
+      width: 1280
+      height: 720
+      fps: 30
+      required: true
+    left:
+      name: "LEFT"
+      device_index: 2
+      stream_uri: ""
+      sim_video_path: "data/test_videos/left_sim.mp4"
+      width: 1280
+      height: 720
+      fps: 30
+      required: true
+    right:
+      name: "RIGHT"
+      device_index: 3
+      stream_uri: ""
+      sim_video_path: "data/test_videos/right_sim.mp4"
+      width: 1280
+      height: 720
+      fps: 30
+      required: true
+
+ai_engine:
+  backend: "mock" # "mock", "onnx", "tensorrt"
+  model_path: "models/yolo_driving_v1.onnx"
+  confidence_threshold: 0.70
+  iou_threshold: 0.45
+  input_size: [640, 640]
+  device: "cuda" # "cuda" yoki "cpu"
+
+sensors:
+  gps:
+    enabled: true
+    port: "/dev/ttyUSB0"
+    baudrate: 9600
+    required: true
+    sim_mode: true
+  imu:
+    enabled: true
+    port: "/dev/ttyUSB1"
+    baudrate: 115200
+    required: true
+    sim_mode: true
+  obd:
+    enabled: true
+    port: "/dev/ttyUSB2"
+    baudrate: 38400
+    required: true
+    sim_mode: true
+
+exercises:
+  sequence:
+    - "START"
+    - "ESTAKADA"
+    - "ZMEIKA"
+    - "TURN_90"
+    - "PARALLEL_PARKING"
+    - "GARAGE_REVERSE"
+    - "STOP"
+    - "FINISH"
+  geofence_tolerance_meters: 3.0
+  speed_stop_threshold_kmh: 1.5
+
+storage:
+  base_dir: "data"
+  db_path: "data/db/exam_system.db"
+  evidence_dir: "data/evidence"
+  min_free_disk_gb: 10.0
+  prune_threshold_gb: 5.0
+  ring_buffer_seconds: 5.0 # Eventdan oldingi va keyingi bufer
+
+audio:
+  enabled: true
+  backend: "wav_primary"
+  audio_dir: "data/audio"
+  piper_model_path: "models/piper/uz_model.onnx"
+  volume: 1.0
+
+ui:
+  kiosk_mode: true
+  fullscreen: true
+  window_title: "Avtomatlashtirilgan Haydash Imtihon Tizimi"
+  popup_duration_seconds: 3.5
+  language: "uz-Latn"
+
+security:
+  # SHA-256 for default admin pin "1234" -> 03ac674216f3e15c761ee1a5e255f067953623c8b388b4459e13f978d7c846f4
+  admin_pin_hash_sha256: "03ac674216f3e15c761ee1a5e255f067953623c8b388b4459e13f978d7c846f4"
+  power_loss_recovery_mode: "SAFE_INTERRUPT" # "SAFE_INTERRUPT" yoki "RESUME_ACTIVE"

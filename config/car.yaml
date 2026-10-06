@@ -1,0 +1,27 @@
+# ==============================================================================
+# AVTOMOBIL PARAMETRLARI VA IDENTIFIKATSIYASI (car.yaml)
+# Har bir standalone mashina faqat shu fayl va calibration/ orqali farqlanadi.
+# ==============================================================================
+
+car_id: "CAR-UZ-01"
+vin: "XWBXXXXXXXX123456"
+plate_number: "01 A 777 AA"
+model: "Chevrolet Cobalt"
+manufacture_year: 2024
+
+dimensions_meters:
+  length: 4.479
+  width: 1.735
+  height: 1.514
+  wheelbase: 2.620
+  front_overhang: 0.950
+  rear_overhang: 0.909
+
+sensor_offsets_meters:
+  # Avtomobilning geometrik markaziga nisbatan (X: o'ng, Y: old, Z: yuqori)
+  front_camera: [0.0, 2.1, 1.3]
+  rear_camera: [0.0, -2.1, 0.9]
+  left_camera: [-0.95, 0.5, 1.0]
+  right_camera: [0.95, 0.5, 1.0]
+  gps_antenna: [0.0, -0.3, 1.5]
+  imu_sensor: [0.0, 0.0, 0.3]

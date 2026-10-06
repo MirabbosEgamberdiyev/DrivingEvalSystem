@@ -1,0 +1,31 @@
+[Unit]
+Description=Standalone 4-Camera Offline AI Driving Evaluation Kiosk System
+After=network.target sound.target graphical.target systemd-user-sessions.service
+Wants=graphical.target
+
+[Service]
+Type=simple
+User=autoeval
+Group=autoeval
+WorkingDirectory=/opt/driving_eval_system
+Environment="DISPLAY=:0"
+Environment="XAUTHORITY=/home/autoeval/.Xauthority"
+Environment="PYTHONPATH=/opt/driving_eval_system/src"
+Environment="QT_QPA_PLATFORM=xcb"
+
+ExecStart=/opt/driving_eval_system/.venv/bin/python -m driving_eval.app_runner --kiosk
+Restart=always
+RestartSec=3s
+KillMode=mixed
+TimeoutStopSec=10s
+
+# Sandboxing & Resource Limits
+LimitNOFILE=65536
+CPUSchedulingPolicy=rr
+CPUSchedulingPriority=20
+
+StandardOutput=journal
+StandardError=journal
+
+[Install]
+WantedBy=graphical.target
