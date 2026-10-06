@@ -25,22 +25,22 @@ Ushbu hujjat loyihaning har bir bosqichidagi bajarilgan ishlar, testlar holati, 
 | **Bosqich 5** | Rule engine, event manager (debounce/cooldown/dedup), scoring engine, kritik oqim, SUSPECT | ✅ TUGALLANDI | 9 ta qoida plagini, 1 xato = 1 event = 1 ovoz = 1 penalty kafolati, 3-tilli pasport getterlari, SUSPECT jarimasiz ajratish, kritik to'xtatish (`05e4541`). |
 | **Bosqich 6** | Evidence recorder (ring buffer, SHA-256 zanjir), 3-tilli Audio service (.wav to'plami), storage manager | ✅ TUGALLANDI | 4-kamerali kompozitli dalillar paketi (`before`, `event`, `after`, `composite.jpg`, `event.mp4`, `metadata.json`), kriptografik xesh tekshiruvi, 3 ta tilda 36 ta WAV audio to'plami va USB eksport manifesti (`fd730bb`). |
 | **Bosqich 7** | QML UI: 3-maketli ekran klaviaturasi, til almashtirgich, 9 ta ekran, popup navbati, 3-tilli hisobotlar | ✅ TUGALLANDI | 3-maketli sensorli klaviatura (`uz-Latn`, `uz-Cyrl`, `ru`), ReportLab Unicode font embed bilan 3-tilli PDF va UTF-8 BOM CSV hisobotlari, 3 ta rezolyutsiyada skrinshot testlari (103 ta test PASS). |
-| **Bosqich 8** | ONNX backend (CUDA, TensorRT, DirectML), o'qitish/export/baholash skriptlari, replay tizimi | ⏳ BOSHLANMOQDA | Mock vs Real ONNX, precision/recall benchmark. |
-| **Bosqich 9** | Ed25519 offline aktivatsiya, tolerant Machine ID, soat himoyasi, Admin License Generator | ⏳ KUTILMOQDA | Asimmetrik kriptografiya, alohida admin vositasi. |
+| **Bosqich 8** | ONNX backend (CUDA, TensorRT, DirectML), o'qitish/export/baholash skriptlari, replay tizimi | ✅ TUGALLANDI | DirectML ustuvorligi, YOLOv8/v5 chiqish formatlari, opset 17 eksport skripti, SessionReplayer va 100% precision/recall testlari. |
+| **Bosqich 9** | Ed25519 offline aktivatsiya, tolerant Machine ID, soat himoyasi, Admin License Generator | ⏳ BOSHLANMOQDA | Asimmetrik kriptografiya, alohida admin vositasi. |
 | **Bosqich 10** | Setup Wizard (apparat tekshiruvi, kamera yo'nalishi, kalibrovka ustasi, poligon zonalari, audio test) | ⏳ KUTILMOQDA | Birinchi ishga tushirishda 3 tilda interaktiv usta. |
 | **Bosqich 11** | Watchdog, diagnostika zipi, yangilash/rollback, Nuitka build, Inno Setup 3 tilda (.isl) | ⏳ KUTILMOQDA | Windows installer, uz-Latn.isl, uz-Cyrl.isl, Russian.isl. |
 | **Bosqich 12** | Yakuniy sifat: check_translations, ovoz to'plami testi, soak (2 soat), 3 til skrinshotlari, hujjatlar | ⏳ KUTILMOQDA | Demo ishga tushirish: uz-Latn, uz-Cyrl, ru. |
 
 ---
 
-## Bajarilgan Ishlar (Bosqich 7)
-- [x] `VirtualKeyboard.qml` yaratildi: 3 ta to'liq sensorli maket (`uz-Latn` QWERTY + `Oʻ`/`Gʻ`, `uz-Cyrl` ЙЦУКЕН + `Ў`/`Қ`/`Ғ`/`Ҳ`, `ru` ЙЦУКЕН + `Ё`/`Ъ`/`Ы`/`Э`), tebranishga chidamli katta tugmalar ($\ge 52\times 48$ px), Shift, Space, Backspace, Clear va OK signallari.
-- [x] 3-tilli PDF hisobot generatori (`generate_pdf_report`): Windows tizim shriftlari (`Arial`/`Segoe UI`) orqali Unicode TrueType font ro'yxatdan o'tkazildi, kirillcha harflar va maxsus o'zbek belgilarida tofu/xato yo'q, xesh va imzolar bloki bilan.
-- [x] 3-tilli CSV hisobot generatori (`export_violations_to_csv`): `utf-8-sig` bilan Windows Excel dasturida to'g'ri ochilishi kafolatlandi.
-- [x] Barcha ekranlar va komponentlarning QQmlApplicationEngine orqali yuklanishi va 3 xil ekranda (1024x600, 1280x800, 1920x1080) render qilinishi avtotestlandi.
-- [x] 103/103 test yashil (100% PASS), 0 ruff xatosi, 0 mypy xatosi.
+## Bajarilgan Ishlar (Bosqich 8)
+- [x] `ONNXDetector` yangilandi: Windows DirectML (`DmlExecutionProvider`), CUDA (`CUDAExecutionProvider`), TensorRT va CPU execution providerlari iyerarxiyasi, avtomatik aniqlash va graceful fallback, warmup va benchmark usullari, YOLOv8 va YOLOv5 formatlarini NMS bilan postprocessing qilish.
+- [x] `scripts/export_yolo_to_onnx.py`: YOLO modellarini opset 17, FP16, dinamik o'qlar bilan ONNX ga eksport qilish, struktura validatsiyasi va benchmark o'lchov vositasi.
+- [x] `src/driving_eval/replay/session_replay.py`: to'liq pipeline (`Tracker` -> `ExerciseDetector` -> `RuleEngine` -> `EventManager` -> `ScoringEngine`) orqali harakatlanuvchi replay vositasi, Precision / Recall / F1 metrikalari va hisobot eksporti (JSON, CSV, Markdown).
+- [x] `tests/replay/test_replay_ground_truth.py`: 12 ta stsenariy bo'yicha barcha 9 ta qoida, SUSPECT izolyatsiyasi, cooldown/deduplikatsiya va 100% precision/recall tekshiruvi.
+- [x] 108/108 test yashil (100% PASS), 0 ruff xatosi, 0 mypy xatosi (87 ta fayl tekshirildi).
 
 ---
 
-## Ochiq Masalalar va Keyingi Qadam (Bosqich 8)
-- [ ] Bosqich 8: ONNX Runtime backend (DirectML Windows GPU, CUDA fallback, CPU), YOLO driving evaluation export va baholash skriptlari, replay tizimi (ground truth VCF/CSV replay va precision/recall tekshiruvi).
+## Ochiq Masalalar va Keyingi Qadam (Bosqich 9)
+- [ ] Bosqich 9: Ed25519 asimmetrik offline aktivatsiya, tolerant Windows Machine ID (Motherboard UUID + CPU + Disk + MAC, 1 ta komponent o'zgarishiga chidamli), tizim soatini orqaga surishdan himoya (SHA-256 zanjir), va `tools/admin_license_gen.py` admin kalit generatori.
