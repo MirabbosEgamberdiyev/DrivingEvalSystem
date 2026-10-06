@@ -18,9 +18,6 @@ os.environ["QT_QPA_PLATFORM"] = "offscreen"
 
 
 def test_pdf_and_csv_generation(tmp_path):
-    pdf_out = tmp_path / "report.pdf"
-    csv_out = tmp_path / "report.csv"
-
     session_data = {
         "id": "SESS-2026-TEST",
         "student_id": "STU-001",
@@ -66,13 +63,16 @@ def test_pdf_and_csv_generation(tmp_path):
         },
     ]
 
-    res_pdf = generate_pdf_report(pdf_out, session_data, student_data, vehicle_data, violations, "a" * 64)
-    assert res_pdf.exists()
-    assert res_pdf.stat().st_size > 1000
+    for lang in ("uz-Latn", "uz-Cyrl", "ru"):
+        p_out = tmp_path / f"report_{lang}.pdf"
+        c_out = tmp_path / f"report_{lang}.csv"
+        res_pdf = generate_pdf_report(p_out, session_data, student_data, vehicle_data, violations, "a" * 64, language=lang)
+        assert res_pdf.exists()
+        assert res_pdf.stat().st_size > 1000
 
-    res_csv = export_violations_to_csv(csv_out, session_data, violations)
-    assert res_csv.exists()
-    assert "CONE_TOUCH" in res_csv.read_text(encoding="utf-8")
+        res_csv = export_violations_to_csv(c_out, session_data, violations, language=lang)
+        assert res_csv.exists()
+        assert "CONE_TOUCH" in res_csv.read_text(encoding="utf-8-sig")
 
 
 def test_app_ui_lifecycle_headless(qapp, tmp_path):

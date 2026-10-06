@@ -42,6 +42,8 @@ def test_individual_screens_compile(qapp):
         "screens/ViolationsListScreen.qml",
         "screens/EvidenceScreen.qml",
         "screens/SettingsScreen.qml",
+        "components/PasswordPad.qml",
+        "components/VirtualKeyboard.qml",
     ]
 
     bridge = MockBridge()
