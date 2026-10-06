@@ -1,7 +1,8 @@
 """Unit and integration tests for Setup Wizard service and QML bridge."""
 
-from pathlib import Path
 import tempfile
+from pathlib import Path
+
 import yaml
 
 from driving_eval.core.state_machine import ApplicationState, ApplicationStateMachine

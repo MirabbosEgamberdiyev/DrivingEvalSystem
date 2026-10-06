@@ -5,7 +5,6 @@ Usage:
 """
 
 import argparse
-from pathlib import Path
 
 
 def train_yolo(
@@ -16,7 +15,7 @@ def train_yolo(
     model_name: str = "yolov8m.pt",
     output_dir: str = "runs/train",
 ) -> None:
-    print(f"=== YOLO O'qitish Boshlanmoqda ===")
+    print("=== YOLO O'qitish Boshlanmoqda ===")
     print(f"Dataset config: {data_yaml}")
     print(f"Baza model: {model_name}")
     print(f"Epochlar: {epochs}, Batch: {batch_size}, Input: {img_size}")

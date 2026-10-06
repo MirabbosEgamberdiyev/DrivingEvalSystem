@@ -5,7 +5,6 @@ Usage:
 """
 
 import argparse
-from pathlib import Path
 
 
 def export_model(weights_path: str, format_target: str = "onnx", imgsz: int = 640) -> None:

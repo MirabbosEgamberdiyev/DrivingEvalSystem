@@ -1,11 +1,10 @@
 """Model Evaluation Script: Computes per-class Precision, Recall, mAP50, and mAP50-95."""
 
 import argparse
-from pathlib import Path
 
 
 def evaluate_model(weights_path: str, data_yaml: str) -> None:
-    print(f"=== Model Baholash (Evaluation) Boshlanmoqda ===")
+    print("=== Model Baholash (Evaluation) Boshlanmoqda ===")
     print(f"Model: {weights_path}")
     print(f"Test Dataset: {data_yaml}")
 

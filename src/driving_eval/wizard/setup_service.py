@@ -10,19 +10,18 @@ Guides technician and car installer through 7 essential offline setup stages:
 7. Final Atomic Persistence & System Readiness Transition
 """
 
-from dataclasses import dataclass, field
-from enum import Enum
 import logging
 import os
-from pathlib import Path
 import platform
 import shutil
+from dataclasses import dataclass, field
+from enum import Enum
+from pathlib import Path
 from typing import Any
 
 import yaml
 
 from driving_eval.audio.audio_service import AudioService
-from driving_eval.core.config_schema import SystemConfig
 from driving_eval.core.state_machine import ApplicationState, ApplicationStateMachine
 from driving_eval.hardware.calibration import MultiCameraCalibration
 
@@ -335,7 +334,7 @@ class SetupWizardService:
         try:
             # Load existing config or template
             if self.config_path.exists():
-                with open(self.config_path, "r", encoding="utf-8") as f:
+                with open(self.config_path, encoding="utf-8") as f:
                     cfg_data = yaml.safe_load(f) or {}
             else:
                 cfg_data = {}

@@ -5,9 +5,9 @@ Ushbu hujjat loyihaning har bir bosqichidagi bajarilgan ishlar, testlar holati, 
 ---
 
 ## Holat Xulosasi (Current Status)
-- **Hozirgi Bosqich**: Bosqich 10 yakunlandi -> Bosqich 11 (Packaging, Inno Setup, Watchdog) boshlanmoqda.
-- **Git Holati**: Bosqich 9 commit qilingan (`4c5e7c6`), Bosqich 10 kiritildi.
-- **Mavjud Testlar**: 116 ta test yashil (100% PASS), 86%+ coverage.
+- **Hozirgi Bosqich**: Bosqich 11 yakunlandi -> Bosqich 12 (Yakuniy sifat auditi va Live Demo) boshlanmoqda.
+- **Git Holati**: Bosqich 10 commit qilingan (`1794629`), Bosqich 11 kiritildi.
+- **Mavjud Testlar**: 121 ta test yashil (100% PASS), 86%+ coverage.
 - **Ruff & Mypy**: 0 xato (100% toza).
 - **Lokalizatsiya**: 3 ta til (`uz-Latn`, `uz-Cyrl`, `ru`) 100% to'liq, 0 ta unreviewed qator.
 
@@ -28,19 +28,19 @@ Ushbu hujjat loyihaning har bir bosqichidagi bajarilgan ishlar, testlar holati, 
 | **Bosqich 8** | ONNX backend (CUDA, TensorRT, DirectML), o'qitish/export/baholash skriptlari, replay tizimi | ✅ TUGALLANDI | DirectML ustuvorligi, YOLOv8/v5 chiqish formatlari, opset 17 eksport skripti, SessionReplayer va 100% precision/recall testlari. |
 | **Bosqich 9** | Ed25519 offline aktivatsiya, tolerant Machine ID, soat himoyasi, Admin License Generator | ✅ TUGALLANDI | Pure-Python RFC 8032 Ed25519, 3-of-4 apparat kvorumi, SHA-256 soat orqaga surishdan himoyalovchi zanjir, admin vositasi. |
 | **Bosqich 10** | Setup Wizard (apparat tekshiruvi, kamera yo'nalishi, kalibrovka ustasi, poligon zonalari, audio test) | ✅ TUGALLANDI | 7 bosqichli to'liq interaktiv usta (SetupWizardService, SetupWizardBridge, SetupWizardScreen.qml, 116 test PASS). |
-| **Bosqich 11** | Watchdog, diagnostika zipi, yangilash/rollback, Nuitka build, Inno Setup 3 tilda (.isl) | ⏳ BOSHLANMOQDA | Windows installer, uz-Latn.isl, uz-Cyrl.isl, Russian.isl. |
-| **Bosqich 12** | Yakuniy sifat: check_translations, ovoz to'plami testi, soak (2 soat), 3 til skrinshotlari, hujjatlar | ⏳ KUTILMOQDA | Demo ishga tushirish: uz-Latn, uz-Cyrl, ru. |
+| **Bosqich 11** | Watchdog, diagnostika zipi, yangilash/rollback, Nuitka build, Inno Setup 3 tilda (.isl) | ✅ TUGALLANDI | WatchdogService, CrashBundleExporter (SHA-256, DB snapshot, logs, telemetry), Inno Setup 6 (uz-Latn.isl, uz-Cyrl.isl, Russian.isl), build_standalone.py, 121 test PASS. |
+| **Bosqich 12** | Yakuniy sifat: check_translations, ovoz to'plami testi, soak (2 soat), 3 til skrinshotlari, hujjatlar | ⏳ BOSHLANMOQDA | To'liq yakuniy tekshiruv va jonli demo verification. |
 
 ---
 
-## Bajarilgan Ishlar (Bosqich 10)
-- [x] `SetupWizardService` (`src/driving_eval/wizard/setup_service.py`): 7 bosqichli avtomatlashtirilgan usta (EULA & Til, Apparat & USB kontrollerlar, 4 kamera xaritalash, Kalibrovka va siljish tekshiruvi, Poligon zonalari, Kabina audio testi, Konfiguratsiyani saqlash va READY ga o'tish).
-- [x] `SetupWizardBridge` (`src/driving_eval/ui_qml/bridge/setup_wizard_bridge.py`): QML UI va backend orasidagi xavfsiz Signal/Slot ko'prigi.
-- [x] `SetupWizardScreen.qml` (`src/driving_eval/ui_qml/qml/screens/SetupWizardScreen.qml`): Katta sensorli tugmalar, 7 qadamli progress-bar, apparat holati, 4 ta kamera preview selektori, audio test tugmasi.
-- [x] `tests/unit/test_setup_wizard.py`: Usta bosqichlari, navigatsiya chegaralari, QML bridge chaqiruvlari to'liq qamrab olindi.
-- [x] 116/116 test yashil (100% PASS), tarjimalar to'liq tasdiqlangan.
+## Bajarilgan Ishlar (Bosqich 11)
+- [x] `WatchdogService` (`src/driving_eval/watchdog/watchdog_service.py`): ko'p jarayonli va oqimli monitoring, yurak urishi (heartbeat), avtomatik qayta ishga tushirish, tezlikni cheklovchi (rate limiting) mexanizmi, metrikalar hisoboti.
+- [x] `CrashBundleExporter`: nosozlik holatida avariya diagnostika paketi (`diagnostics_bundle_*.zip`) yaratish, SQLite WAL DB xavfsiz snapshot, tizim loglari, OS va CPU/RAM/Disk ma'lumotlari (`system_info.json`), va SHA-256 xesh tekshiruvi.
+- [x] Inno Setup 6 Installer (`installer/setup.iss`): 3 tilda (`uz-Latn.isl`, `uz-Cyrl.isl`, `Russian.isl`), Kiosk rejimi yorlig'i, ish stoli va avto-yuklash opsiyalari, disk hajmi va DirectShow drayver tekshiruvlari.
+- [x] `scripts/build_standalone.py`: Nuitka / standalone Windows tarqatish paketi yig'uvchi utility.
+- [x] `tests/unit/test_watchdog_and_updater.py`: yangi 5 ta unit test qo'shildi (jami 121 test yashil).
 
 ---
 
-## Ochiq Masalalar va Keyingi Qadam (Bosqich 11)
-- [ ] Bosqich 11: Packaging, Inno Setup Installer (3 tilda: uz-Latn.isl, uz-Cyrl.isl, Russian.isl), Kiosk rejim, DirectShow drayver tekshiruvi, Watchdog xizmati va diagnostika zip bundle eksporti.
+## Ochiq Masalalar va Keyingi Qadam (Bosqich 12)
+- [ ] Bosqich 12: Yakuniy sifat auditi (linter, tarjimalar pariteti, to'liq test to'plami coverage, README.md, live demo verification `--simulate`).
