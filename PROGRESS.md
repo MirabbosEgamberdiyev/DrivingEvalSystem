@@ -26,21 +26,22 @@ Ushbu hujjat loyihaning har bir bosqichidagi bajarilgan ishlar, testlar holati, 
 | **Bosqich 6** | Evidence recorder (ring buffer, SHA-256 zanjir), 3-tilli Audio service (.wav to'plami), storage manager | ✅ TUGALLANDI | 4-kamerali kompozitli dalillar paketi (`before`, `event`, `after`, `composite.jpg`, `event.mp4`, `metadata.json`), kriptografik xesh tekshiruvi, 3 ta tilda 36 ta WAV audio to'plami va USB eksport manifesti (`fd730bb`). |
 | **Bosqich 7** | QML UI: 3-maketli ekran klaviaturasi, til almashtirgich, 9 ta ekran, popup navbati, 3-tilli hisobotlar | ✅ TUGALLANDI | 3-maketli sensorli klaviatura (`uz-Latn`, `uz-Cyrl`, `ru`), ReportLab Unicode font embed bilan 3-tilli PDF va UTF-8 BOM CSV hisobotlari, 3 ta rezolyutsiyada skrinshot testlari (103 ta test PASS). |
 | **Bosqich 8** | ONNX backend (CUDA, TensorRT, DirectML), o'qitish/export/baholash skriptlari, replay tizimi | ✅ TUGALLANDI | DirectML ustuvorligi, YOLOv8/v5 chiqish formatlari, opset 17 eksport skripti, SessionReplayer va 100% precision/recall testlari. |
-| **Bosqich 9** | Ed25519 offline aktivatsiya, tolerant Machine ID, soat himoyasi, Admin License Generator | ⏳ BOSHLANMOQDA | Asimmetrik kriptografiya, alohida admin vositasi. |
-| **Bosqich 10** | Setup Wizard (apparat tekshiruvi, kamera yo'nalishi, kalibrovka ustasi, poligon zonalari, audio test) | ⏳ KUTILMOQDA | Birinchi ishga tushirishda 3 tilda interaktiv usta. |
+| **Bosqich 9** | Ed25519 offline aktivatsiya, tolerant Machine ID, soat himoyasi, Admin License Generator | ✅ TUGALLANDI | Pure-Python RFC 8032 Ed25519, 3-of-4 apparat kvorumi, SHA-256 soat orqaga surishdan himoyalovchi zanjir, admin vositasi. |
+| **Bosqich 10** | Setup Wizard (apparat tekshiruvi, kamera yo'nalishi, kalibrovka ustasi, poligon zonalari, audio test) | ⏳ BOSHLANMOQDA | Birinchi ishga tushirishda 3 tilda interaktiv usta. |
 | **Bosqich 11** | Watchdog, diagnostika zipi, yangilash/rollback, Nuitka build, Inno Setup 3 tilda (.isl) | ⏳ KUTILMOQDA | Windows installer, uz-Latn.isl, uz-Cyrl.isl, Russian.isl. |
 | **Bosqich 12** | Yakuniy sifat: check_translations, ovoz to'plami testi, soak (2 soat), 3 til skrinshotlari, hujjatlar | ⏳ KUTILMOQDA | Demo ishga tushirish: uz-Latn, uz-Cyrl, ru. |
 
 ---
 
-## Bajarilgan Ishlar (Bosqich 8)
-- [x] `ONNXDetector` yangilandi: Windows DirectML (`DmlExecutionProvider`), CUDA (`CUDAExecutionProvider`), TensorRT va CPU execution providerlari iyerarxiyasi, avtomatik aniqlash va graceful fallback, warmup va benchmark usullari, YOLOv8 va YOLOv5 formatlarini NMS bilan postprocessing qilish.
-- [x] `scripts/export_yolo_to_onnx.py`: YOLO modellarini opset 17, FP16, dinamik o'qlar bilan ONNX ga eksport qilish, struktura validatsiyasi va benchmark o'lchov vositasi.
-- [x] `src/driving_eval/replay/session_replay.py`: to'liq pipeline (`Tracker` -> `ExerciseDetector` -> `RuleEngine` -> `EventManager` -> `ScoringEngine`) orqali harakatlanuvchi replay vositasi, Precision / Recall / F1 metrikalari va hisobot eksporti (JSON, CSV, Markdown).
-- [x] `tests/replay/test_replay_ground_truth.py`: 12 ta stsenariy bo'yicha barcha 9 ta qoida, SUSPECT izolyatsiyasi, cooldown/deduplikatsiya va 100% precision/recall tekshiruvi.
-- [x] 108/108 test yashil (100% PASS), 0 ruff xatosi, 0 mypy xatosi (87 ta fayl tekshirildi).
+## Bajarilgan Ishlar (Bosqich 9)
+- [x] Pure-Python RFC 8032 Ed25519 asimmetrik kriptografiya moduli (`ed25519.py`) yaratildi: tashqi C-kutubxonasiz 100% offline raqamli imzolash va tekshirish.
+- [x] Tolerant Windows Machine ID (`machine_id.py`): Motherboard UUID, CPU ID, Disk serial va MAC manzillari asosida apparat barmoq izi, 3-of-4 kvorum (1 ta ehtiyot qism almashtirilganda ham litsenziya bekor bo'lmasligi).
+- [x] Soat orqaga qaytarilishidan himoya (`clock_tamper.py`): SQLite DB da SHA-256 xesh zanjirli vaqt muhrlari zanjiri (`clock_timeline`) va orqaga surishni aniqlash.
+- [x] `LicenseManager` (`license_manager.py`): offline litsenziyani tekshirish, token formatlash (`DRV-LIC-...`), car_id, amal qilish muddati, tier va funksiyalar filtri, diskda saqlash va tekshirish.
+- [x] `tools/admin_license_gen.py`: imtihon markazi administratori uchun alohida Ed25519 private key orqali offline litsenziya generatsiya qiluvchi CLI vositasi.
+- [x] 113/113 test yashil (100% PASS), 0 ruff xatosi, 0 mypy xatosi (92 ta fayl tekshirildi).
 
 ---
 
-## Ochiq Masalalar va Keyingi Qadam (Bosqich 9)
-- [ ] Bosqich 9: Ed25519 asimmetrik offline aktivatsiya, tolerant Windows Machine ID (Motherboard UUID + CPU + Disk + MAC, 1 ta komponent o'zgarishiga chidamli), tizim soatini orqaga surishdan himoya (SHA-256 zanjir), va `tools/admin_license_gen.py` admin kalit generatori.
+## Ochiq Masalalar va Keyingi Qadam (Bosqich 10)
+- [ ] Bosqich 10: Setup Wizard (Apparat tekshiruvi, 4 kamera yo'nalishi va rezolyutsiyasi, kalibrovka ustasi, poligon mashq zonalari geofence sozlamalari, audio test) 3 tilda to'liq interaktiv UI va backend orqali.
