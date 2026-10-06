@@ -56,7 +56,7 @@ Item {
             }
 
             Text {
-                text: "TEST JARAYONDA"
+                text: (typeof i18n !== "undefined" && i18n) ? i18n.t("hud_test_active") : "TEST JARAYONDA"
                 color: Theme.colorSuccess
                 font.family: Theme.fontFamily
                 font.pixelSize: Theme.fontHeadline
@@ -73,7 +73,7 @@ Item {
             spacing: 12
 
             Text {
-                text: "VAQT:"
+                text: (typeof i18n !== "undefined" && i18n) ? i18n.t("hud_time_label") : "VAQT:"
                 color: Theme.textMuted
                 font.family: Theme.fontFamily
                 font.pixelSize: Theme.fontHeadline
@@ -139,7 +139,7 @@ Item {
 
             Text {
                 id: speedUnit
-                text: "km/h"
+                text: (typeof i18n !== "undefined" && i18n) ? i18n.t("hud_speed_unit") : "km/h"
                 color: Theme.textSecondary
                 font.family: Theme.fontFamily
                 font.pixelSize: Theme.fontTitle
@@ -166,13 +166,15 @@ Item {
                     spacing: 8
 
                     Text {
-                        text: "Jarima:"
+                        text: (typeof i18n !== "undefined" && i18n) ? i18n.t("hud_penalty_label") : "Jarima:"
                         color: Theme.textSecondary
                         font.family: Theme.fontFamily
                         font.pixelSize: Theme.fontHeadline
                     }
                     Text {
-                        text: root.totalPenalty + " ball"
+                        text: (typeof i18n !== "undefined" && i18n)
+                            ? i18n.t_plural("penalty_points_plural", root.totalPenalty)
+                            : (root.totalPenalty + " ball")
                         color: root.totalPenalty > 0 ? Theme.colorError : Theme.textPrimary
                         font.family: Theme.fontFamily
                         font.pixelSize: Theme.fontHeadline
@@ -195,13 +197,15 @@ Item {
                     spacing: 8
 
                     Text {
-                        text: "Xatolar:"
+                        text: (typeof i18n !== "undefined" && i18n) ? i18n.t("hud_errors_label") : "Xatolar:"
                         color: Theme.textSecondary
                         font.family: Theme.fontFamily
                         font.pixelSize: Theme.fontHeadline
                     }
                     Text {
-                        text: root.mistakeCount.toString()
+                        text: (typeof i18n !== "undefined" && i18n)
+                            ? i18n.t_plural("errors_count_plural", root.mistakeCount)
+                            : root.mistakeCount.toString()
                         color: Theme.textPrimary
                         font.family: Theme.fontFamily
                         font.pixelSize: Theme.fontHeadline
@@ -222,7 +226,7 @@ Item {
         Text {
             anchors.centerIn: parent
             visible: !backendBridge.finishReady
-            text: "Mashq bajarilmoqda. Belgilangan chiziqlarga e'tibor bering."
+            text: (typeof i18n !== "undefined" && i18n) ? i18n.t("hud_moving_prompt") : "Mashq bajarilmoqda. Belgilangan chiziqlarga e'tibor bering."
             color: Theme.textMuted
             font.family: Theme.fontFamily
             font.pixelSize: Theme.fontBody
@@ -235,7 +239,7 @@ Item {
             visible: backendBridge.finishReady
 
             Text {
-                text: "Avtomobil to'xtadi. Testni yakunlashingiz mumkin."
+                text: (typeof i18n !== "undefined" && i18n) ? i18n.t("hud_finish_prompt") : "Avtomobil to'xtadi. Testni yakunlashingiz mumkin."
                 color: Theme.colorSuccess
                 font.family: Theme.fontFamily
                 font.pixelSize: Theme.fontHeadline
@@ -248,7 +252,7 @@ Item {
                 minHeight: 64
                 variant: "danger"
                 iconSource: "../assets/icons/finish.svg"
-                text: "TESTNI YAKUNLASH"
+                text: (typeof i18n !== "undefined" && i18n) ? i18n.t("btn_finish_test") : "TESTNI YAKUNLASH"
                 anchors.verticalCenter: parent.verticalCenter
                 onClicked: root.finishTestClicked()
             }

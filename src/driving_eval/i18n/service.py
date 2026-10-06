@@ -21,7 +21,7 @@ from datetime import datetime
 from pathlib import Path
 from typing import Any
 
-from PySide6.QtCore import QObject, Signal, Slot
+from PySide6.QtCore import Property, QObject, Signal, Slot
 
 logger = logging.getLogger(__name__)
 
@@ -64,9 +64,14 @@ class I18nService(QObject):
         self._catalogs: dict[str, dict[str, Any]] = {}
         self._load_all_catalogs()
 
+    @Property(str, notify=languageChanged)
+    def currentLanguage(self) -> str:
+        """Exposes the currently active BCP-47 language code to QML."""
+        return self._current_lang
+
     @property
     def current_language(self) -> str:
-        """Returns the currently active BCP-47 language code."""
+        """Returns the currently active BCP-47 language code in Python."""
         return self._current_lang
 
     def _load_all_catalogs(self) -> None:

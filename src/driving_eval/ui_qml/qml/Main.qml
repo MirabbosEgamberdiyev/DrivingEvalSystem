@@ -198,7 +198,7 @@ Window {
 
                 Text {
                     anchors.horizontalCenter: parent.horizontalCenter
-                    text: "ALOQA TIKLANMOQDA..."
+                    text: (typeof i18n !== "undefined" && i18n) ? i18n.t("disconnect_overlay_title") : "ALOQA TIKLANMOQDA..."
                     color: Theme.colorWarning
                     font.family: Theme.fontFamily
                     font.pixelSize: Theme.fontTitle
@@ -207,7 +207,7 @@ Window {
 
                 Text {
                     anchors.horizontalCenter: parent.horizontalCenter
-                    text: "Backend xizmati bilan aloqa yo'qoldi. Qayta ulanish kutilmoqda. Test hisobi va ma'lumotlar saqlanmoqda."
+                    text: (typeof i18n !== "undefined" && i18n) ? i18n.t("disconnect_overlay_desc") : "Backend xizmati bilan aloqa yo'qoldi. Qayta ulanish kutilmoqda. Test hisobi va ma'lumotlar saqlanmoqda."
                     color: Theme.textSecondary
                     font.family: Theme.fontFamily
                     font.pixelSize: Theme.fontBody

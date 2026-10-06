@@ -76,24 +76,46 @@ Rectangle {
         anchors.verticalCenter: parent.verticalCenter
         spacing: 16
 
-        // Car ID Badge
-        Rectangle {
-            height: 40
-            width: Math.max(90, carLabel.implicitWidth + 24)
-            radius: Theme.radiusSmall
-            color: Theme.surfaceElevated
-            border.color: Theme.surfaceBorder
-            border.width: 1
+        // Language Selector Pills
+        Row {
+            spacing: 6
             anchors.verticalCenter: parent.verticalCenter
 
-            Text {
-                id: carLabel
-                anchors.centerIn: parent
-                text: root.carId
-                color: Theme.colorAccentHover
-                font.family: Theme.fontFamily
-                font.pixelSize: Theme.fontSub
-                font.bold: true
+            Repeater {
+                model: [
+                    { code: "uz-Latn", label: "O'ZB" },
+                    { code: "uz-Cyrl", label: "ЎЗБ" },
+                    { code: "ru",      label: "РУС" }
+                ]
+
+                delegate: Rectangle {
+                    id: langBtn
+                    width: 58
+                    height: 40
+                    radius: Theme.radiusSmall
+                    property bool active: (typeof i18n !== "undefined" && i18n) ? i18n.currentLanguage === modelData.code : false
+                    color: active ? Theme.colorAccent : Theme.surfaceElevated
+                    border.color: active ? Theme.colorAccentHover : Theme.surfaceBorder
+                    border.width: 1
+
+                    Text {
+                        anchors.centerIn: parent
+                        text: modelData.label
+                        color: langBtn.active ? "#FFFFFF" : Theme.textSecondary
+                        font.family: Theme.fontFamily
+                        font.pixelSize: 15
+                        font.bold: true
+                    }
+
+                    MouseArea {
+                        anchors.fill: parent
+                        onClicked: {
+                            if (typeof i18n !== "undefined" && i18n) {
+                                i18n.set_language(modelData.code)
+                            }
+                        }
+                    }
+                }
             }
         }
 

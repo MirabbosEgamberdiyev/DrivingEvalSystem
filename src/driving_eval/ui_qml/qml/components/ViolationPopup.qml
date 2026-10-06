@@ -102,7 +102,9 @@ Item {
                 }
 
                 Text {
-                    text: root.currentItem && root.currentItem.critical ? "KRITIK QOIDABUZARLIK!" : "QOIDABUZARLIK QAYD ETILDI"
+                    text: root.currentItem && root.currentItem.critical 
+                        ? ((typeof i18n !== "undefined" && i18n) ? i18n.t("popup_critical_title") : "KRITIK QOIDABUZARLIK!")
+                        : ((typeof i18n !== "undefined" && i18n) ? i18n.t("popup_violation_title") : "QOIDABUZARLIK QAYD ETILDI")
                     color: root.currentItem && root.currentItem.critical ? Theme.colorError : Theme.colorWarning
                     font.family: Theme.fontFamily
                     font.pixelSize: Theme.fontTitle
@@ -146,7 +148,9 @@ Item {
 
             // Queue count indicator if multiple violations are queued
             Text {
-                text: "Navbatda yana: " + root.queue.length + " ta"
+                text: (typeof i18n !== "undefined" && i18n)
+                    ? i18n.tf("popup_queue_more", root.queue.length)
+                    : ("Navbatda yana: " + root.queue.length + " ta")
                 color: Theme.textMuted
                 font.family: Theme.fontFamily
                 font.pixelSize: Theme.fontSub

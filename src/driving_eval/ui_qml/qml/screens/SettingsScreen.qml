@@ -8,7 +8,7 @@ Item {
 
     property bool isUnlocked: backendBridge.settingsUnlocked
     property bool pinHasError: false
-    property string pinErrorMessage: "PIN kod noto'g'ri!"
+    property string pinErrorMessage: (typeof i18n !== "undefined" && i18n) ? i18n.t("settings_pin_error") : "PIN kod noto'g'ri!"
 
     signal backClicked()
 
@@ -44,8 +44,10 @@ Item {
         anchors.top: parent.top
         anchors.left: parent.left
         anchors.right: parent.right
-        title: "TIZIM SOZLAMALARI"
-        subtitle: root.isUnlocked ? "Administrator rejimi faol" : "PIN bilan himoyalangan"
+        title: (typeof i18n !== "undefined" && i18n) ? i18n.t("settings_title") : "TIZIM SOZLAMALARI"
+        subtitle: root.isUnlocked 
+            ? ((typeof i18n !== "undefined" && i18n) ? i18n.t("settings_subtitle_unlocked") : "Administrator rejimi faol")
+            : ((typeof i18n !== "undefined" && i18n) ? i18n.t("settings_subtitle_locked") : "PIN bilan himoyalangan")
         carId: backendBridge.carId
         showBack: true
         showSettings: false
@@ -67,10 +69,10 @@ Item {
         visible: false
         z: 60
 
-        property alias text: toastLabel.text
+        property alias text: notifyLabel.text
 
         Text {
-            id: toastLabel
+            id: notifyLabel
             anchors.centerIn: parent
             text: ""
             color: "#FFFFFF"
@@ -139,7 +141,7 @@ Item {
                         spacing: 12
 
                         Text {
-                            text: "USKUNALAR VA TIZIM PARAMETRLARI"
+                            text: (typeof i18n !== "undefined" && i18n) ? i18n.t("settings_device_info") : "USKUNALAR VA TIZIM PARAMETRLARI"
                             color: Theme.colorAccentHover
                             font.family: Theme.fontFamily
                             font.pixelSize: Theme.fontHeadline
@@ -153,19 +155,19 @@ Item {
                             columnSpacing: 32
                             width: parent.width
 
-                            Text { text: "Mashina ID (Car ID):"; color: Theme.textMuted; font.pixelSize: Theme.fontSub; font.family: Theme.fontFamily }
+                            Text { text: ((typeof i18n !== "undefined" && i18n) ? i18n.t("car_id_label") : "Mashina ID (Car ID):"); color: Theme.textMuted; font.pixelSize: Theme.fontSub; font.family: Theme.fontFamily }
                             Text { text: backendBridge.carId; color: Theme.textPrimary; font.bold: true; font.pixelSize: Theme.fontSub; font.family: Theme.fontFamily }
 
-                            Text { text: "Qoidalar to'plami:"; color: Theme.textMuted; font.pixelSize: Theme.fontSub; font.family: Theme.fontFamily }
+                            Text { text: ((typeof i18n !== "undefined" && i18n) ? i18n.t("rules_ver_label") : "Qoidalar to'plami:"); color: Theme.textMuted; font.pixelSize: Theme.fontSub; font.family: Theme.fontFamily }
                             Text { text: "rules.yaml (" + backendBridge.rulesVersion + ")"; color: Theme.textPrimary; font.bold: true; font.pixelSize: Theme.fontSub; font.family: Theme.fontFamily }
 
-                            Text { text: "AI Inference Engine:"; color: Theme.textMuted; font.pixelSize: Theme.fontSub; font.family: Theme.fontFamily }
-                            Text { text: "ONNX Runtime (Standalone Local CPU/GPU)"; color: Theme.textPrimary; font.pixelSize: Theme.fontSub; font.family: Theme.fontFamily }
+                            Text { text: "AI Engine:"; color: Theme.textMuted; font.pixelSize: Theme.fontSub; font.family: Theme.fontFamily }
+                            Text { text: "ONNX Runtime (Offline Local DirectML/CPU)"; color: Theme.textPrimary; font.pixelSize: Theme.fontSub; font.family: Theme.fontFamily }
 
-                            Text { text: "Offline Rejim:"; color: Theme.textMuted; font.pixelSize: Theme.fontSub; font.family: Theme.fontFamily }
-                            Text { text: "100% Standalone (Tashqi aloqalar bloklangan)"; color: Theme.colorSuccess; font.bold: true; font.pixelSize: Theme.fontSub; font.family: Theme.fontFamily }
+                            Text { text: "Offline:"; color: Theme.textMuted; font.pixelSize: Theme.fontSub; font.family: Theme.fontFamily }
+                            Text { text: "100% Standalone Offline"; color: Theme.colorSuccess; font.bold: true; font.pixelSize: Theme.fontSub; font.family: Theme.fontFamily }
 
-                            Text { text: "Ma'lumotlar bazasi:"; color: Theme.textMuted; font.pixelSize: Theme.fontSub; font.family: Theme.fontFamily }
+                            Text { text: "Database:"; color: Theme.textMuted; font.pixelSize: Theme.fontSub; font.family: Theme.fontFamily }
                             Text { text: "SQLite WAL + SHA-256 Hash Chain"; color: Theme.textPrimary; font.pixelSize: Theme.fontSub; font.family: Theme.fontFamily }
                         }
                     }
@@ -186,7 +188,7 @@ Item {
                         spacing: 8
 
                         Text {
-                            text: "TIZIM AUDIT JURNALI (system_logs)"
+                            text: (typeof i18n !== "undefined" && i18n) ? i18n.t("settings_logs_title") : "TIZIM AUDIT JURNALI (system_logs)"
                             color: Theme.textPrimary
                             font.family: Theme.fontFamily
                             font.pixelSize: Theme.fontHeadline
@@ -234,7 +236,7 @@ Item {
                 minHeight: 64
                 variant: "secondary"
                 iconSource: "../assets/icons/lock.svg"
-                text: "QULFLASH"
+                text: (typeof i18n !== "undefined" && i18n) ? i18n.t("btn_lock") : "QULFLASH"
                 onClicked: {
                     backendBridge.adminLogout()
                 }
@@ -245,7 +247,7 @@ Item {
                 minHeight: 64
                 variant: "primary"
                 iconSource: "../assets/icons/usb.svg"
-                text: "BAZANI USB GA EKSPORT"
+                text: (typeof i18n !== "undefined" && i18n) ? i18n.t("btn_export_db") : "BAZANI USB GA EKSPORT"
                 onClicked: {
                     backendBridge.exportUsb()
                 }
@@ -256,7 +258,7 @@ Item {
                 minHeight: 64
                 variant: "secondary"
                 iconSource: "../assets/icons/back.svg"
-                text: "CHIQISH"
+                text: (typeof i18n !== "undefined" && i18n) ? i18n.t("btn_exit") : "CHIQISH"
                 onClicked: {
                     backendBridge.adminLogout()
                     root.backClicked()

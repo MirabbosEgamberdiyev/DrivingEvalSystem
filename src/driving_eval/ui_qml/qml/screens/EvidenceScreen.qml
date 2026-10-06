@@ -37,8 +37,10 @@ Item {
         anchors.top: parent.top
         anchors.left: parent.left
         anchors.right: parent.right
-        title: "DALILLARNI KO'RISH"
-        subtitle: "Hodisa ID: " + (root.evidenceData ? root.evidenceData.event_id : root.eventId)
+        title: (typeof i18n !== "undefined" && i18n) ? i18n.t("evidence_title") : "DALILLARNI KO'RISH"
+        subtitle: (typeof i18n !== "undefined" && i18n) 
+            ? i18n.tf("evidence_subtitle", (root.evidenceData ? root.evidenceData.event_id : root.eventId))
+            : ("Hodisa ID: " + (root.evidenceData ? root.evidenceData.event_id : root.eventId))
         carId: backendBridge.carId
         showBack: true
         showSettings: false
@@ -69,7 +71,7 @@ Item {
                     minWidth: 130
                     minHeight: 52
                     variant: root.activeTab === "before" ? "primary" : "secondary"
-                    text: "Oldin"
+                    text: (typeof i18n !== "undefined" && i18n) ? i18n.t("evidence_tab_before") : "Oldin"
                     onClicked: root.activeTab = "before"
                 }
 
@@ -77,7 +79,7 @@ Item {
                     minWidth: 130
                     minHeight: 52
                     variant: root.activeTab === "event" ? "primary" : "secondary"
-                    text: "Hodisa"
+                    text: (typeof i18n !== "undefined" && i18n) ? i18n.t("evidence_tab_event") : "Hodisa"
                     onClicked: root.activeTab = "event"
                 }
 
@@ -85,7 +87,7 @@ Item {
                     minWidth: 130
                     minHeight: 52
                     variant: root.activeTab === "after" ? "primary" : "secondary"
-                    text: "Keyin"
+                    text: (typeof i18n !== "undefined" && i18n) ? i18n.t("evidence_tab_after") : "Keyin"
                     onClicked: root.activeTab = "after"
                 }
 
@@ -94,7 +96,7 @@ Item {
                     minHeight: 52
                     variant: root.activeTab === "video" ? "primary" : "secondary"
                     iconSource: "../assets/icons/video.svg"
-                    text: "Video"
+                    text: (typeof i18n !== "undefined" && i18n) ? i18n.t("evidence_tab_video") : "Video"
                     onClicked: root.activeTab = "video"
                 }
             }
@@ -125,10 +127,10 @@ Item {
                     Text {
                         anchors.horizontalCenter: parent.horizontalCenter
                         text: {
-                            if (root.activeTab === "video") return "Video yozuvi (event.mp4)"
-                            if (root.activeTab === "before") return "Kadr: Hodisadan oldin (before.jpg)"
-                            if (root.activeTab === "after") return "Kadr: Hodisadan keyin (after.jpg)"
-                            return "Kadr: Hodisa payti (event.jpg)"
+                            if (root.activeTab === "video") return "event.mp4"
+                            if (root.activeTab === "before") return "before.jpg"
+                            if (root.activeTab === "after") return "after.jpg"
+                            return "event.jpg"
                         }
                         color: Theme.textPrimary
                         font.family: Theme.fontFamily
@@ -138,7 +140,7 @@ Item {
 
                     Text {
                         anchors.horizontalCenter: parent.horizontalCenter
-                        text: "Fayl diskda xavfsiz saqlangan (NVMe Ring Buffer)"
+                        text: (typeof i18n !== "undefined" && i18n) ? i18n.t("evidence_ring_desc") : "Fayl diskda xavfsiz saqlangan (NVMe Ring Buffer)"
                         color: Theme.textMuted
                         font.family: Theme.fontFamily
                         font.pixelSize: Theme.fontSub
@@ -162,7 +164,7 @@ Item {
                 spacing: 16
 
                 Text {
-                    text: "HODISA METAMA'LUMOTI"
+                    text: (typeof i18n !== "undefined" && i18n) ? i18n.t("evidence_meta_title") : "HODISA METAMA'LUMOTI"
                     color: Theme.textPrimary
                     font.family: Theme.fontFamily
                     font.pixelSize: Theme.fontHeadline
@@ -215,7 +217,7 @@ Item {
                 minHeight: 64
                 variant: "secondary"
                 iconSource: "../assets/icons/back.svg"
-                text: "ORQAGA"
+                text: (typeof i18n !== "undefined" && i18n) ? i18n.t("btn_back") : "ORQAGA"
                 onClicked: root.backClicked()
             }
 
@@ -224,7 +226,7 @@ Item {
                 minHeight: 64
                 variant: "primary"
                 iconSource: "../assets/icons/usb.svg"
-                text: "USB GA SAQLASH"
+                text: (typeof i18n !== "undefined" && i18n) ? i18n.t("btn_export_usb") : "USB GA EKSPORT"
                 onClicked: {
                     backendBridge.exportUsb()
                     root.exportUsbClicked()

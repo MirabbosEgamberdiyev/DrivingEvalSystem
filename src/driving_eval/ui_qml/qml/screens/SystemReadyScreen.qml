@@ -20,8 +20,8 @@ Item {
         anchors.top: parent.top
         anchors.left: parent.left
         anchors.right: parent.right
-        title: "TIZIM TAYYOR"
-        subtitle: "Barcha diagnostikalar muvaffaqiyatli o'tdi"
+        title: (typeof i18n !== "undefined" && i18n) ? i18n.t("system_ready_title") : "TIZIM TAYYOR"
+        subtitle: (typeof i18n !== "undefined" && i18n) ? i18n.t("precheck_passed") : "Barcha diagnostikalar muvaffaqiyatli o'tdi"
         carId: backendBridge.carId
         showBack: true
         showSettings: false
@@ -60,7 +60,7 @@ Item {
 
             Text {
                 anchors.horizontalCenter: parent.horizontalCenter
-                text: "IMTIHONNI BOSHLASHGA TAYYOR"
+                text: (typeof i18n !== "undefined" && i18n) ? i18n.t("system_ready_title") : "IMTIHONNI BOSHLASHGA TAYYOR"
                 color: Theme.colorSuccess
                 font.family: Theme.fontFamily
                 font.pixelSize: Theme.fontTitleLarge
@@ -69,7 +69,7 @@ Item {
 
             Text {
                 anchors.horizontalCenter: parent.horizontalCenter
-                text: "Barcha tizimlar soz holatda. Avtomobilni start chizig'iga olib kelib harakatni boshlashingiz mumkin."
+                text: (typeof i18n !== "undefined" && i18n) ? i18n.t("system_ready_desc") : "Barcha tizimlar soz holatda. Avtomobilni start chizig'iga olib kelib harakatni boshlashingiz mumkin."
                 color: Theme.textPrimary
                 font.family: Theme.fontFamily
                 font.pixelSize: Theme.fontBody
@@ -86,7 +86,7 @@ Item {
             minHeight: Theme.buttonLargeHeight + 8
             variant: "success"
             iconSource: "../assets/icons/check.svg"
-            text: "TESTNI BOSHLASH"
+            text: (typeof i18n !== "undefined" && i18n) ? i18n.t("btn_start_test") : "TESTNI BOSHLASH"
             onClicked: root.startTestClicked()
         }
     }
@@ -102,7 +102,7 @@ Item {
             spacing: 32
 
             Text {
-                text: "⚠️ Diqqat: 'TESTNI BOSHLASH' bosilmaguncha jarima hisoblanmaydi."
+                text: (typeof i18n !== "undefined" && i18n) ? i18n.t("system_ready_warning") : "⚠️ Diqqat: 'TESTNI BOSHLASH' bosilmaguncha jarima hisoblanmaydi."
                 color: Theme.textMuted
                 font.family: Theme.fontFamily
                 font.pixelSize: Theme.fontSub

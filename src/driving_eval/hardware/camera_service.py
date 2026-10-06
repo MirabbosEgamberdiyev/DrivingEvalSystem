@@ -128,12 +128,25 @@ class SingleCameraWorker:
             return True
         else:
             uri = self.config.stream_uri
-            target = uri if uri else self.config.device_index
-            self._cap = cv2.VideoCapture(target)
-            if self._cap.isOpened():
+            if uri:
+                self._cap = cv2.VideoCapture(uri, cv2.CAP_FFMPEG)
+                if self._cap.isOpened():
+                    self._cap.set(cv2.CAP_PROP_BUFFERSIZE, 1)
+            else:
+                # Local USB camera device index: prefer DirectShow on Windows for fast init
+                device_idx = self.config.device_index
+                try:
+                    self._cap = cv2.VideoCapture(device_idx, cv2.CAP_DSHOW)
+                    if not self._cap.isOpened():
+                        self._cap = cv2.VideoCapture(device_idx)
+                except Exception:
+                    self._cap = cv2.VideoCapture(device_idx)
+
+            if self._cap and self._cap.isOpened():
                 self._cap.set(cv2.CAP_PROP_FRAME_WIDTH, self.config.width)
                 self._cap.set(cv2.CAP_PROP_FRAME_HEIGHT, self.config.height)
                 self._cap.set(cv2.CAP_PROP_FPS, self.config.fps)
+                self._cap.set(cv2.CAP_PROP_BUFFERSIZE, 1)
                 self._status = StreamStatus.ONLINE
                 return True
             else:

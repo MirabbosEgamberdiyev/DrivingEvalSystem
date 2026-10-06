@@ -50,8 +50,8 @@ Item {
         anchors.top: parent.top
         anchors.left: parent.left
         anchors.right: parent.right
-        title: "QAYD ETILGAN QOIDABUZARLIKLAR"
-        subtitle: "Jami: " + root.violations.length + " ta hodisa"
+        title: (typeof i18n !== "undefined" && i18n) ? i18n.t("violations_list_title") : "QAYD ETILGAN QOIDABUZARLIKLAR"
+        subtitle: (typeof i18n !== "undefined" && i18n) ? i18n.tf("violations_list_subtitle", root.violations.length) : ("Jami: " + root.violations.length + " ta hodisa")
         carId: backendBridge.carId
         showBack: true
         showSettings: false
@@ -79,7 +79,7 @@ Item {
 
             Text {
                 anchors.horizontalCenter: parent.horizontalCenter
-                text: "Hech qanday qoidabuzarlik qayd etilmadi!"
+                text: (typeof i18n !== "undefined" && i18n) ? i18n.t("violations_empty_title") : "Hech qanday qoidabuzarlik qayd etilmadi!"
                 color: Theme.colorSuccess
                 font.family: Theme.fontFamily
                 font.pixelSize: Theme.fontTitle
@@ -88,7 +88,7 @@ Item {
 
             Text {
                 anchors.horizontalCenter: parent.horizontalCenter
-                text: "Barcha talablar namunali darajada bajarildi."
+                text: (typeof i18n !== "undefined" && i18n) ? i18n.t("violations_empty_desc") : "Barcha talablar namunali darajada bajarildi."
                 color: Theme.textSecondary
                 font.family: Theme.fontFamily
                 font.pixelSize: Theme.fontBody
@@ -121,7 +121,7 @@ Item {
                 visible: root.confirmedList.length > 0
 
                 Text {
-                    text: "TASDIQLANGAN JARIMALAR (BALLDAN AYRILGAN):"
+                    text: (typeof i18n !== "undefined" && i18n) ? i18n.t("violations_confirmed_header") : "TASDIQLANGAN JARIMALAR (BALLDAN AYRILGAN):"
                     color: Theme.colorError
                     font.family: Theme.fontFamily
                     font.pixelSize: Theme.fontHeadline
@@ -155,7 +155,7 @@ Item {
                 visible: root.suspectList.length > 0
 
                 Text {
-                    text: "SHUBHALI (SUSPECT) HODISALAR (JARIMA OLINMAGAN, INSPEKTOR KO'RISHI UCHUN):"
+                    text: (typeof i18n !== "undefined" && i18n) ? i18n.t("violations_suspect_header") : "SHUBHALI (SUSPECT) HODISALAR (JARIMA OLINMAGAN, INSPEKTOR KO'RISHI UCHUN):"
                     color: Theme.colorWarning
                     font.family: Theme.fontFamily
                     font.pixelSize: Theme.fontHeadline
@@ -200,7 +200,7 @@ Item {
                 minHeight: 64
                 variant: "secondary"
                 iconSource: "../assets/icons/back.svg"
-                text: "NATIJAGA QAYTISH"
+                text: (typeof i18n !== "undefined" && i18n) ? i18n.t("btn_back") : "ORQAGA"
                 onClicked: root.backClicked()
             }
         }

@@ -22,8 +22,8 @@ Item {
         anchors.top: parent.top
         anchors.left: parent.left
         anchors.right: parent.right
-        title: "AVTOMATLASHTIRILGAN HAYDASH IMTIHONI"
-        subtitle: "4-Kamerali Offline AI Baholash Tizimi"
+        title: (typeof i18n !== "undefined" && i18n) ? i18n.t("app_title") : "AVTOMATLASHTIRILGAN HAYDASH IMTIHONI"
+        subtitle: (typeof i18n !== "undefined" && i18n) ? i18n.t("app_subtitle") : "4-Kamerali Offline AI Baholash Tizimi"
         carId: backendBridge.carId
         showBack: false
         showSettings: true
@@ -52,7 +52,7 @@ Item {
 
             Text {
                 anchors.horizontalCenter: parent.horizontalCenter
-                text: "HAYDASH MALAKASINI BAHOLASH"
+                text: (typeof i18n !== "undefined" && i18n) ? i18n.t("home_title") : "HAYDASH MALAKASINI BAHOLASH"
                 color: Theme.textPrimary
                 font.family: Theme.fontFamily
                 font.pixelSize: Theme.fontTitleLarge
@@ -62,11 +62,14 @@ Item {
             Text {
                 anchors.horizontalCenter: parent.horizontalCenter
                 text: backendBridge.precheckPassed 
-                    ? "Barcha tizimlar soz holatda. Imtihonni boshlashga tayyor."
-                    : "⚠️ Tizim ishga tushirildi. Avval uskunalar tekshiruvini (Pre-check) o'tkazing."
+                    ? ((typeof i18n !== "undefined" && i18n) ? i18n.t("home_ready_msg") : "Barcha tizimlar soz holatda. Imtihonni boshlashga tayyor.")
+                    : ((typeof i18n !== "undefined" && i18n) ? i18n.t("home_not_ready_msg") : "⚠️ Tizim ishga tushirildi. Avval uskunalar tekshiruvini (Pre-check) o'tkazing.")
                 color: backendBridge.precheckPassed ? Theme.colorSuccess : Theme.colorWarning
                 font.family: Theme.fontFamily
                 font.pixelSize: Theme.fontBody
+                horizontalAlignment: Text.AlignHCenter
+                wrapMode: Text.WordWrap
+                width: Math.min(parent.width, 700)
             }
         }
 
@@ -82,7 +85,7 @@ Item {
                 variant: backendBridge.precheckPassed ? "success" : "secondary"
                 enabled: backendBridge.precheckPassed
                 iconSource: "../assets/icons/check.svg"
-                text: "TESTNI BOSHLASH"
+                text: (typeof i18n !== "undefined" && i18n) ? i18n.t("btn_start_test") : "TESTNI BOSHLASH"
                 onClicked: root.startTestClicked()
             }
 
@@ -92,7 +95,9 @@ Item {
                 minHeight: 64
                 variant: backendBridge.precheckPassed ? "secondary" : "primary"
                 iconSource: "../assets/icons/refresh.svg"
-                text: backendBridge.precheckPassed ? "QAYTA PRE-CHECK" : "TIZIMNI TEKSHIRISH (PRE-CHECK)"
+                text: backendBridge.precheckPassed 
+                    ? ((typeof i18n !== "undefined" && i18n) ? i18n.t("btn_recheck") : "QAYTA TEKSHIRISH")
+                    : ((typeof i18n !== "undefined" && i18n) ? i18n.t("btn_precheck") : "TIZIMNI TEKSHIRISH (PRE-CHECK)")
                 onClicked: root.precheckClicked()
             }
         }
@@ -109,14 +114,16 @@ Item {
             spacing: 40
 
             Text {
-                text: "Qoidalar: " + backendBridge.rulesVersion
+                text: ((typeof i18n !== "undefined" && i18n) ? i18n.t("rules_ver_label") : "Qoidalar versiyasi:") + " " + backendBridge.rulesVersion
                 color: Theme.textMuted
                 font.family: Theme.fontFamily
                 font.pixelSize: Theme.fontSub
             }
 
             Text {
-                text: "Holat: " + (backendBridge.isConnected ? "100% OFFLINE ISHONCHLI" : "ALOQA YO'Q")
+                text: (typeof i18n !== "undefined" && i18n)
+                    ? (backendBridge.isConnected ? "100% OFFLINE" : i18n.t("status_failed"))
+                    : (backendBridge.isConnected ? "100% OFFLINE" : "ALOQA YO'Q")
                 color: backendBridge.isConnected ? Theme.colorSuccess : Theme.colorError
                 font.family: Theme.fontFamily
                 font.pixelSize: Theme.fontSub
