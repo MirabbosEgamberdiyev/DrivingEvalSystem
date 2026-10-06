@@ -129,3 +129,13 @@ def test_app_ui_lifecycle_headless(qapp, tmp_path):
         cam_service.stop_all()
         audio.stop()
         app_win.close()
+
+
+def test_app_runner_check_mode(monkeypatch):
+    import sys
+    from driving_eval.app_runner import main
+
+    monkeypatch.setattr(sys, "argv", ["app_runner", "--simulate", "--check", "--config", "config/config.yaml"])
+    ret = main()
+    assert ret == 0
+
