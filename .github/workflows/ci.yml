@@ -1,0 +1,62 @@
+name: CI / Build Standalone Windows Release
+
+on:
+  push:
+    branches: [ master ]
+    tags: [ 'v*' ]
+  pull_request:
+    branches: [ master ]
+
+jobs:
+  test-and-package:
+    runs-on: windows-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python 3.11
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: "pip"
+
+      - name: Install Dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install ruff mypy pytest pytest-cov pytest-qt pyinstaller pyserial
+          pip install -e .
+
+      - name: Code Quality & Linting (Ruff)
+        run: |
+          ruff check .
+
+      - name: Static Type Checking (Mypy)
+        run: |
+          mypy src
+
+      - name: Multilingual Translation Parity Verification
+        run: |
+          $env:PYTHONPATH = "src"
+          python src/driving_eval/i18n/check_translations.py
+
+      - name: Execute Full Test Suite with Coverage
+        run: |
+          pytest --cov=src/driving_eval --cov-report=term --cov-fail-under=80
+
+      - name: Build Standalone Windows Executable (.exe)
+        run: |
+          pyinstaller DrivingEvalSystem.spec
+
+      - name: Prepare Standalone Distribution Artifact
+        run: |
+          Copy-Item -Recurse -Force config dist\DrivingEvalSystem\config
+          Copy-Item -Recurse -Force data dist\DrivingEvalSystem\data
+          Compress-Archive -Path dist\DrivingEvalSystem\* -DestinationPath dist\DrivingEvalSystem_Windows_x64.zip -Force
+
+      - name: Upload Standalone Windows ZIP Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: DrivingEvalSystem_Windows_x64
+          path: dist/DrivingEvalSystem_Windows_x64.zip
+          retention-days: 14

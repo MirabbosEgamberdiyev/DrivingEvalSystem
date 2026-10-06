@@ -133,6 +133,7 @@ def test_app_ui_lifecycle_headless(qapp, tmp_path):
 
 def test_app_runner_check_mode(monkeypatch):
     import sys
+
     from driving_eval.app_runner import main
 
     monkeypatch.setattr(sys, "argv", ["app_runner", "--simulate", "--check", "--config", "config/config.yaml"])
