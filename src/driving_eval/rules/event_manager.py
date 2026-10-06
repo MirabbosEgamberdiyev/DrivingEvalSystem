@@ -38,6 +38,23 @@ class ProcessedViolationEvent:
     voice_text: str
     timestamp: float
     evidence_metadata: dict[str, Any] = field(default_factory=dict)
+    translations: dict[str, Any] = field(default_factory=dict)
+
+    def get_title(self, lang: str = "uz-Latn") -> str:
+        t = self.translations.get(lang) or self.translations.get("uz-Latn")
+        return getattr(t, "title", self.rule_code) if t else self.rule_code
+
+    def get_screen_text(self, lang: str = "uz-Latn") -> str:
+        t = self.translations.get(lang) or self.translations.get("uz-Latn")
+        return getattr(t, "screen_text", self.screen_text) if t else self.screen_text
+
+    def get_voice_text(self, lang: str = "uz-Latn") -> str:
+        t = self.translations.get(lang) or self.translations.get("uz-Latn")
+        return getattr(t, "voice_text", self.voice_text) if t else self.voice_text
+
+    def get_voice_file(self, lang: str = "uz-Latn") -> str:
+        t = self.translations.get(lang) or self.translations.get("uz-Latn")
+        return getattr(t, "voice_file", self.voice_file) if t else self.voice_file
 
 
 @dataclass
@@ -148,6 +165,7 @@ class EventManager:
                 voice_text=rule.voice_text,
                 timestamp=timestamp,
                 evidence_metadata=result.evidence_metadata,
+                translations=rule.translations,
             )
 
             logger.info(

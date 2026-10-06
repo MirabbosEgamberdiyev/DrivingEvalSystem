@@ -1,4 +1,14 @@
-"""Rule plugins: STOP_LINE_VIOLATION, HILL_ROLLBACK, SPEED_EXCEEDED, INDICATOR_MISSED, CRITICAL_COLLISION."""
+"""Standard Rule plugins for the driving evaluation system.
+
+Rules:
+- STOP_LINE_VIOLATION
+- HILL_ROLLBACK
+- SPEED_EXCEEDED
+- INDICATOR_MISSED
+- PARKING_OUT_OF_BOUNDS
+- CRITICAL_COLLISION
+- EXERCISE_SEQUENCE_BROKEN
+"""
 
 from driving_eval.rules.base_rule import BaseRulePlugin, EvaluationContext, RuleEvaluationResult
 
@@ -83,6 +93,34 @@ class IndicatorMissedRulePlugin(BaseRulePlugin):
         return RuleEvaluationResult(violated=False)
 
 
+class ParkingOutOfBoundsRulePlugin(BaseRulePlugin):
+    @property
+    def rule_code(self) -> str:
+        return "PARKING_OUT_OF_BOUNDS"
+
+    def evaluate(self, ctx: EvaluationContext) -> RuleEvaluationResult:
+        if ctx.current_exercise not in ("PARALLEL_PARKING", "GARAGE_REVERSE"):
+            return RuleEvaluationResult(violated=False)
+
+        line_dets = [
+            d for d in ctx.detections if d.label.lower() in ("parking_line", "yellow_line", "solid_line")
+        ]
+        for det in line_dets:
+            # Check wheel contact threshold in side/rear cameras
+            if det.camera in ("LEFT", "RIGHT", "REAR") and det.bbox.y2 > 650:
+                is_suspect = det.confidence < 0.80
+                return RuleEvaluationResult(
+                    violated=True,
+                    is_suspect=is_suspect,
+                    confidence=det.confidence,
+                    camera=det.camera,
+                    track_id=det.track_id,
+                    details=f"To'xtash joyi chegarasi bosildi ({det.camera} kamera)",
+                    evidence_metadata={"camera": det.camera, "bbox": [det.bbox.x1, det.bbox.y1, det.bbox.x2, det.bbox.y2]},
+                )
+        return RuleEvaluationResult(violated=False)
+
+
 class CriticalCollisionRulePlugin(BaseRulePlugin):
     @property
     def rule_code(self) -> str:
@@ -101,4 +139,25 @@ class CriticalCollisionRulePlugin(BaseRulePlugin):
                     details=f"To'siqqa to'qnashuv aniqlandi! ({det.label})",
                     evidence_metadata={"obstacle": det.label, "confidence": det.confidence},
                 )
+        return RuleEvaluationResult(violated=False)
+
+
+class ExerciseSequenceBrokenRulePlugin(BaseRulePlugin):
+    @property
+    def rule_code(self) -> str:
+        return "EXERCISE_SEQUENCE_BROKEN"
+
+    def evaluate(self, ctx: EvaluationContext) -> RuleEvaluationResult:
+        # Context may signal sequence violation through detection label or frame metadata
+        seq_violation_dets = [d for d in ctx.detections if d.label.upper() == "SEQUENCE_BROKEN"]
+        if seq_violation_dets:
+            det = seq_violation_dets[0]
+            return RuleEvaluationResult(
+                violated=True,
+                is_suspect=False,
+                confidence=det.confidence or 1.0,
+                camera="FRONT",
+                details=str(det.metadata.get("message", "Mashqlar ketma-ketligi buzildi!")),
+                evidence_metadata=dict(det.metadata),
+            )
         return RuleEvaluationResult(violated=False)

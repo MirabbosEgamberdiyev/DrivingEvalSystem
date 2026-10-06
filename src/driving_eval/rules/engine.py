@@ -10,8 +10,10 @@ from driving_eval.rules.plugins.cone_touch import ConeTouchRulePlugin
 from driving_eval.rules.plugins.seatbelt import SeatbeltRulePlugin
 from driving_eval.rules.plugins.standard_rules import (
     CriticalCollisionRulePlugin,
+    ExerciseSequenceBrokenRulePlugin,
     HillRollbackRulePlugin,
     IndicatorMissedRulePlugin,
+    ParkingOutOfBoundsRulePlugin,
     SpeedExceededRulePlugin,
     StopLineRulePlugin,
 )
@@ -34,7 +36,9 @@ class RuleEngine:
         self.register_plugin(HillRollbackRulePlugin())
         self.register_plugin(SpeedExceededRulePlugin())
         self.register_plugin(IndicatorMissedRulePlugin())
+        self.register_plugin(ParkingOutOfBoundsRulePlugin())
         self.register_plugin(CriticalCollisionRulePlugin())
+        self.register_plugin(ExerciseSequenceBrokenRulePlugin())
 
     def register_plugin(self, plugin: BaseRulePlugin) -> None:
         """Registers a rule plugin."""

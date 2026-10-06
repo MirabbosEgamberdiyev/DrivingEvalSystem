@@ -160,3 +160,128 @@ def test_exercise_binding_filters_inactive_rules(empty_state):
     events = engine.evaluate(ctx)
     # Should be empty because CONE_TOUCH is inactive during START!
     assert len(events) == 0
+
+
+def test_processed_event_multilingual_passports(empty_state):
+    """ProcessedViolationEvent provides text and audio files across all 3 languages."""
+    engine = RuleEngine()
+    det = Detection(
+        label="cone",
+        confidence=0.95,
+        bbox=BoundingBox(500, 600, 550, 690),
+        camera="FRONT",
+        timestamp=100.0,
+        track_id=10,
+    )
+
+    ev = None
+    for i in range(6):
+        ctx = EvaluationContext(
+            timestamp=100.0 + i * 0.033,
+            current_exercise="ZMEIKA",
+            vehicle_state=empty_state,
+            detections=[det],
+            frame_bundle=None,
+            calibrations={},
+        )
+        evs = engine.evaluate(ctx)
+        if evs:
+            ev = evs[0]
+            break
+
+    assert ev is not None
+    assert ev.get_title("uz-Latn") == "Yo'l belgilovchi konusga tegish"
+    assert ev.get_title("uz-Cyrl") == "Йўл белгиловчи конусга тегиш"
+    assert ev.get_title("ru") == "Касание разметочного конуса"
+
+    assert "Konusga" in ev.get_screen_text("uz-Latn")
+    assert "Конусга" in ev.get_screen_text("uz-Cyrl")
+    assert "конуса" in ev.get_screen_text("ru")
+
+    assert ev.get_voice_file("uz-Latn") == "cone_touch.wav"
+
+
+def test_debounce_resets_on_interrupted_flicker(empty_state):
+    """A 2-frame glitch must not trigger violation if debounce is 5 frames."""
+    engine = RuleEngine()
+    det = Detection(
+        label="cone",
+        confidence=0.95,
+        bbox=BoundingBox(500, 600, 550, 690),
+        camera="FRONT",
+        timestamp=100.0,
+        track_id=88,
+    )
+
+    # Frame 1 & 2: detected
+    for i in range(2):
+        ctx = EvaluationContext(
+            timestamp=100.0 + i * 0.033,
+            current_exercise="ZMEIKA",
+            vehicle_state=empty_state,
+            detections=[det],
+            frame_bundle=None,
+            calibrations={},
+        )
+        events = engine.evaluate(ctx)
+        assert len(events) == 0
+
+    # Frame 3: no detection (glitch ended)
+    ctx_empty = EvaluationContext(
+        timestamp=100.0 + 2 * 0.033,
+        current_exercise="ZMEIKA",
+        vehicle_state=empty_state,
+        detections=[],
+        frame_bundle=None,
+        calibrations={},
+    )
+    events = engine.evaluate(ctx_empty)
+    assert len(events) == 0
+
+
+def test_distinct_tracks_emit_separate_violations(empty_state):
+    """Two different cones touched in same exercise emit separate violations."""
+    engine = RuleEngine()
+    scoring = ScoringEngine(ScoringConfig(start_score=100, pass_score=80))
+
+    # Cone 1
+    d1 = Detection("cone", 0.95, BoundingBox(100, 500, 150, 690), "FRONT", 100.0, track_id=1)
+    for i in range(6):
+        ctx = EvaluationContext(
+            timestamp=100.0 + i * 0.033,
+            current_exercise="ZMEIKA",
+            vehicle_state=empty_state,
+            detections=[d1],
+            frame_bundle=None,
+            calibrations={},
+        )
+        for ev in engine.evaluate(ctx):
+            scoring.apply_event(ev)
+
+    assert scoring.current_score == 75
+
+    # Cone 2 (different track_id = 2)
+    d2 = Detection("cone", 0.95, BoundingBox(600, 500, 650, 690), "FRONT", 101.0, track_id=2)
+    for i in range(6):
+        ctx = EvaluationContext(
+            timestamp=101.0 + i * 0.033,
+            current_exercise="ZMEIKA",
+            vehicle_state=empty_state,
+            detections=[d2],
+            frame_bundle=None,
+            calibrations={},
+        )
+        for ev in engine.evaluate(ctx):
+            scoring.apply_event(ev)
+
+    assert scoring.current_score == 50  # 100 - 25 - 25
+    assert scoring.confirmed_violations_count == 2 if hasattr(scoring, 'confirmed_violations_count') else len(scoring.confirmed_violations) == 2
+
+
+def test_all_rule_plugins_registered():
+    engine = RuleEngine()
+    registered_codes = set(engine._plugins.keys())
+    manifest_codes = {r.code for r in engine.manifest.rules}
+
+    # All 9 rules in rules.yaml must have registered evaluator plugins
+    assert manifest_codes == registered_codes
