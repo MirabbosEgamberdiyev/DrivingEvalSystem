@@ -284,3 +284,15 @@ class MultiCameraService:
     def get_all_health(self) -> dict[str, CameraHealth]:
         """Returns health metrics for all 4 cameras."""
         return {name: worker.get_health() for name, worker in self.workers.items()}
+
+    def get_disconnected_cameras(self, timeout_sec: float = 2.0) -> list[str]:
+        """Detects cameras that are offline or haven't delivered frames within timeout_sec."""
+        now = time.monotonic()
+        disconnected: list[str] = []
+        for name, worker in self.workers.items():
+            health = worker.get_health()
+            if health.status == StreamStatus.OFFLINE:
+                disconnected.append(name)
+            elif health.total_frames > 0 and (now - health.last_frame_timestamp) > timeout_sec:
+                disconnected.append(name)
+        return disconnected

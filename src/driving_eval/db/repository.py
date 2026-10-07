@@ -7,6 +7,9 @@ import hashlib
 import hmac
 import logging
 import sqlite3
+import threading
+from collections.abc import Generator
+from contextlib import contextmanager
 from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
@@ -23,17 +26,28 @@ class DatabaseRepository:
     def __init__(self, db_path: str | Path):
         self.db_path = Path(db_path)
         self.db_path.parent.mkdir(parents=True, exist_ok=True)
+        self._write_lock = threading.RLock()
         self._init_db()
 
-    def get_connection(self) -> sqlite3.Connection:
-        conn = sqlite3.connect(str(self.db_path), timeout=10.0, check_same_thread=False)
-        conn.row_factory = sqlite3.Row
-        conn.executescript(PRAGMAS)
-        return conn
+    @contextmanager
+    def get_connection(self) -> Generator[sqlite3.Connection, None, None]:
+        with self._write_lock:
+            conn = sqlite3.connect(str(self.db_path), timeout=30.0, check_same_thread=False)
+            conn.row_factory = sqlite3.Row
+            conn.execute("PRAGMA foreign_keys = ON;")
+            conn.execute("PRAGMA busy_timeout = 30000;")
+            try:
+                with conn:
+                    yield conn
+            finally:
+                conn.close()
 
     def _init_db(self) -> None:
-        with self.get_connection() as conn:
-            run_migrations(conn)
+        with self._write_lock:
+            with sqlite3.connect(str(self.db_path), timeout=30.0, check_same_thread=False) as conn:
+                conn.row_factory = sqlite3.Row
+                conn.executescript(PRAGMAS)
+                run_migrations(conn)
 
     def sync_rules(self, rules_manifest_path_or_obj: Any) -> None:
         """Populates the rules table from rules.yaml manifest."""
@@ -460,24 +474,25 @@ class DatabaseRepository:
         conn: sqlite3.Connection | None = None,
     ) -> None:
         now_iso = datetime.now(UTC).isoformat()
-        should_close = False
         if conn is None:
-            conn = self.get_connection()
-            should_close = True
+            with self.get_connection() as c:
+                c.execute(
+                    """
+                    INSERT INTO system_logs (timestamp, level, module, message, session_id, state)
+                    VALUES (?, ?, ?, ?, ?, ?);
+                    """,
+                    (now_iso, level, module, message, session_id, state),
+                )
+                c.commit()
+            return
 
-        try:
-            conn.execute(
-                """
-                INSERT INTO system_logs (timestamp, level, module, message, session_id, state)
-                VALUES (?, ?, ?, ?, ?, ?);
-                """,
-                (now_iso, level, module, message, session_id, state),
-            )
-            if should_close:
-                conn.commit()
-        finally:
-            if should_close:
-                conn.close()
+        conn.execute(
+            """
+            INSERT INTO system_logs (timestamp, level, module, message, session_id, state)
+            VALUES (?, ?, ?, ?, ?, ?);
+            """,
+            (now_iso, level, module, message, session_id, state),
+        )
 
     def log_admin_action(self, admin_user: str, action: str, target: str, details: str, ip_or_tty: str = "LOCAL") -> None:
         now_iso = datetime.now(UTC).isoformat()

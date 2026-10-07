@@ -28,8 +28,31 @@ class StorageManager:
         return usage.free / (1024**3)
 
     def is_space_low(self) -> bool:
-        """Returns True if free space is below the critical threshold."""
+        """Returns True if free space is below the prune threshold."""
         return self.get_free_space_gb() < self.config.prune_threshold_gb
+
+    def is_critically_low(self, critical_threshold_gb: float = 2.0) -> bool:
+        """Returns True if free space is below emergency safety floor (default 2.0 GB)."""
+        return self.get_free_space_gb() < critical_threshold_gb
+
+    def check_disk_space(self, critical_threshold_gb: float = 2.0) -> dict[str, float | bool | int]:
+        """Performs disk diagnostics, automatically prunes old sessions if low,
+
+        and reports whether space is critically low.
+        """
+        low = self.is_space_low()
+        pruned = 0
+        if low:
+            pruned = self.prune_old_evidence_if_needed()
+
+        free_after = self.get_free_space_gb()
+        critical = free_after < critical_threshold_gb
+        return {
+            "free_space_gb": round(free_after, 2),
+            "is_low": free_after < self.config.prune_threshold_gb,
+            "is_critical": critical,
+            "pruned_sessions": pruned,
+        }
 
     def export_session_to_usb(self, session_id: str, usb_target_path: str | Path) -> Path:
         """Exports full session evidence, metadata, and signed manifest to USB drive."""
