@@ -1,4 +1,4 @@
-"""Unit and integration tests for Ed25519 offline licensing and anti-tamper security."""
+"""Unit and integration tests for Ed25519 offline licensing, activation states, and anti-tamper security."""
 
 import sqlite3
 import tempfile
@@ -12,7 +12,6 @@ from driving_eval.licensing.ed25519 import (
     verify,
 )
 from driving_eval.licensing.license_manager import (
-    MASTER_PUBLIC_KEY_HEX,
     LicenseManager,
     LicensePayload,
     pack_license_token,
@@ -23,10 +22,7 @@ from driving_eval.licensing.machine_id import (
     get_current_machine_fingerprint,
     parse_fingerprint_dict,
 )
-from tools.admin_license_gen import (
-    DEFAULT_VENDOR_PRIVATE_KEY_HEX,
-    create_signed_license,
-)
+from tools.admin_license_gen import create_signed_license
 
 
 def test_ed25519_cryptographic_primitives():
@@ -158,7 +154,8 @@ def test_admin_license_generation_and_validation():
         db_path = Path(tmp_dir) / "driving_eval.db"
         lic_file = Path(tmp_dir) / "license.key"
 
-        # Target machine fingerprint
+        # Ephemeral test keypair for clean, decoupled verification
+        test_priv, test_pub = generate_keypair()
         target_fp = MachineFingerprint("board_111", "cpu_222", "disk_333", "mac_444")
 
         # 1. Generate valid license via admin generator
@@ -167,11 +164,11 @@ def test_admin_license_generation_and_validation():
             fingerprint=target_fp,
             expires_at="2028-12-31",
             tier="FULL",
-            private_key_hex=DEFAULT_VENDOR_PRIVATE_KEY_HEX,
+            private_key_hex=test_priv.hex(),
         )
 
         manager = LicenseManager(
-            public_key_hex=MASTER_PUBLIC_KEY_HEX,
+            public_key_hex=test_pub.hex(),
             license_file_path=lic_file,
             db_path=str(db_path),
         )
@@ -200,47 +197,12 @@ def test_admin_license_generation_and_validation():
         assert res_swapped.is_valid is True
         assert res_swapped.matching_components == 3
 
-        # 4. Car ID mismatch
-        res_car_mismatch = manager.validate(
-            token,
-            expected_car_id="CAR-UZ-02",
-            current_fingerprint=target_fp,
-        )
-        assert res_car_mismatch.is_valid is False
-        assert res_car_mismatch.status_code == "CAR_ID_MISMATCH"
-
-        # 5. Machine mismatch (different computer)
-        fp_alien = MachineFingerprint("alien_b", "alien_c", "alien_d", "alien_m")
-        res_alien = manager.validate(
-            token,
-            expected_car_id="CAR-UZ-01",
-            current_fingerprint=fp_alien,
-        )
-        assert res_alien.is_valid is False
-        assert res_alien.status_code == "MACHINE_MISMATCH"
-
-        # 6. Expired license validation
-        token_expired = create_signed_license(
-            car_id="CAR-UZ-01",
-            fingerprint=target_fp,
-            expires_at="2020-01-01",
-            private_key_hex=DEFAULT_VENDOR_PRIVATE_KEY_HEX,
-        )
-        res_exp = manager.validate(
-            token_expired,
-            expected_car_id="CAR-UZ-01",
-            current_fingerprint=target_fp,
-            test_now_timestamp=1760000000.0,
-        )
-        assert res_exp.is_valid is False
-        assert res_exp.status_code == "EXPIRED"
-
-        # 7. Permanent license validation
+        # 4. Permanent license validation
         token_perm = create_signed_license(
             car_id="CAR-UZ-01",
             fingerprint=target_fp,
             expires_at="PERMANENT",
-            private_key_hex=DEFAULT_VENDOR_PRIVATE_KEY_HEX,
+            private_key_hex=test_priv.hex(),
         )
         res_perm = manager.validate(
             token_perm,
@@ -251,12 +213,164 @@ def test_admin_license_generation_and_validation():
         assert res_perm.is_valid is True
         assert res_perm.status_code == "ACTIVE"
 
-        # 8. Stored file save and load
+        # 5. Stored file save and load
         manager.save_license_file(token)
         assert lic_file.exists()
         loaded_token = manager.load_license_file()
         assert loaded_token == token
 
         stored_res = manager.verify_stored_license(expected_car_id="CAR-UZ-01")
-        # May fail hardware check if actual machine differs from target_fp, but verify method executes cleanly
         assert stored_res.status_code in ("ACTIVE", "MACHINE_MISMATCH")
+
+
+# --- Comprehensive 9+ Activation Error Case Tests ---
+
+
+def test_activation_case_1_valid():
+    """Case 1: Standard valid license matches machine and car_id."""
+    test_priv, test_pub = generate_keypair()
+    fp = MachineFingerprint("b1", "c1", "d1", "m1")
+    token = create_signed_license("CAR-01", fp, expires_at="2028-12-31", private_key_hex=test_priv.hex())
+    manager = LicenseManager(public_key_hex=test_pub.hex())
+    res = manager.validate(token, expected_car_id="CAR-01", current_fingerprint=fp, test_now_timestamp=1760000000.0)
+    assert res.is_valid is True
+    assert res.status_code == "ACTIVE"
+
+
+def test_activation_case_2_forged_signature():
+    """Case 2: Token signed by an attacker with an unauthorized private key."""
+    _, legit_pub = generate_keypair()
+    attacker_priv, _ = generate_keypair()
+    fp = MachineFingerprint("b1", "c1", "d1", "m1")
+    forged_token = create_signed_license("CAR-01", fp, expires_at="2028-12-31", private_key_hex=attacker_priv.hex())
+
+    manager = LicenseManager(public_key_hex=legit_pub.hex())
+    res = manager.validate(forged_token, expected_car_id="CAR-01", current_fingerprint=fp)
+    assert res.is_valid is False
+    assert res.status_code == "INVALID_SIGNATURE"
+
+
+def test_activation_case_3_altered_payload():
+    """Case 3: Attacker alters payload (e.g. tier changed to FULL) with original signature."""
+    priv, pub = generate_keypair()
+    fp = MachineFingerprint("b1", "c1", "d1", "m1")
+    token = create_signed_license("CAR-01", fp, expires_at="2028-12-31", tier="TRAINING", private_key_hex=priv.hex())
+
+    payload, sig = unpack_license_token(token)
+    payload["tier"] = "FULL"  # Tampered field!
+    tampered_payload_obj = LicensePayload(
+        car_id=payload["car_id"],
+        machine_fingerprint=payload["machine_fingerprint"],
+        issued_at=payload["issued_at"],
+        expires_at=payload["expires_at"],
+        tier=payload["tier"],
+        features=payload["features"],
+    )
+    tampered_token = pack_license_token(tampered_payload_obj, sig)
+
+    manager = LicenseManager(public_key_hex=pub.hex())
+    res = manager.validate(tampered_token, expected_car_id="CAR-01", current_fingerprint=fp)
+    assert res.is_valid is False
+    assert res.status_code == "INVALID_SIGNATURE"
+
+
+def test_activation_case_4_expired():
+    """Case 4: License expired in the past."""
+    priv, pub = generate_keypair()
+    fp = MachineFingerprint("b1", "c1", "d1", "m1")
+    token = create_signed_license("CAR-01", fp, expires_at="2020-01-01", private_key_hex=priv.hex())
+    manager = LicenseManager(public_key_hex=pub.hex())
+    res = manager.validate(token, expected_car_id="CAR-01", current_fingerprint=fp, test_now_timestamp=1760000000.0)
+    assert res.is_valid is False
+    assert res.status_code == "EXPIRED"
+
+
+def test_activation_case_5_machine_mismatch():
+    """Case 5: License belongs to another vehicle computer."""
+    priv, pub = generate_keypair()
+    fp_car_a = MachineFingerprint("b_a", "c_a", "d_a", "m_a")
+    fp_car_b = MachineFingerprint("b_b", "c_b", "d_b", "m_b")
+    token = create_signed_license("CAR-01", fp_car_a, expires_at="2028-12-31", private_key_hex=priv.hex())
+    manager = LicenseManager(public_key_hex=pub.hex())
+    res = manager.validate(token, expected_car_id="CAR-01", current_fingerprint=fp_car_b, test_now_timestamp=1760000000.0)
+    assert res.is_valid is False
+    assert res.status_code == "MACHINE_MISMATCH"
+
+
+def test_activation_case_6_clock_rollback():
+    """Case 6: System clock rolled back into the past."""
+    with tempfile.TemporaryDirectory() as tmp_dir:
+        db_path = Path(tmp_dir) / "clock.db"
+        guard = ClockTamperGuard(db_path=str(db_path))
+        t0 = 1750000000.0
+        guard.record_timestamp_anchor(current_time=t0)
+
+        priv, pub = generate_keypair()
+        fp = MachineFingerprint("b1", "c1", "d1", "m1")
+        token = create_signed_license("CAR-01", fp, expires_at="2028-12-31", private_key_hex=priv.hex())
+        manager = LicenseManager(public_key_hex=pub.hex(), clock_guard=guard)
+
+        # Roll back time by 10 days
+        res = manager.validate(token, expected_car_id="CAR-01", current_fingerprint=fp, test_now_timestamp=t0 - 864000.0)
+        assert res.is_valid is False
+        assert res.status_code == "CLOCK_ROLLBACK"
+
+
+def test_activation_case_7_empty_key():
+    """Case 7: Empty key string or whitespace."""
+    _, pub = generate_keypair()
+    manager = LicenseManager(public_key_hex=pub.hex())
+    for empty_input in ["", "   ", "\n\t"]:
+        res = manager.validate(empty_input)
+        assert res.is_valid is False
+        assert res.status_code == "MALFORMED"
+
+
+def test_activation_case_8_corrupted_format():
+    """Case 8: Corrupted base64 or garbage data."""
+    _, pub = generate_keypair()
+    manager = LicenseManager(public_key_hex=pub.hex())
+    for bad in ["DRV-LIC-NOT-BASE64!@#$%", "DRV-LIC-QUFB", "DRV-LIC-"]:
+        res = manager.validate(bad)
+        assert res.is_valid is False
+        assert res.status_code == "MALFORMED"
+
+
+def test_activation_case_9_car_id_mismatch():
+    """Case 9: License issued for CAR-01 presented on CAR-02."""
+    priv, pub = generate_keypair()
+    fp = MachineFingerprint("b1", "c1", "d1", "m1")
+    token = create_signed_license("CAR-01", fp, expires_at="2028-12-31", private_key_hex=priv.hex())
+    manager = LicenseManager(public_key_hex=pub.hex())
+    res = manager.validate(token, expected_car_id="CAR-02", current_fingerprint=fp, test_now_timestamp=1760000000.0)
+    assert res.is_valid is False
+    assert res.status_code == "CAR_ID_MISMATCH"
+
+
+def test_exam_start_blocked_without_active_license():
+    """Case 10 (Gating): Exam start must strictly fail when application is UNLICENSED."""
+    from driving_eval.core.state_machine import (
+        ApplicationState,
+        ApplicationStateMachine,
+        ExamState,
+        ExamStateMachine,
+        InvalidStateTransitionError,
+    )
+
+    app_sm = ApplicationStateMachine()
+    exam_sm = ExamStateMachine(initial_state=ExamState.READY, app_state_machine=app_sm)
+
+    # Application is UNLICENSED
+    assert app_sm.current_state == ApplicationState.UNLICENSED
+
+    # Starting exam when app is UNLICENSED must be blocked
+    assert not exam_sm.can_transition(ExamState.PRECHECK)
+    try:
+        exam_sm.transition_to(ExamState.PRECHECK, "Exam start attempt")
+        unlicensed_blocked = False
+    except InvalidStateTransitionError as ex:
+        unlicensed_blocked = True
+        assert "UNLICENSED" in str(ex)
+
+    assert unlicensed_blocked is True
+    assert exam_sm.current_state == ExamState.READY

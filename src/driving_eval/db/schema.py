@@ -137,6 +137,20 @@ CREATE TABLE IF NOT EXISTS scores (
     FOREIGN KEY(session_id) REFERENCES test_sessions(id)
 );
 
+CREATE TABLE IF NOT EXISTS session_hash_ledger (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    session_id TEXT NOT NULL,
+    seq INTEGER NOT NULL,
+    event_type TEXT NOT NULL,
+    entity_id TEXT NOT NULL,
+    payload TEXT NOT NULL,
+    entry_hash TEXT NOT NULL,
+    prev_hash TEXT NOT NULL,
+    created_at TEXT NOT NULL,
+    FOREIGN KEY(session_id) REFERENCES test_sessions(id)
+);
+CREATE INDEX IF NOT EXISTS idx_hash_ledger_sess_seq ON session_hash_ledger(session_id, seq);
+
 CREATE TABLE IF NOT EXISTS test_results (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     session_id TEXT UNIQUE NOT NULL,
@@ -145,6 +159,7 @@ CREATE TABLE IF NOT EXISTS test_results (
     critical_violations_count INTEGER NOT NULL,
     suspect_count INTEGER NOT NULL,
     hash_chain_root TEXT NOT NULL,
+    root_signature TEXT,
     finalized_at TEXT NOT NULL,
     FOREIGN KEY(session_id) REFERENCES test_sessions(id)
 );

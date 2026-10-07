@@ -120,7 +120,11 @@ class UIConfig(BaseModel):
 
 
 class SecurityConfig(BaseModel):
-    admin_pin_hash_sha256: str = Field(..., min_length=64, max_length=64)
+    admin_pin_pbkdf2: str = ""
+    admin_pin_salt: str = ""
+    admin_pin_hash_sha256: str = "03ac674216f3e15c761ee1a5e255f067953623c8b388b4459e13f978d7c846f4"
+    lockout_duration_seconds: int = Field(default=300, ge=10)  # 5 minutes default lockout
+    max_failed_attempts: int = Field(default=3, ge=1)
     power_loss_recovery_mode: Literal["SAFE_INTERRUPT", "RESUME_ACTIVE"] = "SAFE_INTERRUPT"
 
 

@@ -28,10 +28,12 @@ class BackendBridge(QObject):
     systemDiagnosticsUpdated = Signal(dict)
     reportExportFinished = Signal(bool, str)
     hashVerificationFinished = Signal(str, bool, str)
+    roleChanged = Signal(str)
 
     def __init__(self, parent: QObject | None = None):
         super().__init__(parent)
         self._current_state: str = "HOME"
+        self._current_role: str = "STUDENT"  # 'STUDENT', 'INSPECTOR', 'ADMIN'
         self._finish_ready: bool = False
         self._is_connected: bool = True
         self._car_id: str = "CAR-01"
@@ -102,6 +104,16 @@ class BackendBridge(QObject):
         return self._lockout_remaining
 
     lockoutRemaining = Property(int, get_lockout_remaining, notify=lockoutRemainingChanged)
+
+    def get_current_role(self) -> str:
+        return self._current_role
+
+    def set_current_role(self, role: str) -> None:
+        if self._current_role != role:
+            self._current_role = role
+            self.roleChanged.emit(role)
+
+    currentRole = Property(str, get_current_role, set_current_role, notify=roleChanged)
 
     # --- Abstract Commands (Slots invoked from QML) ---
 

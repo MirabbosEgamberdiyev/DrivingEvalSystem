@@ -3,6 +3,7 @@
 Translates backend events into Qt signals without leaking business logic into the UI.
 """
 
+import time
 from typing import Any
 
 from PySide6.QtCore import QObject, QTimer, Slot
@@ -41,9 +42,26 @@ class RealBridge(BackendBridge):
         self._pin_attempts = 0
         self._lockout_seconds = 0
 
+        # Persistent lockout restoration across application restarts
+        if self.repository:
+            try:
+                stored_lockout = self.repository.get_app_setting("admin_lockout_until", "")
+                if stored_lockout:
+                    remaining = int(float(stored_lockout) - time.time())
+                    if remaining > 0:
+                        self._lockout_seconds = remaining
+                        self._lockout_remaining = remaining
+                stored_attempts = self.repository.get_app_setting("admin_failed_attempts", "0")
+                if stored_attempts:
+                    self._pin_attempts = int(stored_attempts)
+            except Exception:
+                pass
+
         self._lockout_timer = QTimer(self)
         self._lockout_timer.setInterval(1000)
         self._lockout_timer.timeout.connect(self._on_lockout_tick)
+        if self._lockout_seconds > 0:
+            self._lockout_timer.start()
 
         # Polling/tick timer for active test telemetry
         self._telemetry_timer = QTimer(self)
@@ -249,20 +267,39 @@ class RealBridge(BackendBridge):
     @Slot(str)
     def adminLogin(self, pin: str) -> None:
         if self._lockout_seconds > 0:
+            self.lockoutRemainingChanged.emit(self._lockout_seconds)
             return
 
         import hashlib
         import hmac
 
-        pin_hash = hashlib.sha256(pin.encode("utf-8")).hexdigest()
-        expected_hash = self.config.security.admin_pin_hash_sha256
-        is_valid = hmac.compare_digest(pin_hash, expected_hash)
+        # 1. Salted PBKDF2 or SHA-256 with constant-time compare
+        is_valid = False
+        pbkdf2_hash = getattr(self.config.security, "admin_pin_pbkdf2", "")
+        salt_hex = getattr(self.config.security, "admin_pin_salt", "")
+
+        if pbkdf2_hash and salt_hex:
+            try:
+                salt_bytes = bytes.fromhex(salt_hex)
+                derived = hashlib.pbkdf2_hmac("sha256", pin.encode("utf-8"), salt_bytes, 100_000).hex()
+                is_valid = hmac.compare_digest(derived, pbkdf2_hash)
+            except Exception:
+                is_valid = False
+        elif hasattr(self.config.security, "admin_pin_hash_sha256") and self.config.security.admin_pin_hash_sha256:
+            pin_hash = hashlib.sha256(pin.encode("utf-8")).hexdigest()
+            expected_hash = self.config.security.admin_pin_hash_sha256
+            is_valid = hmac.compare_digest(pin_hash, expected_hash)
+
+        max_attempts = getattr(self.config.security, "max_failed_attempts", 3)
+        lockout_duration = getattr(self.config.security, "lockout_duration_seconds", 300)
 
         if is_valid:
             self._pin_attempts = 0
-            self._settings_unlocked = True
-            self.settingsUnlockedChanged.emit(True)
+            self._lockout_seconds = 0
+            self._lockout_remaining = 0
             if self.repository:
+                self.repository.set_app_setting("admin_failed_attempts", "0")
+                self.repository.set_app_setting("admin_lockout_until", "0")
                 self.repository.log_admin_action(
                     admin_user="ADMIN",
                     action="LOGIN_SUCCESS",
@@ -270,13 +307,22 @@ class RealBridge(BackendBridge):
                     details="Admin PIN authentication succeeded",
                     ip_or_tty="TOUCHSCREEN",
                 )
+            self._settings_unlocked = True
+            self.settingsUnlockedChanged.emit(True)
         else:
             self._pin_attempts += 1
-            if self._pin_attempts >= 3:
-                self._lockout_seconds = 30
-                self._lockout_remaining = 30
-                self.lockoutRemainingChanged.emit(30)
+            if self.repository:
+                self.repository.set_app_setting("admin_failed_attempts", str(self._pin_attempts))
+
+            if self._pin_attempts >= max_attempts:
+                self._lockout_seconds = lockout_duration
+                self._lockout_remaining = lockout_duration
+                lockout_until = time.time() + lockout_duration
+                if self.repository:
+                    self.repository.set_app_setting("admin_lockout_until", str(lockout_until))
+                self.lockoutRemainingChanged.emit(self._lockout_seconds)
                 self._lockout_timer.start()
+
             self._settings_unlocked = False
             self.settingsUnlockedChanged.emit(False)
             if self.repository:
@@ -288,7 +334,6 @@ class RealBridge(BackendBridge):
                     ip_or_tty="TOUCHSCREEN",
                 )
 
-
     def _on_lockout_tick(self) -> None:
         if self._lockout_seconds > 0:
             self._lockout_seconds -= 1
@@ -297,6 +342,9 @@ class RealBridge(BackendBridge):
             if self._lockout_seconds == 0:
                 self._lockout_timer.stop()
                 self._pin_attempts = 0
+                if self.repository:
+                    self.repository.set_app_setting("admin_failed_attempts", "0")
+                    self.repository.set_app_setting("admin_lockout_until", "0")
 
     @Slot()
     def adminLogout(self) -> None:

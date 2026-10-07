@@ -65,9 +65,41 @@ def _apply_migration_2(conn: sqlite3.Connection) -> None:
     """)
 
 
+def _apply_migration_3(conn: sqlite3.Connection) -> None:
+    """Applies migration 3: adds root_signature column to test_results."""
+    cursor = conn.cursor()
+    cursor.execute("PRAGMA table_info(test_results)")
+    columns = {row[1] for row in cursor.fetchall()}
+    if "root_signature" not in columns:
+        cursor.execute("ALTER TABLE test_results ADD COLUMN root_signature TEXT;")
+
+
+def _apply_migration_4(conn: sqlite3.Connection) -> None:
+    """Applies migration 4: creates session_hash_ledger for monotonic cryptographic chain."""
+    conn.execute("""
+        CREATE TABLE IF NOT EXISTS session_hash_ledger (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            session_id TEXT NOT NULL,
+            seq INTEGER NOT NULL,
+            event_type TEXT NOT NULL,
+            entity_id TEXT NOT NULL,
+            payload TEXT NOT NULL,
+            entry_hash TEXT NOT NULL,
+            prev_hash TEXT NOT NULL,
+            created_at TEXT NOT NULL,
+            FOREIGN KEY(session_id) REFERENCES test_sessions(id)
+        );
+    """)
+    conn.execute("""
+        CREATE INDEX IF NOT EXISTS idx_hash_ledger_sess_seq ON session_hash_ledger(session_id, seq);
+    """)
+
+
 MIGRATIONS: list[tuple[int, str, str | Callable[[sqlite3.Connection], None]]] = [
     (1, "Initial baseline tables with foreign keys and WAL mode", CREATE_TABLES_SQL),
     (2, "Add mode, language, license_state, consent_log, app_settings", _apply_migration_2),
+    (3, "Add root_signature to test_results for cryptographic tamper detection", _apply_migration_3),
+    (4, "Add session_hash_ledger for monotonic cryptographic chain", _apply_migration_4),
 ]
 
 

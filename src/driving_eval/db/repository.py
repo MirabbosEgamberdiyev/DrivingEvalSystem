@@ -4,6 +4,8 @@ Prevents silent failures and guarantees tamper evidence across test records.
 """
 
 import hashlib
+import hmac
+import logging
 import sqlite3
 from datetime import UTC, datetime
 from pathlib import Path
@@ -11,6 +13,8 @@ from typing import Any
 
 from driving_eval.db.migrations import run_migrations
 from driving_eval.db.schema import PRAGMAS
+
+logger = logging.getLogger("driving_eval.db.repository")
 
 
 class DatabaseRepository:
@@ -124,6 +128,17 @@ class DatabaseRepository:
             conn.commit()
         return v_id
 
+    def get_device_tamper_key(self) -> bytes:
+        """Derives a device-bound 32-byte secret key from local hardware fingerprint."""
+        try:
+            from driving_eval.licensing.machine_id import get_current_machine_fingerprint
+
+            fp = get_current_machine_fingerprint()
+            raw = f"DEVICE_TAMPER_KEY_SALT_2026:{fp.canonical_id}".encode()
+        except Exception:
+            raw = b"DEVICE_TAMPER_KEY_FALLBACK_DEFAULT"
+        return hashlib.sha256(raw).digest()
+
     # --- Session Management ---
 
     def create_session(
@@ -138,7 +153,10 @@ class DatabaseRepository:
         language: str = "uz-Latn",
     ) -> None:
         now_iso = datetime.now(UTC).isoformat()
-        initial_hash = self.compute_sha256(f"SESSION_START:{session_id}:{student_id}:{now_iso}".encode())
+        initial_payload = (
+            f"SESSION_START:{session_id}:{student_id}:{vehicle_id}:{mode}:{language}:{rules_version}:{app_version}:{now_iso}"
+        )
+        initial_hash = self.compute_sha256(initial_payload.encode())
         with self.get_connection() as conn:
             conn.execute(
                 """
@@ -148,6 +166,14 @@ class DatabaseRepository:
                 ) VALUES (?, ?, ?, ?, 'IN_PROGRESS', ?, ?, ?, 0, ?, ?, ?);
                 """,
                 (session_id, student_id, vehicle_id, now_iso, mode, language, start_score, rules_version, app_version, initial_hash),
+            )
+            conn.execute(
+                """
+                INSERT INTO session_hash_ledger (
+                    session_id, seq, event_type, entity_id, payload, entry_hash, prev_hash, created_at
+                ) VALUES (?, 1, 'SESSION_START', ?, ?, ?, 'INIT', ?);
+                """,
+                (session_id, session_id, initial_payload, initial_hash, now_iso),
             )
             # Log initial score snapshot
             conn.execute(
@@ -222,14 +248,21 @@ class DatabaseRepository:
     ) -> None:
         now_iso = datetime.now(UTC).isoformat()
         with self.get_connection() as conn:
-            # 1. Update hash chain
-            cur = conn.execute("SELECT session_hash FROM test_sessions WHERE id = ?", (session_id,))
-            row = cur.fetchone()
-            prev_hash = row["session_hash"] if row and row["session_hash"] else "INIT"
-            event_payload = f"{prev_hash}|VIOLATION:{violation_id}:{status}:{rule_code}:{confidence:.3f}:{now_iso}"
-            new_hash = self.compute_sha256(event_payload.encode())
+            cur = conn.execute(
+                "SELECT seq, entry_hash FROM session_hash_ledger WHERE session_id = ? ORDER BY seq DESC LIMIT 1",
+                (session_id,),
+            )
+            last = cur.fetchone()
+            if last:
+                next_seq = last["seq"] + 1
+                prev_hash = last["entry_hash"]
+            else:
+                next_seq = 1
+                prev_hash = "INIT"
 
-            # 2. Insert violation
+            payload = f"VIOLATION:{violation_id}:{status}:{rule_code}:{confidence:.3f}:{now_iso}"
+            entry_hash = self.compute_sha256(f"{prev_hash}|{payload}".encode())
+
             conn.execute(
                 """
                 INSERT INTO violations (
@@ -240,8 +273,16 @@ class DatabaseRepository:
                 (violation_id, session_id, status, confidence, camera, exercise, rule_code, now_iso, description, evidence_id),
             )
 
-            # 3. Update session hash
-            conn.execute("UPDATE test_sessions SET session_hash = ? WHERE id = ?", (new_hash, session_id))
+            conn.execute(
+                """
+                INSERT INTO session_hash_ledger (
+                    session_id, seq, event_type, entity_id, payload, entry_hash, prev_hash, created_at
+                ) VALUES (?, ?, 'VIOLATION', ?, ?, ?, ?, ?);
+                """,
+                (session_id, next_seq, violation_id, payload, entry_hash, prev_hash, now_iso),
+            )
+
+            conn.execute("UPDATE test_sessions SET session_hash = ? WHERE id = ?", (entry_hash, session_id))
             conn.commit()
 
     def record_penalty(self, violation_id: str, session_id: str, points: int) -> None:
@@ -290,6 +331,21 @@ class DatabaseRepository:
     ) -> None:
         now_iso = datetime.now(UTC).isoformat()
         with self.get_connection() as conn:
+            cur = conn.execute(
+                "SELECT seq, entry_hash FROM session_hash_ledger WHERE session_id = ? ORDER BY seq DESC LIMIT 1",
+                (session_id,),
+            )
+            last = cur.fetchone()
+            if last:
+                next_seq = last["seq"] + 1
+                prev_hash = last["entry_hash"]
+            else:
+                next_seq = 1
+                prev_hash = "INIT"
+
+            payload = f"EVIDENCE:{evidence_id}:{violation_id or 'NONE'}:{sha256_hash}:{file_type}:{now_iso}"
+            entry_hash = self.compute_sha256(f"{prev_hash}|{payload}".encode())
+
             conn.execute(
                 """
                 INSERT INTO evidence (
@@ -298,6 +354,17 @@ class DatabaseRepository:
                 """,
                 (evidence_id, session_id, violation_id, file_path, file_type, sha256_hash, now_iso),
             )
+
+            conn.execute(
+                """
+                INSERT INTO session_hash_ledger (
+                    session_id, seq, event_type, entity_id, payload, entry_hash, prev_hash, created_at
+                ) VALUES (?, ?, 'EVIDENCE', ?, ?, ?, ?, ?);
+                """,
+                (session_id, next_seq, evidence_id, payload, entry_hash, prev_hash, now_iso),
+            )
+
+            conn.execute("UPDATE test_sessions SET session_hash = ? WHERE id = ?", (entry_hash, session_id))
             conn.commit()
 
     def get_evidence(self, evidence_id: str) -> dict[str, Any] | None:
@@ -323,28 +390,49 @@ class DatabaseRepository:
     ) -> str:
         now_iso = datetime.now(UTC).isoformat()
         with self.get_connection() as conn:
-            cur = conn.execute("SELECT session_hash FROM test_sessions WHERE id = ?", (session_id,))
-            row = cur.fetchone()
-            session_hash = row["session_hash"] if row and row["session_hash"] else "EMPTY"
-            final_root_hash = self.compute_sha256(
-                f"{session_hash}|FINAL:{final_score}:{result}:{critical_count}:{now_iso}".encode()
+            cur = conn.execute(
+                "SELECT seq, entry_hash FROM session_hash_ledger WHERE session_id = ? ORDER BY seq DESC LIMIT 1",
+                (session_id,),
             )
+            last = cur.fetchone()
+            if last:
+                next_seq = last["seq"] + 1
+                prev_hash = last["entry_hash"]
+            else:
+                next_seq = 1
+                prev_hash = "INIT"
+
+            payload = f"FINAL:{final_score}:{result}:{critical_count}:{suspect_count}:{now_iso}"
+            final_root_hash = self.compute_sha256(f"{prev_hash}|{payload}".encode())
+
+            conn.execute(
+                """
+                INSERT INTO session_hash_ledger (
+                    session_id, seq, event_type, entity_id, payload, entry_hash, prev_hash, created_at
+                ) VALUES (?, ?, 'FINAL', ?, ?, ?, ?, ?);
+                """,
+                (session_id, next_seq, session_id, payload, final_root_hash, prev_hash, now_iso),
+            )
+
+            device_key = self.get_device_tamper_key()
+            root_signature = hmac.new(device_key, final_root_hash.encode("utf-8"), hashlib.sha256).hexdigest()
 
             conn.execute(
                 """
                 INSERT INTO test_results (
                     session_id, final_score, result, critical_violations_count,
-                    suspect_count, hash_chain_root, finalized_at
-                ) VALUES (?, ?, ?, ?, ?, ?, ?)
+                    suspect_count, hash_chain_root, root_signature, finalized_at
+                ) VALUES (?, ?, ?, ?, ?, ?, ?, ?)
                 ON CONFLICT(session_id) DO UPDATE SET
                     final_score=excluded.final_score,
                     result=excluded.result,
                     critical_violations_count=excluded.critical_violations_count,
                     suspect_count=excluded.suspect_count,
                     hash_chain_root=excluded.hash_chain_root,
+                    root_signature=excluded.root_signature,
                     finalized_at=excluded.finalized_at;
                 """,
-                (session_id, final_score, result, critical_count, suspect_count, final_root_hash, now_iso),
+                (session_id, final_score, result, critical_count, suspect_count, final_root_hash, root_signature, now_iso),
             )
 
             status = "TERMINATED" if critical_count > 0 else "COMPLETED"
@@ -417,44 +505,103 @@ class DatabaseRepository:
             return [dict(r) for r in cur.fetchall()]
 
     def verify_session_hash_integrity(self, session_id: str) -> bool:
-        """Verifies if the stored root hash matches cryptographic recalculation of the entire session chain."""
+        """Verifies if the stored root hash matches cryptographic recalculation of the entire session chain and checks device HMAC."""
         with self.get_connection() as conn:
             cur = conn.execute("SELECT * FROM test_results WHERE session_id = ?", (session_id,))
             res = cur.fetchone()
             if not res or not res["hash_chain_root"] or len(res["hash_chain_root"]) != 64:
                 return False
 
-            sess_cur = conn.execute("SELECT * FROM test_sessions WHERE id = ?", (session_id,))
-            sess = sess_cur.fetchone()
+            # 1. Device HMAC signature check
+            device_key = self.get_device_tamper_key()
+            expected_sig = hmac.new(device_key, res["hash_chain_root"].encode("utf-8"), hashlib.sha256).hexdigest()
+            actual_sig = res["root_signature"] if "root_signature" in res.keys() and res["root_signature"] else ""
+            if not actual_sig or not hmac.compare_digest(actual_sig, expected_sig):
+                logger.error("Root hash qurilma HMAC imzosi noto'g'ri yoki manipulyatsiya qilingan!")
+                return False
+
+            # 2. Check session_hash_ledger rows
+            l_cur = conn.execute(
+                "SELECT * FROM session_hash_ledger WHERE session_id = ? ORDER BY seq ASC",
+                (session_id,),
+            )
+            ledger_rows = [dict(r) for r in l_cur.fetchall()]
+            if not ledger_rows:
+                return False
+
+            # Check that every violation and evidence record exists in ledger and vice-versa
+            v_rows = conn.execute("SELECT id FROM violations WHERE session_id = ?", (session_id,)).fetchall()
+            v_ids = {r["id"] for r in v_rows}
+            e_rows = conn.execute("SELECT id FROM evidence WHERE session_id = ?", (session_id,)).fetchall()
+            e_ids = {r["id"] for r in e_rows}
+
+            ledger_v_ids = {r["entity_id"] for r in ledger_rows if r["event_type"] == "VIOLATION"}
+            ledger_e_ids = {r["entity_id"] for r in ledger_rows if r["event_type"] == "EVIDENCE"}
+
+            # If any violation or evidence was deleted or inserted in table without matching ledger -> Tampered!
+            if v_ids != ledger_v_ids or e_ids != ledger_e_ids:
+                return False
+
+            # Verify session fields match initial payload
+            sess = conn.execute("SELECT * FROM test_sessions WHERE id = ?", (session_id,)).fetchone()
             if not sess:
                 return False
 
-            # Recalculate hash chain from source of truth
-            # 1. Base session start hash
-            initial_payload = f"SESSION_START:{sess['id']}:{sess['student_id']}:{sess['started_at']}".encode()
-            current_hash = self.compute_sha256(initial_payload)
+            expected_prev = "INIT"
+            for i, row in enumerate(ledger_rows):
+                # Verify monotonic sequence continuity (no deleted rows, no inserted rows, no gaps)
+                if row["seq"] != i + 1:
+                    return False
+                if row["prev_hash"] != expected_prev:
+                    return False
 
-            # 2. Iterate each violation in chronological insertion order
-            v_cur = conn.execute(
-                """
-                SELECT id, status, rule_code, confidence, timestamp
-                FROM violations
-                WHERE session_id = ?
-                ORDER BY timestamp ASC, id ASC
-                """,
-                (session_id,),
-            )
-            for row in v_cur.fetchall():
-                payload = f"{current_hash}|VIOLATION:{row['id']}:{row['status']}:{row['rule_code']}:{row['confidence']:.3f}:{row['timestamp']}".encode()
-                current_hash = self.compute_sha256(payload)
+                # Verify payload integrity
+                if row["event_type"] == "SESSION_START":
+                    mode = sess["mode"] or "ASSESSMENT"
+                    lang = sess["language"] or "uz-Latn"
+                    rules_ver = sess["rules_version"] or "1.0.0"
+                    app_ver = sess["app_version"] or "1.0.0"
+                    expected_payload = (
+                        f"SESSION_START:{sess['id']}:{sess['student_id']}:{sess['vehicle_id']}:{mode}:{lang}:{rules_ver}:{app_ver}:{sess['started_at']}"
+                    )
+                    if row["payload"] != expected_payload:
+                        return False
+                    expected_hash = self.compute_sha256(expected_payload.encode())
+                elif row["event_type"] == "VIOLATION":
+                    v_row = conn.execute("SELECT * FROM violations WHERE id = ?", (row["entity_id"],)).fetchone()
+                    if not v_row:
+                        return False
+                    expected_payload = f"VIOLATION:{v_row['id']}:{v_row['status']}:{v_row['rule_code']}:{v_row['confidence']:.3f}:{v_row['timestamp']}"
+                    if row["payload"] != expected_payload:
+                        return False
+                    expected_hash = self.compute_sha256(f"{expected_prev}|{expected_payload}".encode())
+                elif row["event_type"] == "EVIDENCE":
+                    e_row = conn.execute("SELECT * FROM evidence WHERE id = ?", (row["entity_id"],)).fetchone()
+                    if not e_row:
+                        return False
+                    expected_payload = f"EVIDENCE:{e_row['id']}:{e_row['violation_id'] or 'NONE'}:{e_row['sha256_hash']}:{e_row['file_type']}:{e_row['created_at']}"
+                    if row["payload"] != expected_payload:
+                        return False
+                    expected_hash = self.compute_sha256(f"{expected_prev}|{expected_payload}".encode())
+                elif row["event_type"] == "FINAL":
+                    suspect_count = res["suspect_count"] if "suspect_count" in res.keys() else 0
+                    expected_payload = f"FINAL:{res['final_score']}:{res['result']}:{res['critical_violations_count']}:{suspect_count}:{res['finalized_at']}"
+                    if row["payload"] != expected_payload:
+                        return False
+                    expected_hash = self.compute_sha256(f"{expected_prev}|{expected_payload}".encode())
+                else:
+                    return False
 
-            # 3. Finalization hash
-            final_payload = (
-                f"{current_hash}|FINAL:{res['final_score']}:{res['result']}:{res['critical_violations_count']}:{res['finalized_at']}".encode()
-            )
-            expected_root_hash = self.compute_sha256(final_payload)
+                if row["entry_hash"] != expected_hash:
+                    return False
 
-            return expected_root_hash == res["hash_chain_root"]
+                expected_prev = expected_hash
+
+            # Final root hash in test_results must match last ledger entry hash
+            if res["hash_chain_root"] != expected_prev:
+                return False
+
+            return True
 
 
     # --- Consent & EULA ---

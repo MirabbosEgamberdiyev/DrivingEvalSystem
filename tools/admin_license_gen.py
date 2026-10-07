@@ -3,7 +3,7 @@
 
 Generates Ed25519 cryptographically signed license tokens binding vehicle car_id,
 tolerant hardware machine fingerprints, expiration dates, and tier privileges.
-Kept securely by the authority / exam administrator.
+Kept securely by the authority / exam administrator outside of public repositories.
 """
 
 import argparse
@@ -14,10 +14,9 @@ import sys
 from datetime import UTC, datetime
 from pathlib import Path
 
-from driving_eval.licensing.ed25519 import (
-    generate_keypair,
-    sign,
-)
+from cryptography.hazmat.primitives import serialization
+from cryptography.hazmat.primitives.asymmetric.ed25519 import Ed25519PrivateKey
+
 from driving_eval.licensing.license_manager import (
     LicensePayload,
     pack_license_token,
@@ -30,12 +29,6 @@ from driving_eval.licensing.machine_id import (
 logging.basicConfig(level=logging.INFO, format="%(asctime)s [%(levelname)s] %(message)s")
 logger = logging.getLogger("admin_license_gen")
 
-# WARNING: This key was previously committed to repository history and is strictly COMPROMISED.
-# Retained ONLY for backwards compatibility with offline unit test suites.
-# Production environments MUST supply DRIVING_EVAL_VENDOR_KEY or --private-key.
-COMPROMISED_DEV_VENDOR_PRIVATE_KEY_HEX: str = "bdd0b1a5fdd912b838c5cd6a6d08bc58caa1174c6f6a30df78cd157a1eb53869"
-DEFAULT_VENDOR_PRIVATE_KEY_HEX: str = COMPROMISED_DEV_VENDOR_PRIVATE_KEY_HEX
-
 
 def create_signed_license(
     car_id: str,
@@ -47,17 +40,18 @@ def create_signed_license(
 ) -> str:
     """Signs and packs an offline activation token using Ed25519 private key."""
     if not private_key_hex:
-        private_key_hex = os.environ.get("DRIVING_EVAL_VENDOR_KEY") or DEFAULT_VENDOR_PRIVATE_KEY_HEX
+        private_key_hex = os.environ.get("DRIVING_EVAL_VENDOR_KEY")
 
-    if private_key_hex == COMPROMISED_DEV_VENDOR_PRIVATE_KEY_HEX:
-        logger.warning(
-            "[XAVFSIZLIK OGOHLANTIRISHI] Litsenziya ommaviy kompromat DEV kalit bilan imzolanmoqda! "
-            "Haqiqiy muhitda DRIVING_EVAL_VENDOR_KEY o'zgaruvchisidan foydalaning."
+    if not private_key_hex:
+        raise ValueError(
+            "XATOLIK: Ed25519 xususiy kaliti ko'rsatilmadi! "
+            "Iltimos, --private-key parametrini bering yoki DRIVING_EVAL_VENDOR_KEY "
+            "muhit o'zgaruvchisini o'rnating."
         )
 
     priv_bytes = bytes.fromhex(private_key_hex)
+    priv_obj = Ed25519PrivateKey.from_private_bytes(priv_bytes)
     now_iso = datetime.now(UTC).strftime("%Y-%m-%dT%H:%M:%SZ")
-
 
     payload = LicensePayload(
         car_id=car_id,
@@ -77,34 +71,59 @@ def create_signed_license(
         "features": payload.features,
     }
     json_bytes = json.dumps(payload_dict, sort_keys=True, separators=(",", ":")).encode("utf-8")
-    signature = sign(json_bytes, priv_bytes)
+    signature = priv_obj.sign(json_bytes)
 
     token = pack_license_token(payload, signature)
     return token
 
 
 def main() -> int:
-    parser = argparse.ArgumentParser(description="Admin Ed25519 License Generator")
+    parser = argparse.ArgumentParser(description="Admin Ed25519 License Generator (Secure Offline Edition)")
     parser.add_argument("--car-id", type=str, default="CAR-UZ-01", help="Vehicle Car ID")
     parser.add_argument("--expires", type=str, default="2027-12-31", help="Expiration date (YYYY-MM-DD or PERMANENT)")
     parser.add_argument("--tier", type=str, default="FULL", choices=["FULL", "TRAINING", "ASSESSMENT"], help="License tier")
     parser.add_argument("--features", type=str, default="4_cameras,all_exercises,pdf_reports", help="Comma-separated features")
-    parser.add_argument("--private-key", type=str, default=None, help="Ed25519 Private key in hex or file path (defaults to DRIVING_EVAL_VENDOR_KEY env var)")
+    parser.add_argument("--private-key", type=str, default=None, help="Ed25519 Private key hex or path to private key file")
+    parser.add_argument("--passphrase", type=str, default=None, help="Passphrase for encrypted PEM private key")
     parser.add_argument("--current-machine", action="store_true", help="Bind to current machine's actual hardware")
     parser.add_argument("--machine-json", type=Path, help="Path to machine fingerprint JSON file")
     parser.add_argument("--output", type=Path, help="Output path to save license token (e.g. config/license.key)")
     parser.add_argument("--generate-keypair", action="store_true", help="Generate a new Ed25519 root keypair")
+    parser.add_argument("--save-encrypted", type=Path, help="File path to save passphrase-encrypted private key PEM")
 
     args = parser.parse_args()
 
     if args.generate_keypair:
-        priv, pub = generate_keypair()
-        print("\n" + "=" * 60)
-        print("YANGI ED25519 ASIMMETRIK KALITLAR JUFTLIGI")
-        print("=" * 60)
-        print(f"Maxfiy Kalit (Private Key Hex) : {priv.hex()}")
-        print(f"Ochiq Kalit (Public Key Hex)   : {pub.hex()}")
-        print("=" * 60 + "\n")
+        priv_key = Ed25519PrivateKey.generate()
+        raw_priv = priv_key.private_bytes(
+            encoding=serialization.Encoding.Raw,
+            format=serialization.PrivateFormat.Raw,
+            encryption_algorithm=serialization.NoEncryption(),
+        )
+        pub_key = priv_key.public_key()
+        raw_pub = pub_key.public_bytes(
+            encoding=serialization.Encoding.Raw,
+            format=serialization.PublicFormat.Raw,
+        )
+
+        print("\n" + "=" * 70)
+        print("YANGI ED25519 ASIMMETRIK KALITLAR JUFTLIGI YARATILDI")
+        print("=" * 70)
+        print(f"Ochiq Kalit (Public Key Hex - Dasturga kiritiladi): {raw_pub.hex()}")
+        print(f"Maxfiy Kalit (Private Key Hex - MAXFIY TUTING!):   {raw_priv.hex()}")
+        print("=" * 70)
+
+        if args.save_encrypted and args.passphrase:
+            encrypted_pem = priv_key.private_bytes(
+                encoding=serialization.Encoding.PEM,
+                format=serialization.PrivateFormat.PKCS8,
+                encryption_algorithm=serialization.BestAvailableEncryption(args.passphrase.encode("utf-8")),
+            )
+            args.save_encrypted.parent.mkdir(parents=True, exist_ok=True)
+            args.save_encrypted.write_bytes(encrypted_pem)
+            print(f"[+] Maxfiy kalit parol bilan shifrlanib saqlandi: {args.save_encrypted}")
+
+        print("DIQQAT: Maxfiy kalitni hech qachon Git repozitoriyasiga yuklamang!\n")
         return 0
 
     # Determine fingerprint
@@ -126,15 +145,28 @@ def main() -> int:
 
     # Resolve private key
     priv_hex = args.private_key or os.environ.get("DRIVING_EVAL_VENDOR_KEY")
-    if not priv_hex:
-        logger.warning(
-            "[XAVFSIZLIK OGOHLANTIRISHI] --private-key yoki DRIVING_EVAL_VENDOR_KEY ko'rsatilmadi! "
-            "Insecure dev kalit ishlatilmoqda."
-        )
-        priv_hex = DEFAULT_VENDOR_PRIVATE_KEY_HEX
-    elif Path(priv_hex).exists():
-        priv_hex = Path(priv_hex).read_text(encoding="utf-8").strip()
+    if priv_hex and Path(priv_hex).exists():
+        key_path = Path(priv_hex)
+        key_bytes = key_path.read_bytes()
+        if b"BEGIN ENCRYPTED PRIVATE KEY" in key_bytes or b"BEGIN PRIVATE KEY" in key_bytes:
+            password = args.passphrase.encode("utf-8") if args.passphrase else None
+            loaded_priv = serialization.load_pem_private_key(key_bytes, password=password)
+            if not isinstance(loaded_priv, Ed25519PrivateKey):
+                raise ValueError("Fayldagi kalit Ed25519 turi bo'lishi shart.")
+            priv_hex = loaded_priv.private_bytes(
+                encoding=serialization.Encoding.Raw,
+                format=serialization.PrivateFormat.Raw,
+                encryption_algorithm=serialization.NoEncryption(),
+            ).hex()
+        else:
+            priv_hex = key_bytes.decode("utf-8").strip()
 
+    if not priv_hex:
+        logger.error(
+            "XATOLIK: Maxfiy kalit ko'rsatilmadi! "
+            "Iltimos, --private-key yoki DRIVING_EVAL_VENDOR_KEY muhit o'zgaruvchisidan foydalaning."
+        )
+        return 1
 
     token = create_signed_license(
         car_id=args.car_id,

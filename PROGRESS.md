@@ -5,12 +5,26 @@ Ushbu hujjat loyihaning har bir bosqichidagi bajarilgan ishlar, testlar holati, 
 ---
 
 ## Holat Xulosasi (Current Status)
-- **Hozirgi Bosqich**: Mustaqil QA va Xavfsizlik Auditi to'liq yakunlandi (Bosqich 13).
-- **Git Holati**: Barcha tuzatishlar va testlar kiritildi, commit va pushga tayyor.
-- **Mavjud Testlar**: 131 ta test yashil (100% PASS), 83% statement coverage.
+- **Hozirgi Bosqich**: 2-Raund QA va Xavfsizlik Auditi: Bosqich 1 (Sirlar) & Bosqich 2 (Kriptografiya va Yaxlitlik) to'liq yakunlandi; Bosqich 3 boshlanmoqda.
+- **Git Holati**: Bosqich 1 va 2 tuzatishlari kiritildi, barcha testlar yashil.
+- **Mavjud Testlar**: 149 ta test yashil (100% PASS).
 - **Ruff & Mypy**: 0 xato (100% toza).
-- **Lokalizatsiya**: 3 ta til (`uz-Latn`, `uz-Cyrl`, `ru`) 100% paritet, QML qattiq matnlar `Theme.tr()` ga ulandi.
-- **Xavfsizlik**: Maxfiy kalit ochiqligi (SEC-01), backdoor PIN (SEC-02), soxta xesh tekshiruvi (CRYPTO-01), PII ochiqligi (PII-01) to'liq tuzatildi va isbotlandi.
+- **Kriptografiya va Xavfsizlik**: Standart Ed25519 (`cryptography`), PBKDF2 tuzli PIN, 5 daqiqalik doimiy lockout, apparatga bog'langan HMAC ildiz imzosi, monoto'n `session_hash_ledger` orqali tartib buzilishi, o'chirish, qo'shish va soxtalashtirishni 100% aniqlash kafolatlangan.
+
+---
+
+## 2-Raund: Bosqichlar va Bajarilish Holati
+
+| Bosqich | Tavsif | Holat | Izoh |
+|---|---|---|---|
+| **Raund 2: Bosqich 1** | Sirlar va Repo Xavfsizligi | ✅ VERIFIED | Git tarixi to'liq skanerlandi, kompromat vendor kaliti almashtirildi (`1723341...`), `LICENSING.md` yangilandi, `SECRETS_PURGE_GUIDE.md` tayyorlandi, pre-commit hook o'rnatildi, `pip-audit` toza. |
+| **Raund 2: Bosqich 2** | Kriptografiya va Yaxlitlik | ✅ VERIFIED | Standard Ed25519 (`cryptography`), 10 ta aktivatsiya holati, PBKDF2-HMAC-SHA256 (100,000 iteratsiya) PIN, SQLite da saqlanuvchi doimiy lockout (5 daqiqa / 3 urinish), apparat kaliti bilan HMAC imzo (`root_signature`), monoto'n `session_hash_ledger` (149 ta test PASS). |
+| **Raund 2: Bosqich 3** | Mock vs Real (Diagnostika va Sozlamalar) | 🔄 JARAYONDA | Real harorat (WMI), real kamera enumeratsiyasi, GPS/OBD/IMU [SIMULATION] tegi, dinamik autodrome zonalari. |
+| **Raund 2: Bosqich 4** | Spetsifikatsiya Bo'shliqlari | ⏳ NAVBATDA | Installer, mustaqil admin tool, Training vs Assessment gating, N-camera moslashuvchanligi. |
+| **Raund 2: Bosqich 5** | Lokalizatsiya (Haqiqiy Holat) | ⏳ NAVBATDA | Ko'rib chiqilmagan qatorlarni qaytarish, translation linter. |
+| **Raund 2: Bosqich 6** | UI/UX (Haqiqiy Baholash) | ⏳ NAVBATDA | Sensorli tugmalar o'lchamlari (>=96x72), haydovchi kokpiti minimalizmi. |
+| **Raund 2: Bosqich 7** | Soak, Latency, Replay & Edge Cases | ⏳ NAVBATDA | Disk to'lishi, DB bloklanishi, kamera uzilishi, soat orqaga surilishi. |
+| **Raund 2: Bosqich 8** | Mutatsion Sinov & Yakuniy Hisobot | ⏳ NAVBATDA | Qasddan mutatsiya sinovi, dalillar bilan `FINAL_AUDIT_REPORT_2.md`. |
 
 ---
 

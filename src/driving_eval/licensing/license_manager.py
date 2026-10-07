@@ -25,7 +25,7 @@ from driving_eval.licensing.machine_id import (
 logger = logging.getLogger("driving_eval.licensing")
 
 # Embedded Master Ed25519 Public Key for offline verification
-MASTER_PUBLIC_KEY_HEX: str = "1ddb2af429f68934270ffb85dd1fbe5d0be16af795fb6dc24f9ce67c931d2aa3"
+MASTER_PUBLIC_KEY_HEX: str = "172334160c7edc8c7c3d800147137c6290690357691ee80cf5c76416498ffb30"
 
 
 @dataclass

@@ -16,9 +16,23 @@ htmlcov/
 *.log
 data/db/*.db-shm
 data/db/*.db-wal
+data/db/driving_eval.db
 data/evidence/*
 data/logs/*
 data/config/*
 data/reports/*
 !data/evidence/.gitkeep
 !data/logs/.gitkeep
+
+# Cryptographic Keys & Secrets
+*.pem
+*.key
+*.priv
+*.secret
+license_private*.hex
+vendor_key*.enc
+*secrets*
+GIT_SECRETS_AUDIT.json
+.env
+.env.*
+credentials.json
