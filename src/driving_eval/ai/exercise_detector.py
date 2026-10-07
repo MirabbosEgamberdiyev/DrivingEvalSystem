@@ -13,9 +13,11 @@ Tracks the 8 official autodrome exercises:
 Monitors geofences, heading alignment, sequence progression, and binds active rules.
 """
 
+import json
 import math
 from dataclasses import dataclass
 from enum import Enum
+from pathlib import Path
 
 from driving_eval.core.config_schema import ExercisesConfig
 from driving_eval.hardware.sensor_fusion import FusedVehicleState
@@ -72,23 +74,49 @@ class ExerciseDetector:
             for code in self.sequence
         }
 
-        # Reference autodrome coordinates (Tashkent Autodrome baseline)
-        base_lat = 41.311081
-        base_lon = 69.240562
-
         self._zones: dict[str, GeofenceZone] = {}
-        for idx, code in enumerate(self.sequence):
-            # Staggered by ~35 meters along course
-            offset_m = idx * 35.0
-            lat_offset = offset_m / 111000.0
-            self._zones[code] = GeofenceZone(
-                code=code,
-                lat=base_lat + lat_offset,
-                lon=base_lon,
-                radius_meters=self.config.geofence_tolerance_meters + 15.0,
-                expected_heading_deg=0.0,
-                heading_tolerance_deg=75.0,
-            )
+        loaded_from_file = False
+        map_file = getattr(self.config, "autodrome_map_file", None)
+        if map_file:
+            map_path = Path(map_file)
+            if map_path.exists():
+                try:
+                    with open(map_path, encoding="utf-8") as f:
+                        map_data = json.load(f)
+                    zones_data = map_data.get("zones", {})
+                    for code in self.sequence:
+                        if code in zones_data:
+                            zd = zones_data[code]
+                            self._zones[code] = GeofenceZone(
+                                code=code,
+                                lat=float(zd["lat"]),
+                                lon=float(zd["lon"]),
+                                radius_meters=float(zd.get("radius_meters", self.config.geofence_tolerance_meters + 15.0)),
+                                expected_heading_deg=float(zd.get("expected_heading_deg", 0.0)),
+                                heading_tolerance_deg=float(zd.get("heading_tolerance_deg", 75.0)),
+                            )
+                    if len(self._zones) == len(self.sequence):
+                        loaded_from_file = True
+                except Exception:
+                    loaded_from_file = False
+
+        if not loaded_from_file:
+            # Reference autodrome coordinates (Tashkent Autodrome baseline fallback)
+            base_lat = 41.311081
+            base_lon = 69.240562
+            self._zones = {}
+            for idx, code in enumerate(self.sequence):
+                # Staggered by ~35 meters along course
+                offset_m = idx * 35.0
+                lat_offset = offset_m / 111000.0
+                self._zones[code] = GeofenceZone(
+                    code=code,
+                    lat=base_lat + lat_offset,
+                    lon=base_lon,
+                    radius_meters=self.config.geofence_tolerance_meters + 15.0,
+                    expected_heading_deg=0.0,
+                    heading_tolerance_deg=75.0,
+                )
 
     @property
     def current_exercise(self) -> str:

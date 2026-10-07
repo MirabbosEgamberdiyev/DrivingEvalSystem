@@ -100,7 +100,36 @@ def run_qml_app(argv: list[str] | None = None) -> int:
         config = SystemConfig.load_from_yaml(args.config)
         setup_logging(config.app.log_file, config.app.log_level)
         repository = DatabaseRepository(config.storage.db_path)
-        bridge = RealBridge(config=config, repository=repository)
+        repository.sync_rules("config/rules.yaml")
+
+        from driving_eval.ai.mock_detector import MockDetector
+        from driving_eval.evidence.recorder import EvidenceRecorder
+        from driving_eval.hardware.camera_service import MultiCameraService
+        from driving_eval.hardware.precheck import PrecheckService
+
+        camera_service = MultiCameraService(
+            config.cameras,
+            simulation_mode=(config.app.environment == "simulation"),
+        )
+        ai_detector = MockDetector(healthy=True)
+        evidence_recorder = EvidenceRecorder(
+            config.storage.evidence_dir,
+            repository,
+            buffer_duration_seconds=config.storage.ring_buffer_seconds,
+            fps=30,
+        )
+        precheck_service = PrecheckService(
+            config=config,
+            camera_service=camera_service,
+            ai_detector=ai_detector,
+            repository=repository,
+        )
+        bridge = RealBridge(
+            config=config,
+            repository=repository,
+            precheck_service=precheck_service,
+            evidence_recorder=evidence_recorder,
+        )
 
     # Setup QML Engine
     engine = QQmlApplicationEngine()

@@ -1,0 +1,131 @@
+{
+  "autodrome_name": "Tashkent Central Autodrome",
+  "version": "1.0.0",
+  "datum": "WGS84",
+  "base_coordinates": {
+    "lat": 41.311081,
+    "lon": 69.240562
+  },
+  "sequence": [
+    "START",
+    "ESTAKADA",
+    "ZMEIKA",
+    "TURN_90",
+    "PARALLEL_PARKING",
+    "GARAGE_REVERSE",
+    "STOP",
+    "FINISH"
+  ],
+  "zones": {
+    "START": {
+      "code": "START",
+      "name_uz": "Boshlang'ich start chizig'i",
+      "lat": 41.311081,
+      "lon": 69.240562,
+      "radius_meters": 18.0,
+      "expected_heading_deg": 0.0,
+      "heading_tolerance_deg": 75.0,
+      "geometry": {
+        "type": "box",
+        "length_m": 12.0,
+        "width_m": 4.0
+      }
+    },
+    "ESTAKADA": {
+      "code": "ESTAKADA",
+      "name_uz": "Estakada (ko'tarilishda to'xtash va harakatlanish)",
+      "lat": 41.311396,
+      "lon": 69.240562,
+      "radius_meters": 18.0,
+      "expected_heading_deg": 0.0,
+      "heading_tolerance_deg": 75.0,
+      "geometry": {
+        "type": "incline",
+        "incline_pct": 16.0,
+        "stop_line_offset_m": 15.0,
+        "max_rollback_cm": 20.0
+      }
+    },
+    "ZMEIKA": {
+      "code": "ZMEIKA",
+      "name_uz": "Ilon izi (Zmeyka burilishlari)",
+      "lat": 41.311711,
+      "lon": 69.240562,
+      "radius_meters": 25.0,
+      "expected_heading_deg": 0.0,
+      "heading_tolerance_deg": 90.0,
+      "geometry": {
+        "type": "slalom",
+        "cone_count": 5,
+        "cone_spacing_m": 7.0
+      }
+    },
+    "TURN_90": {
+      "code": "TURN_90",
+      "name_uz": "90 gradusli burilishlar koridori",
+      "lat": 41.312027,
+      "lon": 69.240562,
+      "radius_meters": 20.0,
+      "expected_heading_deg": 90.0,
+      "heading_tolerance_deg": 75.0,
+      "geometry": {
+        "type": "corridor",
+        "corridor_width_m": 3.8
+      }
+    },
+    "PARALLEL_PARKING": {
+      "code": "PARALLEL_PARKING",
+      "name_uz": "Parallel parkovka",
+      "lat": 41.312342,
+      "lon": 69.240562,
+      "radius_meters": 18.0,
+      "expected_heading_deg": 0.0,
+      "heading_tolerance_deg": 60.0,
+      "geometry": {
+        "type": "parking_bay",
+        "length_m": 7.5,
+        "width_m": 2.8
+      }
+    },
+    "GARAGE_REVERSE": {
+      "code": "GARAGE_REVERSE",
+      "name_uz": "Garajga orqa bilan kirish (Boks)",
+      "lat": 41.312657,
+      "lon": 69.240562,
+      "radius_meters": 18.0,
+      "expected_heading_deg": 180.0,
+      "heading_tolerance_deg": 60.0,
+      "geometry": {
+        "type": "garage_bay",
+        "length_m": 5.5,
+        "width_m": 3.0
+      }
+    },
+    "STOP": {
+      "code": "STOP",
+      "name_uz": "To'xtash chizig'i va svetofor",
+      "lat": 41.312972,
+      "lon": 69.240562,
+      "radius_meters": 18.0,
+      "expected_heading_deg": 0.0,
+      "heading_tolerance_deg": 60.0,
+      "geometry": {
+        "type": "stop_line",
+        "stop_line_tolerance_cm": 30.0
+      }
+    },
+    "FINISH": {
+      "code": "FINISH",
+      "name_uz": "Finish chizig'i va to'liq to'xtash",
+      "lat": 41.313288,
+      "lon": 69.240562,
+      "radius_meters": 18.0,
+      "expected_heading_deg": 0.0,
+      "heading_tolerance_deg": 75.0,
+      "geometry": {
+        "type": "finish_box",
+        "stop_box_length_m": 10.0
+      }
+    }
+  }
+}

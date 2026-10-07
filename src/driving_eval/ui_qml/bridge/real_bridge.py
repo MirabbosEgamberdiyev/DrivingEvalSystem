@@ -62,29 +62,50 @@ class RealBridge(BackendBridge):
 
         if not self.precheck_service:
             # Fallback if precheck_service was not injected
-            self._precheck_passed = True
-            if self.state_machine.can_transition(ExamState.CAMERA_CHECK):
-                self.state_machine.transition_to(ExamState.CAMERA_CHECK)
-            if self.state_machine.can_transition(ExamState.SYSTEM_CHECK):
-                self.state_machine.transition_to(ExamState.SYSTEM_CHECK)
-            if self.state_machine.can_transition(ExamState.TEST_READY):
-                self.state_machine.transition_to(ExamState.TEST_READY)
-            self.set_current_state("SYSTEM_READY")
-            return
+            if self.config.app.environment == "production" and not getattr(self, "_allow_mock_fallback", False):
+                self._precheck_passed = False
+                self._precheck_blocked_reason = "Precheck xizmati ulanmagan yoki apparatura sozlanmagan."
+                self.set_current_state("PRECHECK_BLOCKED")
+                self.precheckUpdated.emit([{
+                    "id": "PRECHECK_SERVICE",
+                    "title": "Hardware Diagnostics Service",
+                    "status": "FAILED",
+                    "detail": "Uskunalar diagnostika xizmati ulanmagan",
+                    "required": True,
+                }])
+                return
+            else:
+                self._precheck_passed = True
+                self._precheck_blocked_reason = ""
+                if self.state_machine.can_transition(ExamState.CAMERA_CHECK):
+                    self.state_machine.transition_to(ExamState.CAMERA_CHECK)
+                if self.state_machine.can_transition(ExamState.SYSTEM_CHECK):
+                    self.state_machine.transition_to(ExamState.SYSTEM_CHECK)
+                if self.state_machine.can_transition(ExamState.TEST_READY):
+                    self.state_machine.transition_to(ExamState.TEST_READY)
+                self.set_current_state("SYSTEM_READY")
+                self.precheckUpdated.emit([{
+                    "id": "SIMULATION_CHECK",
+                    "title": "Simulyatsiya Pre-check",
+                    "status": "READY",
+                    "detail": "Simulyatsiya rejimida pre-check muvaffaqiyatli",
+                    "required": True,
+                }])
+                return
 
-        report = self.precheck_service.run_full_check()
+        report = self.precheck_service.run_all_checks()
         items: list[dict[str, Any]] = []
-        for name, comp in report.components.items():
+        for item in report.items:
             items.append({
-                "id": name,
-                "title": comp.name,
-                "status": "READY" if comp.status.value == "PASS" else "FAILED",
-                "detail": comp.details,
-                "required": comp.required,
+                "id": item.name,
+                "title": item.name,
+                "status": "READY" if item.passed else "FAILED",
+                "detail": item.details,
+                "required": item.required,
             })
 
-        self._precheck_passed = report.all_passed
-        if report.all_passed:
+        self._precheck_passed = report.passed
+        if report.passed:
             self._precheck_blocked_reason = ""
             if self.state_machine.can_transition(ExamState.CAMERA_CHECK):
                 self.state_machine.transition_to(ExamState.CAMERA_CHECK)
@@ -94,7 +115,11 @@ class RealBridge(BackendBridge):
                 self.state_machine.transition_to(ExamState.TEST_READY)
             self.set_current_state("SYSTEM_READY")
         else:
-            self._precheck_blocked_reason = "Majburiy komponent nosozligi aniqlandi."
+            self._precheck_blocked_reason = (
+                "; ".join(report.block_reasons)
+                if report.block_reasons
+                else "Majburiy komponent nosozligi aniqlandi."
+            )
             self.set_current_state("PRECHECK_BLOCKED")
 
         self.precheckUpdated.emit(items)

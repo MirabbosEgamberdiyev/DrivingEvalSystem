@@ -137,6 +137,7 @@ def test_real_bridge_basic_lifecycle(qapp, tmp_path):
     repo.sync_rules("config/rules.yaml")
 
     bridge = RealBridge(config=config, repository=repo)
+    bridge._allow_mock_fallback = True
     assert bridge.currentState == "HOME"
     assert bridge.isConnected is True
 
@@ -153,3 +154,57 @@ def test_real_bridge_basic_lifecycle(qapp, tmp_path):
 
     bridge.resetToHome()
     assert bridge.currentState == "HOME"
+
+
+def test_real_bridge_production_blocks_without_precheck_service(qapp, tmp_path):
+    config = SystemConfig.load_from_yaml("config/config.yaml")
+    db_file = tmp_path / "test_real_bridge_block.db"
+    repo = DatabaseRepository(db_file)
+    repo.sync_rules("config/rules.yaml")
+
+    # In production without precheck_service and without mock fallback, precheck MUST block
+    bridge = RealBridge(config=config, repository=repo)
+    bridge.startPrecheck()
+    assert bridge.precheckPassed is False
+    assert bridge.currentState == "PRECHECK_BLOCKED"
+    assert "Precheck xizmati ulanmagan" in bridge.precheckBlockedReason
+
+
+def test_real_bridge_with_precheck_service_passed_and_failed(qapp, tmp_path):
+    from unittest.mock import MagicMock
+
+    from driving_eval.hardware.precheck import CheckItem, PrecheckReport
+
+    config = SystemConfig.load_from_yaml("config/config.yaml")
+    db_file = tmp_path / "test_real_bridge_svc.db"
+    repo = DatabaseRepository(db_file)
+    repo.sync_rules("config/rules.yaml")
+
+    mock_precheck = MagicMock()
+    # Scenario A: Passing precheck
+    mock_precheck.run_all_checks.return_value = PrecheckReport(
+        passed=True,
+        items=[
+            CheckItem("CAMERA_FRONT", True, True, "FPS: 30"),
+            CheckItem("STORAGE_SPACE", True, True, "Bo'sh joy: 50GB"),
+        ],
+        block_reasons=[],
+    )
+
+    bridge = RealBridge(config=config, repository=repo, precheck_service=mock_precheck)
+    bridge.startPrecheck()
+    assert bridge.precheckPassed is True
+    assert bridge.currentState == "SYSTEM_READY"
+
+    # Scenario B: Failing precheck
+    mock_precheck.run_all_checks.return_value = PrecheckReport(
+        passed=False,
+        items=[
+            CheckItem("CAMERA_FRONT", False, True, "Kamera FRONT ishlamayapti"),
+        ],
+        block_reasons=["Kamera FRONT ishlamayapti"],
+    )
+    bridge.retryPrecheck()
+    assert bridge.precheckPassed is False
+    assert bridge.currentState == "PRECHECK_BLOCKED"
+    assert "Kamera FRONT ishlamayapti" in bridge.precheckBlockedReason

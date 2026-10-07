@@ -354,3 +354,15 @@ def test_exercise_detector_active_rules_and_heading():
     # Heading check
     assert detector.check_heading("ESTAKADA", current_heading_deg=10.0) is True
     assert detector.check_heading("ESTAKADA", current_heading_deg=180.0) is False
+
+
+def test_exercise_detector_loads_from_autodrome_json(tmp_path):
+    cfg = SystemConfig.load_from_yaml("config/config.yaml")
+    detector = ExerciseDetector(cfg.exercises)
+
+    # Zones loaded from config/autodrome.json
+    assert len(detector._zones) == 8
+    assert "START" in detector._zones
+    assert "FINISH" in detector._zones
+    assert detector._zones["GARAGE_REVERSE"].expected_heading_deg == 180.0
+    assert detector._zones["TURN_90"].expected_heading_deg == 90.0

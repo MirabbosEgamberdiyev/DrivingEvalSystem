@@ -91,6 +91,7 @@ class ExercisesConfig(BaseModel):
     sequence: list[str] = Field(..., min_length=1)
     geofence_tolerance_meters: float = Field(default=3.0, gt=0.0)
     speed_stop_threshold_kmh: float = Field(default=1.5, ge=0.0)
+    autodrome_map_file: str | None = Field(default="config/autodrome.json")
 
 
 class StorageConfig(BaseModel):
