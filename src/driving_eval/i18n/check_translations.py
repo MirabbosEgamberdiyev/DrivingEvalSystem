@@ -22,6 +22,22 @@ import yaml
 from driving_eval.i18n.service import SUPPORTED_LANGUAGES
 
 PLACEHOLDER_REGEX = re.compile(r"\{[a-zA-Z0-9_]+\}")
+CYRILLIC_REGEX = re.compile(r"[\u0400-\u04FF]")
+UZ_SPECIFIC_CYRL_REGEX = re.compile(r"[қғҳўҚҒҲЎ]")
+LATIN_WORDS_REGEX = re.compile(r"\b[A-Za-z]{3,}\b")
+
+SCRIPT_WHITELIST = {
+    "FRONT", "REAR", "LEFT", "RIGHT", "OBD", "GPS", "FPS", "WAV", "ONNX",
+    "DIRECTML", "VIN", "CAR", "USB", "PDF", "CSV", "JSON", "RAM", "CPU",
+    "GB", "MB", "KB", "WMI", "IPM", "BEV", "ESTAKADA", "ZMEIKA", "PARALLEL",
+    "GARAG", "STOP", "LINE", "CONE", "SEATBELT", "COLLISION", "SPEED",
+    "HANDBRAKE", "SIGNAL", "LIGHTS", "REVERSING", "PEDESTRIAN", "HTML",
+    "SHA", "ED25519", "HMAC", "NEXIA", "STANDALONE", "ONLINE", "OFFLINE",
+    "CHECKING", "FAILED", "PASSED", "READY", "HOME", "TEST", "CIM", "API",
+    "ISO", "UTC", "KMH", "RPM", "VOLT", "CUDA", "TENSORRT", "MICROSOFT",
+    "WINDOWS", "PYSIDE", "PYTHON", "SQLITE", "ICU", "WCAG", "AAA", "HUD",
+    "GNSS", "IMU", "CAN", "NVME", "SSD", "WAL", "PIN", "TTS",
+}
 
 
 @dataclass
@@ -39,11 +55,17 @@ class LinterReport:
     placeholder_mismatches: list[str] = field(default_factory=list)
     rules_errors: list[str] = field(default_factory=list)
     unreviewed_entries: list[UnreviewedEntry] = field(default_factory=list)
+    script_leakages: list[str] = field(default_factory=list)
 
     @property
     def is_valid(self) -> bool:
         has_missing = any(bool(keys) for keys in self.missing_keys.values())
-        return not has_missing and not self.placeholder_mismatches and not self.rules_errors
+        return (
+            not has_missing
+            and not self.placeholder_mismatches
+            and not self.rules_errors
+            and not self.script_leakages
+        )
 
 
 def extract_placeholders(text: str) -> set[str]:
@@ -135,6 +157,31 @@ def run_translation_checks(
                         f"Key '{key}' in lang '{lang}' has placeholders {ph}, expected {expected_placeholders}"
                     )
 
+                # Script leakage check
+                if lang == "uz-Latn":
+                    m_cyrl = CYRILLIC_REGEX.findall(txt)
+                    if m_cyrl:
+                        report.script_leakages.append(
+                            f"[uz-Latn Cyrillic leak] Key '{key}': found {set(m_cyrl)} in '{txt}'"
+                        )
+                elif lang == "ru":
+                    m_uz = UZ_SPECIFIC_CYRL_REGEX.findall(txt)
+                    if m_uz:
+                        report.script_leakages.append(
+                            f"[ru Uzbek leak] Key '{key}': found {set(m_uz)} in '{txt}'"
+                        )
+                    if "o'" in txt.lower() or "g'" in txt.lower() or "o‘" in txt.lower() or "g‘" in txt.lower():
+                        report.script_leakages.append(
+                            f"[ru Uzbek-Latin leak] Key '{key}': found apostrophe in '{txt}'"
+                        )
+                elif lang == "uz-Cyrl":
+                    words = LATIN_WORDS_REGEX.findall(txt)
+                    leaks = [w for w in words if w.upper() not in SCRIPT_WHITELIST]
+                    if leaks:
+                        report.script_leakages.append(
+                            f"[uz-Cyrl Latin leak] Key '{key}': found {leaks} in '{txt}'"
+                        )
+
     # 4. Rules YAML Verification
     if rules_file.exists():
         with open(rules_file, encoding="utf-8") as f:
@@ -161,6 +208,29 @@ def run_translation_checks(
                         report.rules_errors.append(
                             f"Rule '{code}' lang '{lang}' is missing field '{required_field}'"
                         )
+
+                # Script leakage checks on rules
+                for field_name in ("title", "screen_text", "voice_text"):
+                    f_val = str(t_data.get(field_name, ""))
+                    if lang == "uz-Latn":
+                        m_cyrl = CYRILLIC_REGEX.findall(f_val)
+                        if m_cyrl:
+                            report.script_leakages.append(
+                                f"[uz-Latn Cyrillic leak in rules] Rule '{code}' field '{field_name}': found {set(m_cyrl)} in '{f_val}'"
+                            )
+                    elif lang == "ru":
+                        m_uz = UZ_SPECIFIC_CYRL_REGEX.findall(f_val)
+                        if m_uz:
+                            report.script_leakages.append(
+                                f"[ru Uzbek leak in rules] Rule '{code}' field '{field_name}': found {set(m_uz)} in '{f_val}'"
+                            )
+                    elif lang == "uz-Cyrl":
+                        words = LATIN_WORDS_REGEX.findall(f_val)
+                        leaks = [w for w in words if w.upper() not in SCRIPT_WHITELIST]
+                        if leaks:
+                            report.script_leakages.append(
+                                f"[uz-Cyrl Latin leak in rules] Rule '{code}' field '{field_name}': found {leaks} in '{f_val}'"
+                            )
 
                 if not t_data.get("reviewed", False):
                     report.unreviewed_entries.append(
@@ -192,6 +262,7 @@ def generate_review_markdown(output_path: Path, report: LinterReport) -> None:
         f"- Total unreviewed strings: **{len(report.unreviewed_entries)}**",
         f"- Missing keys across catalogs: **{sum(len(v) for v in report.missing_keys.values())}**",
         f"- Placeholder mismatches: **{len(report.placeholder_mismatches)}**",
+        f"- Script leakage issues: **{len(report.script_leakages)}**",
         f"- Rules definition errors: **{len(report.rules_errors)}**",
         "",
     ]
@@ -208,6 +279,12 @@ def generate_review_markdown(output_path: Path, report: LinterReport) -> None:
         lines.append("## Placeholder Mismatches")
         for m in report.placeholder_mismatches:
             lines.append(f"- {m}")
+        lines.append("")
+
+    if report.script_leakages:
+        lines.append("## Script Leakage Issues")
+        for leak in report.script_leakages:
+            lines.append(f"- ❌ {leak}")
         lines.append("")
 
     if report.rules_errors:
@@ -268,6 +345,11 @@ def main() -> int:
         print("\n[ERROR] Placeholder Mismatches:")
         for err in report.placeholder_mismatches:
             print(f"  - {err}")
+
+    if report.script_leakages:
+        print("\n[ERROR] Script Leakage Issues:")
+        for leak in report.script_leakages:
+            print(f"  - {leak}")
 
     if report.rules_errors:
         print("\n[ERROR] Rules Configuration Errors:")

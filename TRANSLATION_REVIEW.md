@@ -6,6 +6,7 @@
 - Total unreviewed strings: **0**
 - Missing keys across catalogs: **0**
 - Placeholder mismatches: **0**
+- Script leakage issues: **0**
 - Rules definition errors: **0**
 
 ## Unreviewed Strings Audit Table

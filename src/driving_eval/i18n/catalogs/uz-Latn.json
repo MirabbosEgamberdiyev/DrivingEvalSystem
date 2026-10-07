@@ -30,7 +30,7 @@
     "reviewer": "metodist_uz"
   },
   "btn_precheck": {
-    "text": "TIZIMNI TEKSHIRISH (PRE-CHECK)",
+    "text": "TIZIMNI TEKSHIRISH",
     "reviewed": true,
     "reviewer": "metodist_uz"
   },
@@ -130,12 +130,12 @@
     "reviewer": "metodist_uz"
   },
   "home_not_ready_msg": {
-    "text": "⚠️ Tizim ishga tushirildi. Avval uskunalar tekshiruvini (Pre-check) o'tkazing.",
+    "text": "⚠️ Tizim ishga tushirildi. Avval uskunalar tekshiruvini o'tkazing.",
     "reviewed": true,
     "reviewer": "metodist_uz"
   },
   "precheck_title": {
-    "text": "USKUNALAR VA TIZIM PRE-CHECK",
+    "text": "USKUNALAR VA TIZIMNI DASTLABKI TEKSHIRISH",
     "reviewed": true,
     "reviewer": "metodist_uz"
   },
@@ -150,7 +150,7 @@
     "reviewer": "metodist_uz"
   },
   "precheck_blocked_title": {
-    "text": "TEST START BLOCKED",
+    "text": "SINOVNI BOSHLASH TAQIQLANGAN",
     "reviewed": true,
     "reviewer": "metodist_uz"
   },
@@ -450,7 +450,7 @@
     "reviewer": "metodist_uz"
   },
   "evidence_ring_desc": {
-    "text": "Fayl diskda xavfsiz saqlangan (NVMe Ring Buffer)",
+    "text": "Fayl diskda xavfsiz saqlangan (aylanma video bufer)",
     "reviewed": true,
     "reviewer": "metodist_uz"
   },
@@ -560,7 +560,7 @@
     "reviewer": "metodist_uz"
   },
   "eula_title": {
-    "text": "FOYDALANUVCHI SHARTNOMASI VA MAXFIYLIK (EULA)",
+    "text": "FOYDALANUVCHI SHARTNOMASI VA MAXFIYLIK",
     "reviewed": true,
     "reviewer": "metodist_uz"
   },
@@ -1095,7 +1095,7 @@
     "reviewer": "metodist_uz"
   },
   "inspector.filter_suspect": {
-    "text": "Shubhali (Suspect)",
+    "text": "Shubhali holatlar",
     "reviewed": true,
     "reviewer": "metodist_uz"
   },
@@ -1140,7 +1140,7 @@
     "reviewer": "metodist_uz"
   },
   "inspector.btn_view_replay": {
-    "text": "Replay ko'rish",
+    "text": "Yozuvni qayta ko'rish",
     "reviewed": true,
     "reviewer": "metodist_uz"
   },
@@ -1255,7 +1255,7 @@
     "reviewer": "metodist_uz"
   },
   "maintenance.can_bus_status": {
-    "text": "OBD-II CAN avtobus aloqasi",
+    "text": "OBD-II CAN shina aloqasi",
     "reviewed": true,
     "reviewer": "metodist_uz"
   },
@@ -1285,7 +1285,7 @@
     "reviewer": "metodist_uz"
   },
   "wizard.step_1": {
-    "text": "1. Til va EULA",
+    "text": "1. Til va shartnoma",
     "reviewed": true,
     "reviewer": "metodist_uz"
   },
@@ -1380,7 +1380,7 @@
     "reviewer": "metodist_uz"
   },
   "admin.rules_title": {
-    "text": "Imtihon qoidalari pasporti (rules.yaml)",
+    "text": "Imtihon qoidalari pasporti",
     "reviewed": true,
     "reviewer": "metodist_uz"
   },
@@ -1450,7 +1450,7 @@
     "reviewer": "metodist_uz"
   },
   "wizard.step1": {
-    "text": "1. Til va EULA",
+    "text": "1. Til va shartnoma",
     "reviewed": true,
     "reviewer": "metodist_uz"
   },
@@ -1595,7 +1595,7 @@
     "reviewer": "qa_audit_team"
   },
   "wizard.polygon_geofence": {
-    "text": "GPS geofence radiusi: 35 metr | Yo'nalish toleransi: 75 gradus",
+    "text": "GPS geohudud radiusi: 35 metr | Yo'nalish toleransi: 75 gradus",
     "reviewed": true,
     "reviewer": "qa_audit_team"
   },

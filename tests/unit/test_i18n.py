@@ -192,6 +192,29 @@ def test_translation_linter_report_clean() -> None:
     assert len(report.missing_keys) == 0
     assert len(report.placeholder_mismatches) == 0
     assert len(report.rules_errors) == 0
+    assert len(report.script_leakages) == 0
+
+
+def test_script_leakage_detection(tmp_path: Path) -> None:
+    """Verifies that script leakage detection catches Cyrillic in Latn, Uzbek in Ru, and Latin in Cyrl."""
+    cat_dir = tmp_path / "catalogs"
+    cat_dir.mkdir()
+    # uz-Latn with Cyrillic character
+    (cat_dir / "uz-Latn.json").write_text('{"k1": {"text": "Test \u0430 text"}}', encoding="utf-8")
+    # uz-Cyrl with non-whitelisted English word
+    (cat_dir / "uz-Cyrl.json").write_text('{"k1": {"text": "Тест disconnect text"}}', encoding="utf-8")
+    # ru with Uzbek apostrophe
+    (cat_dir / "ru.json").write_text('{"k1": {"text": "Тест o\'tgan text"}}', encoding="utf-8")
+
+    dummy_rules = tmp_path / "rules.yaml"
+    dummy_rules.write_text("rules: []\n", encoding="utf-8")
+
+    report = run_translation_checks(catalogs_dir=cat_dir, rules_path=dummy_rules, project_root=tmp_path)
+    assert report.is_valid is False
+    assert len(report.script_leakages) >= 3
+    assert any("[uz-Latn Cyrillic leak]" in x for x in report.script_leakages)
+    assert any("[uz-Cyrl Latin leak]" in x for x in report.script_leakages)
+    assert any("[ru Uzbek-Latin leak]" in x for x in report.script_leakages)
 
 
 def test_db_migration_and_repository_extensions(tmp_path: Path) -> None:

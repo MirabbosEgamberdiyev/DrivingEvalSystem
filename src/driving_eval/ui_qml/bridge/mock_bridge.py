@@ -67,7 +67,7 @@ class MockBridge(BackendBridge):
             {"id": "comp_ai_engine", "title": "AI Inference Dvigateli", "status": "CHECKING", "detail": "ONNX-Runtime Latency: 16ms", "required": True},
             {"id": "comp_gps", "title": "GPS / GNSS Moduli", "status": "CHECKING", "detail": "10 Hz, 14 Yo'ldosh, RTK Fix", "required": True},
             {"id": "comp_imu", "title": "IMU Akselerometr / Giroskop", "status": "CHECKING", "detail": "100 Hz 6-DOF Faol", "required": True},
-            {"id": "comp_obd", "title": "OBD-II Telemetriya (CAN)", "status": "CHECKING", "detail": "500 kbps CAN avtobus ulandi", "required": True},
+            {"id": "comp_obd", "title": "OBD-II Telemetriya (CAN)", "status": "CHECKING", "detail": "500 kbps CAN shina ulandi", "required": True},
             {"id": "comp_storage", "title": "NVMe SSD Xotira Sig'imi", "status": "CHECKING", "detail": "428 GB bo'sh joy (>10 GB)", "required": True},
             {"id": "comp_database", "title": "SQLite WAL Ma'lumotlar Bazasi", "status": "CHECKING", "detail": "SHA-256 zanjir yaxlit", "required": True},
             {"id": "comp_audio", "title": "Ovozli Ogohlantirish Tizimi", "status": "CHECKING", "detail": "Offline ALSA / WAV Audio", "required": True},

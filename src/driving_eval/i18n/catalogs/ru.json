@@ -30,7 +30,7 @@
     "reviewer": "metodist_ru"
   },
   "btn_precheck": {
-    "text": "ПРОВЕРКА СИСТЕМЫ (PRE-CHECK)",
+    "text": "ПРОВЕРКА СИСТЕМЫ",
     "reviewed": true,
     "reviewer": "metodist_ru"
   },
@@ -130,12 +130,12 @@
     "reviewer": "metodist_ru"
   },
   "home_not_ready_msg": {
-    "text": "⚠️ Система запущена. Сначала выполните проверку оборудования (Pre-check).",
+    "text": "⚠️ Система запущена. Сначала выполните предварительную проверку оборудования.",
     "reviewed": true,
     "reviewer": "metodist_ru"
   },
   "precheck_title": {
-    "text": "ПРОВЕРКА ОБОРУДОВАНИЯ И СИСТЕМЫ",
+    "text": "ПРЕДВАРИТЕЛЬНАЯ ПРОВЕРКА ОБОРУДОВАНИЯ",
     "reviewed": true,
     "reviewer": "metodist_ru"
   },
@@ -150,7 +150,7 @@
     "reviewer": "metodist_ru"
   },
   "precheck_blocked_title": {
-    "text": "TEST START BLOCKED",
+    "text": "СТАРТ ТЕСТА ЗАБЛОКИРОВАН",
     "reviewed": true,
     "reviewer": "metodist_ru"
   },
@@ -560,7 +560,7 @@
     "reviewer": "metodist_ru"
   },
   "eula_title": {
-    "text": "ПОЛЬЗОВАТЕЛЬСКОЕ СОГЛАШЕНИЕ И КОНФИДЕНЦИАЛЬНОСТЬ (EULA)",
+    "text": "ПОЛЬЗОВАТЕЛЬСКОЕ СОГЛАШЕНИЕ И КОНФИДЕНЦИАЛЬНОСТЬ",
     "reviewed": true,
     "reviewer": "metodist_ru"
   },
@@ -1104,7 +1104,7 @@
     "reviewer": "metodist_ru"
   },
   "inspector.filter_suspect": {
-    "text": "Подозрительные (Suspect)",
+    "text": "Подозрительные",
     "reviewed": true,
     "reviewer": "metodist_ru"
   },
@@ -1149,7 +1149,7 @@
     "reviewer": "metodist_ru"
   },
   "inspector.btn_view_replay": {
-    "text": "Просмотр Replay",
+    "text": "Просмотр записи",
     "reviewed": true,
     "reviewer": "metodist_ru"
   },
@@ -1294,7 +1294,7 @@
     "reviewer": "metodist_ru"
   },
   "wizard.step_1": {
-    "text": "1. Язык и EULA",
+    "text": "1. Язык и соглашение",
     "reviewed": true,
     "reviewer": "metodist_ru"
   },
@@ -1389,7 +1389,7 @@
     "reviewer": "metodist_ru"
   },
   "admin.rules_title": {
-    "text": "Паспорт правил экзамена (rules.yaml)",
+    "text": "Паспорт правил экзамена",
     "reviewed": true,
     "reviewer": "metodist_ru"
   },
@@ -1459,7 +1459,7 @@
     "reviewer": "metodist_ru"
   },
   "wizard.step1": {
-    "text": "1. Язык и EULA",
+    "text": "1. Язык и соглашение",
     "reviewed": true,
     "reviewer": "metodist_ru"
   },

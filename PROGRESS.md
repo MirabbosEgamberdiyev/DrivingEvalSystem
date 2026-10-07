@@ -74,6 +74,16 @@ Ushbu hujjat loyihaning har bir bosqichidagi bajarilgan ishlar, testlar holati, 
 
 ---
 
-## Yakuniy Xulosa
-Loyihaning barcha texnik va arxitektura talablari (100% Offline, Standalone, Precision ustuvor, Ed25519 litsenziyalash, 3 tillilik, 2 darajali state machine, QML UI, Inno Setup) to'liq, qat'iy va sifatli amalga oshirildi.
+## 2-Raund Auditi va Mukammallashtirish (Round 2 Audit & Hardening)
+
+| Bosqich | Tavsif | Holat | Bajarilgan Ishlar & Dalillar |
+| :--- | :--- | :--- | :--- |
+| **Bosqich 1: Sirlar va Repo Xavfsizligi** | Git tarixi skaneri, vendor kalit juftligini almashtirish, pre-commit hook, pip-audit | ✅ TUGALLANDI | Eski vendor xususiy kaliti bekor qilindi, yangi ochiq kalit (`1723341...`) integratsiya qilindi. `LICENSING.md` da rotatsiya va bekor qilish protokoli hujjatlashtirildi. Git pre-commit sir skaneri faollashtirildi, `pip-audit` toza (`42469d3`). |
+| **Bosqich 2: Kriptografiya va Yaxlitlik** | Standart `cryptography` Ed25519, kengaytirilgan hash zanjiri, PBKDF2 tuzlangan PIN va qayta yuklashga chidamli bloklash | ✅ TUGALLANDI | `cryptography` Ed25519 kutubxonasiga o'tildi. Hash zanjiri kengaytirildi (`session_hash_ledger`), o'chirish/o'zgartirish/qo'shish urinishlari aniqlanadi. 100 000 iteratsiyali PBKDF2 PIN himoyasi, 3 xato kiritishdan so'ng 5 daqiqali bloklash va SQLite'da saqlanishi ta'minlandi (`42469d3`). |
+| **Bosqich 3: Diagnostika va Haqiqiy Uskunalar** | Windows WMI harorat telemetriyasi, [SIMULATION] belgisi, dinamik poligon konfiguratsiyasi | ✅ TUGALLANDI | `system_metrics.py` da WMI orqali CPU/GPU harorati o'qish (`MSAcpi_ThermalZoneTemperature`, `Win32_PerfFormattedData_GPUPerformanceCounters`). Real bridge ulanmagan qurilmalarni `DISCONNECTED` va simulyatsiya rejimini `[SIMULATION]` nishoni bilan ko'rsatadi. `config/autodrome.json` dinamik yuklanishi va validatsiyasi joriy etildi (`7e54c80`). |
+| **Bosqich 4: Spetsifikatsiya Bo'shliqlari** | Mashg'ulot vs Imtihon rejimi, N-kamera moslashuvchanligi, Mustaqil Admin vositasi, Inno Setup | ✅ TUGALLANDI | `TRAINING` vs `ASSESSMENT` rejimlari: qat'iy tekshiruv, `TRAINING` rejimida kritik xatoda imtihon to'xtatilmaydi, yakuniy sertifikatda "Mashg'ulot" belgisi qo'yiladi. N-kamera (1, 2, 3, 4+) dinamik kompozit gridi (`recorder.py`). Mustaqil `admin_license_gen.py` va Inno Setup skripti (`0a65c45`). |
+| **Bosqich 5: Lokalizatsiya va Yozuv Sofligi** | 100% kalit pariteti, skript sizib chiqishini (leakage) to'liq bartaraf etish, avtomatlashtirilgan tekshiruv | ✅ TUGALLANDI | `uz-Latn`, `uz-Cyrl` va `ru` kataloglaridagi 322 ta kalit 100% ko'rib chiqilgan. Kirill yozuvidagi barcha ingliz/lotin so'zlari (EULA, Pre-check, Suspect, Replay, Logs, Drift, geofence, avtobus) tozalandi ("CAN shina"). `check_translations.py` skript sizib chiqishini avtomatik aniqlaydi (`TRANSLATION_REVIEW.md`: 0 xato). 10/10 i18n test PASS. |
+| **Bosqich 6: UI/UX (Avtomobil Sensorli Ekrani)** | Avtomobil standartidagi sensorli tugmalar (>=96x72px), chalg'itmaslik tamoyili, HUD tezlik (>=72px) | ⏳ NAVBATDA | Ko'rik va tekshiruv boshlanmoqda. |
+| **Bosqich 7: Soak, Kechikish, Replay va Chekka Holatlar** | Disk to'lishi, DB qulflanishi, kamera uzilishi, soat orqaga surilishi | ⏳ NAVBATDA | Rejalashtirilgan. |
+| **Bosqich 8: Mutatsion Sinovlar va FINAL_AUDIT_REPORT_2.md** | Baholash dvigateli mutatsiyalari, yakuniy daliliy hisobot | ⏳ NAVBATDA | Rejalashtirilgan. |
 

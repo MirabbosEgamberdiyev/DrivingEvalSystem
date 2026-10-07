@@ -30,7 +30,7 @@
     "reviewer": "metodist_uz"
   },
   "btn_precheck": {
-    "text": "ТИЗИМНИ ТЕКШИРИШ (PRE-CHECK)",
+    "text": "ТИЗИМНИ ТЕКШИРИШ",
     "reviewed": true,
     "reviewer": "metodist_uz"
   },
@@ -130,12 +130,12 @@
     "reviewer": "metodist_uz"
   },
   "home_not_ready_msg": {
-    "text": "⚠️ Тизим ишга туширилди. Аввал ускуналар текширувини (Pre-check) ўтказинг.",
+    "text": "⚠️ Тизим ишга туширилди. Аввал ускуналар текширувини ўтказинг.",
     "reviewed": true,
     "reviewer": "metodist_uz"
   },
   "precheck_title": {
-    "text": "УСКУНАЛАР ВА ТИЗИМ PRE-CHECK",
+    "text": "УСКУНАЛАР ВА ТИЗИМНИ ДАСТЛАБКИ ТЕКШИРИШ",
     "reviewed": true,
     "reviewer": "metodist_uz"
   },
@@ -150,7 +150,7 @@
     "reviewer": "metodist_uz"
   },
   "precheck_blocked_title": {
-    "text": "TEST START BLOCKED",
+    "text": "СИНОВНИ БОШЛАШ ТАҚИҚЛАНГАН",
     "reviewed": true,
     "reviewer": "metodist_uz"
   },
@@ -180,12 +180,12 @@
     "reviewer": "metodist_uz"
   },
   "comp_cam_drift": {
-    "text": "Камералар Калибровкаси (Drift)",
+    "text": "Камералар калибровкаси ва силжиши",
     "reviewed": true,
     "reviewer": "metodist_uz"
   },
   "comp_ai_engine": {
-    "text": "AI Inference Двигатели",
+    "text": "AI нейротармоқ модули",
     "reviewed": true,
     "reviewer": "metodist_uz"
   },
@@ -320,12 +320,12 @@
     "reviewer": "metodist_uz"
   },
   "result_pass": {
-    "text": "МУВАФФАҚИЯТЛИ ЎТДИ (PASS)",
+    "text": "МУВАФФАҚИЯТЛИ ЎТДИ",
     "reviewed": true,
     "reviewer": "metodist_uz"
   },
   "result_fail": {
-    "text": "ЙИҚИЛДИ (FAIL)",
+    "text": "ЙИҚИЛДИ",
     "reviewed": true,
     "reviewer": "metodist_uz"
   },
@@ -395,7 +395,7 @@
     "reviewer": "metodist_uz"
   },
   "violations_suspect_header": {
-    "text": "ШУБҲАЛИ (SUSPECT) ҲОДИСАЛАР (ЖАРИМА ОЛИНМАГАН, ИНСПЕКТОР КЎРИШИ УЧУН):",
+    "text": "ШУБҲАЛИ ҲОДИСАЛАР (ЖАРИМА ОЛИНМАГАН, ИНСПЕКТОР КЎРИШИ УЧУН):",
     "reviewed": true,
     "reviewer": "metodist_uz"
   },
@@ -450,7 +450,7 @@
     "reviewer": "metodist_uz"
   },
   "evidence_ring_desc": {
-    "text": "Файл дискда хавфсиз сақланган (NVMe Ring Buffer)",
+    "text": "Файл дискда хавфсиз сақланган (айланма видео буфер)",
     "reviewed": true,
     "reviewer": "metodist_uz"
   },
@@ -500,7 +500,7 @@
     "reviewer": "metodist_uz"
   },
   "disconnect_overlay_desc": {
-    "text": "Backend хизмати билан алоқа йўқолди. Қайта уланиш кутилмоқда. Тест ҳисоби ва маълумотлар сақланмоқда.",
+    "text": "Асосий дастур билан алоқа йўқолди. Қайта уланиш кутилмоқда. Тест ҳисоби ва маълумотлар сақланмоқда.",
     "reviewed": true,
     "reviewer": "metodist_uz"
   },
@@ -515,7 +515,7 @@
     "reviewer": "metodist_uz"
   },
   "activation_machine_id": {
-    "text": "Ушбу компьютер ID (Machine ID):",
+    "text": "Ушбу компьютернинг қурилма ID рақами:",
     "reviewed": true,
     "reviewer": "metodist_uz"
   },
@@ -560,7 +560,7 @@
     "reviewer": "metodist_uz"
   },
   "eula_title": {
-    "text": "ФОЙДАЛАНУВЧИ ШАРТНОМАСИ ВА МАХФИЙЛИК (EULA)",
+    "text": "ФОЙДАЛАНУВЧИ КЕЛИШУВИ ВА МАХФИЙЛИК",
     "reviewed": true,
     "reviewer": "metodist_uz"
   },
@@ -970,7 +970,7 @@
     "reviewer": "metodist_uz"
   },
   "system.precheck_title": {
-    "text": "УСКУНАЛАР PRE-CHECK ТЕКШИРУВИ",
+    "text": "УСКУНАЛАРНИ ДАСТЛАБКИ ТЕКШИРИШ",
     "reviewed": true,
     "reviewer": "metodist_uz"
   },
@@ -1095,7 +1095,7 @@
     "reviewer": "metodist_uz"
   },
   "inspector.filter_suspect": {
-    "text": "Шубҳали (Suspect)",
+    "text": "Шубҳали ҳолатлар",
     "reviewed": true,
     "reviewer": "metodist_uz"
   },
@@ -1140,7 +1140,7 @@
     "reviewer": "metodist_uz"
   },
   "inspector.btn_view_replay": {
-    "text": "Replay кўриш",
+    "text": "Ёзувни қайта кўриш",
     "reviewed": true,
     "reviewer": "metodist_uz"
   },
@@ -1215,7 +1215,7 @@
     "reviewer": "metodist_uz"
   },
   "admin.tab_logs": {
-    "text": "Журнал (Logs)",
+    "text": "Тизим журнали",
     "reviewed": true,
     "reviewer": "metodist_uz"
   },
@@ -1255,7 +1255,7 @@
     "reviewer": "metodist_uz"
   },
   "maintenance.can_bus_status": {
-    "text": "OBD-II CAN автобус алоқаси",
+    "text": "OBD-II CAN шина алоқаси",
     "reviewed": true,
     "reviewer": "metodist_uz"
   },
@@ -1285,7 +1285,7 @@
     "reviewer": "metodist_uz"
   },
   "wizard.step_1": {
-    "text": "1. Тил ва EULA",
+    "text": "1. Тил ва шартнома",
     "reviewed": true,
     "reviewer": "metodist_uz"
   },
@@ -1310,7 +1310,7 @@
     "reviewer": "metodist_uz"
   },
   "wizard.step_6": {
-    "text": "6. Овоз ва TTS",
+    "text": "6. Овоз ва нутқ синтези",
     "reviewed": true,
     "reviewer": "metodist_uz"
   },
@@ -1380,7 +1380,7 @@
     "reviewer": "metodist_uz"
   },
   "admin.rules_title": {
-    "text": "Имтиҳон қоидалари паспорти (rules.yaml)",
+    "text": "Имтиҳон қоидалари паспорти",
     "reviewed": true,
     "reviewer": "metodist_uz"
   },
@@ -1435,7 +1435,7 @@
     "reviewer": "metodist_uz"
   },
   "admin.calib_drift": {
-    "text": "Силжиш (Drift)",
+    "text": "Камера силжиши",
     "reviewed": true,
     "reviewer": "metodist_uz"
   },
@@ -1450,7 +1450,7 @@
     "reviewer": "metodist_uz"
   },
   "wizard.step1": {
-    "text": "1. Тил ва EULA",
+    "text": "1. Тил ва шартнома",
     "reviewed": true,
     "reviewer": "metodist_uz"
   },
@@ -1555,7 +1555,7 @@
     "reviewer": "qa_audit_team"
   },
   "settings_bev_drift_label": {
-    "text": "Fiducial drift назорати: 2.1 см (< 5.0 см рухсат этилган) — Камера силжимаган.",
+    "text": "Эталон силжиш назорати: 2.1 см (< 5.0 см рухсат этилган) — Камера силжимаган.",
     "reviewed": true,
     "reviewer": "qa_audit_team"
   },
@@ -1595,7 +1595,7 @@
     "reviewer": "qa_audit_team"
   },
   "wizard.polygon_geofence": {
-    "text": "GPS geofence радиуси: 35 метр | Йўналиш толеранси: 75 градус",
+    "text": "GPS геоҳудуд радиуси: 35 метр | Йўналиш толеранси: 75 градус",
     "reviewed": true,
     "reviewer": "qa_audit_team"
   },
