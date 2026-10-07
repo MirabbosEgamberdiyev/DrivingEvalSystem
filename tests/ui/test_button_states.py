@@ -74,3 +74,22 @@ def test_big_button_debounce_logic(qapp, qtbot):
     assert len(clicks) == 2
 
 
+def test_automotive_touch_and_typography_standards(qapp):
+    """Verifies that Theme enforces automotive cockpit standards (>=96x72 touch target, >=72px HUD speed)."""
+    engine = QQmlApplicationEngine()
+    qml_dir = Path("src/driving_eval/ui_qml/qml").resolve()
+    engine.addImportPath(str(qml_dir))
+
+    theme_file = qml_dir / "Theme.qml"
+    engine.load(QUrl.fromLocalFile(str(theme_file)))
+    assert len(engine.rootObjects()) > 0
+    theme = engine.rootObjects()[0]
+
+    assert theme.property("minTouchTarget") >= 72
+    assert theme.property("buttonMinHeight") >= 72
+    assert theme.property("buttonMinWidth") >= 96
+    assert theme.property("fontDisplay") >= 72
+    assert theme.property("fontBody") >= 22
+
+
+

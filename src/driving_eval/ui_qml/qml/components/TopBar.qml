@@ -14,7 +14,7 @@ Rectangle {
     signal settingsClicked()
 
     implicitWidth: 1280
-    implicitHeight: 76
+    implicitHeight: 80
     color: Theme.surfaceDark
     border.color: Theme.surfaceBorder
     border.width: 1
@@ -30,7 +30,7 @@ Rectangle {
             id: backBtn
             visible: root.showBack
             minWidth: 96
-            minHeight: 52
+            minHeight: 64
             variant: "secondary"
             iconSource: "../assets/icons/back.svg"
             text: ""
@@ -133,8 +133,8 @@ Rectangle {
 
                 delegate: Rectangle {
                     id: langBtn
-                    width: langRow.implicitWidth + 16
-                    height: 42
+                    width: langRow.implicitWidth + 20
+                    height: 48
                     radius: Theme.radiusSmall
                     property bool active: (typeof i18n !== "undefined" && i18n) ? i18n.currentLanguage === modelData.code : false
                     color: active ? Theme.colorAccent : Theme.surfaceElevated
@@ -178,8 +178,8 @@ Rectangle {
         BigButton {
             id: settingsBtn
             visible: root.showSettings
-            minWidth: 54
-            minHeight: 46
+            minWidth: 64
+            minHeight: 64
             variant: "secondary"
             iconSource: "../assets/icons/gear.svg"
             text: ""

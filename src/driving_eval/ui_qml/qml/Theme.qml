@@ -76,8 +76,8 @@ QtObject {
     readonly property int fontButton: 20
     readonly property int fontStatus: 16
 
-    // Touch Target
-    readonly property int minTouchTarget: 48
+    // Touch Target (Automotive cockpit touch standard >= 96x72 px)
+    readonly property int minTouchTarget: 72
 
     // --- Timings & Animations ---
     readonly property int debounceDelayMs: 300

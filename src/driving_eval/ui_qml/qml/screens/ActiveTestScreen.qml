@@ -440,7 +440,7 @@ Item {
 
             BigButton {
                 minWidth: 260
-                minHeight: 64
+                minHeight: 72
                 variant: "danger"
                 iconSource: "../assets/icons/finish.svg"
                 text: Theme.tr("btn_finish_test")
