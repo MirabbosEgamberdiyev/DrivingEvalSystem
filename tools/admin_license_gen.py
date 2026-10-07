@@ -7,24 +7,84 @@ Kept securely by the authority / exam administrator outside of public repositori
 """
 
 import argparse
+import base64
 import json
 import logging
 import os
 import sys
+from dataclasses import dataclass, field
 from datetime import UTC, datetime
 from pathlib import Path
 
 from cryptography.hazmat.primitives import serialization
 from cryptography.hazmat.primitives.asymmetric.ed25519 import Ed25519PrivateKey
 
-from driving_eval.licensing.license_manager import (
-    LicensePayload,
-    pack_license_token,
-)
-from driving_eval.licensing.machine_id import (
-    MachineFingerprint,
-    get_current_machine_fingerprint,
-)
+# Auto-add src to sys.path if running inside repository
+_repo_src = Path(__file__).resolve().parent.parent / "src"
+if _repo_src.exists() and str(_repo_src) not in sys.path:
+    sys.path.insert(0, str(_repo_src))
+
+try:
+    from driving_eval.licensing.license_manager import (
+        LicensePayload,
+        pack_license_token,
+    )
+    from driving_eval.licensing.machine_id import (
+        MachineFingerprint,
+        get_current_machine_fingerprint,
+    )
+except ImportError:
+    @dataclass
+    class LicensePayload:  # type: ignore[no-redef]
+        car_id: str
+        machine_fingerprint: dict[str, str]
+        issued_at: str
+        expires_at: str
+        tier: str = "FULL"
+        features: list[str] = field(default_factory=lambda: ["4_cameras", "all_exercises", "pdf_reports"])
+
+    def pack_license_token(payload: LicensePayload, signature_bytes: bytes) -> str:  # type: ignore[no-redef]
+        payload_dict = {
+            "car_id": payload.car_id,
+            "machine_fingerprint": payload.machine_fingerprint,
+            "issued_at": payload.issued_at,
+            "expires_at": payload.expires_at,
+            "tier": payload.tier,
+            "features": payload.features,
+        }
+        json_bytes = json.dumps(payload_dict, sort_keys=True, separators=(",", ":")).encode("utf-8")
+        blob = len(json_bytes).to_bytes(4, "big") + json_bytes + signature_bytes
+        b64 = base64.urlsafe_b64encode(blob).decode("ascii").rstrip("=")
+        return f"DRV-LIC-{b64}"
+
+    @dataclass
+    class MachineFingerprint:  # type: ignore[no-redef]
+        cpu_hash: str
+        motherboard_uuid: str
+        disk_serial: str
+        mac_address: str
+
+        def to_dict(self) -> dict[str, str]:
+            return {
+                "cpu_hash": self.cpu_hash,
+                "motherboard_uuid": self.motherboard_uuid,
+                "disk_serial": self.disk_serial,
+                "mac_address": self.mac_address,
+            }
+
+    def get_current_machine_fingerprint() -> MachineFingerprint:  # type: ignore[no-redef]
+        import hashlib
+        import platform
+        import uuid
+        cpu_info = platform.processor() or "CPU_DEFAULT"
+        cpu_hash = hashlib.sha256(cpu_info.encode()).hexdigest()[:16]
+        mac = f"{uuid.getnode():012x}"
+        return MachineFingerprint(
+            cpu_hash=cpu_hash,
+            motherboard_uuid="STANDALONE-MB-DEFAULT",
+            disk_serial="STANDALONE-DISK-DEFAULT",
+            mac_address=mac,
+        )
 
 logging.basicConfig(level=logging.INFO, format="%(asctime)s [%(levelname)s] %(message)s")
 logger = logging.getLogger("admin_license_gen")

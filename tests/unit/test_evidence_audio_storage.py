@@ -183,3 +183,35 @@ def test_storage_manager_export_and_prune(tmp_path, repo):
     pruned = mgr.prune_old_evidence_if_needed()
     assert pruned == 1
     assert not sess_folder.exists()  # Evidences cleaned!
+
+
+def test_evidence_recorder_dynamic_n_cameras():
+    """Verifies EvidenceRecorder composite grid dynamically adapts to 1, 2, or 4 cameras."""
+    import numpy as np
+
+    from driving_eval.evidence.recorder import EvidenceRecorder
+
+    target_shape = (720, 1280)
+    frame_front = np.ones((720, 1280, 3), dtype=np.uint8) * 100
+    frame_cabin = np.ones((720, 1280, 3), dtype=np.uint8) * 200
+
+    # 1. Test 1-camera composite
+    comp_1 = EvidenceRecorder._create_multi_cam_composite({"FRONT": frame_front}, target_shape)
+    assert comp_1.shape == (720, 1280, 3)
+
+    # 2. Test 2-camera composite (side-by-side)
+    comp_2 = EvidenceRecorder._create_multi_cam_composite({"FRONT": frame_front, "CABIN": frame_cabin}, target_shape)
+    assert comp_2.shape == (720, 1280, 3)
+
+    # 3. Test 4-camera composite (2x2 grid)
+    comp_4 = EvidenceRecorder._create_multi_cam_composite(
+        {
+            "FRONT": frame_front,
+            "REAR": frame_cabin,
+            "LEFT": frame_front,
+            "RIGHT": frame_cabin,
+        },
+        target_shape,
+    )
+    assert comp_4.shape == (720, 1280, 3)
+

@@ -119,6 +119,12 @@ class MockBridge(BackendBridge):
 
     # --- Exam Lifecycle Slots ---
 
+    @Slot(str)
+    def startTestWithMode(self, mode: str) -> None:
+        """Sets active examination mode and begins test."""
+        self.set_exam_mode(mode)
+        self.startTest()
+
     @Slot()
     def startTest(self) -> None:
         """Transitions into TEST_ACTIVE and starts telemetry simulation."""
@@ -175,9 +181,11 @@ class MockBridge(BackendBridge):
                     penalty=100,
                     critical=True,
                 )
-                self._test_timer.stop()
-                self._finalize_result()
-                return
+                if self._exam_mode == "ASSESSMENT":
+                    self._test_timer.stop()
+                    self._finalize_result()
+                    return
+                # In TRAINING mode, alert is raised but session continues without abrupt abort
             self._speed = 14.0
             self._current_exercise = "PARALLEL PARK"
         elif self._elapsed == 9:
@@ -269,6 +277,8 @@ class MockBridge(BackendBridge):
 
         result_data = {
             "car_id": self._car_id,
+            "mode": self._exam_mode,
+            "official": self._exam_mode == "ASSESSMENT",
             "start_score": start_score,
             "total_penalty": self._total_penalty,
             "final_score": final_score,

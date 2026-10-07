@@ -803,6 +803,51 @@
     "reviewed": true,
     "reviewer": "metodist_ru"
   },
+  "exam.mode_assessment": {
+    "text": "Официальный экзамен",
+    "reviewed": true,
+    "reviewer": "metodist_ru"
+  },
+  "exam.mode_training": {
+    "text": "Режим тренировки",
+    "reviewed": true,
+    "reviewer": "metodist_ru"
+  },
+  "exam.start_assessment": {
+    "text": "Начать официальный экзамен",
+    "reviewed": true,
+    "reviewer": "metodist_ru"
+  },
+  "exam.start_training": {
+    "text": "Начать тренировку",
+    "reviewed": true,
+    "reviewer": "metodist_ru"
+  },
+  "exam.training_badge": {
+    "text": "РЕЖИМ ТРЕНИРОВКИ",
+    "reviewed": true,
+    "reviewer": "metodist_ru"
+  },
+  "exam.assessment_badge": {
+    "text": "ОФИЦИАЛЬНЫЙ ЭКЗАМЕН",
+    "reviewed": true,
+    "reviewer": "metodist_ru"
+  },
+  "exam.training_watermark": {
+    "text": "ВНИМАНИЕ: Тест проведен в режиме тренировки (Не является официальным протоколом)",
+    "reviewed": true,
+    "reviewer": "metodist_ru"
+  },
+  "exam.training_notice": {
+    "text": "В режиме тренировки ошибки озвучиваются и отображаются, но экзамен не прерывается принудительно.",
+    "reviewed": true,
+    "reviewer": "metodist_ru"
+  },
+  "result.training_completed": {
+    "text": "ТРЕНИРОВКА ЗАВЕРШЕНА",
+    "reviewed": true,
+    "reviewer": "metodist_ru"
+  },
   "camera.front": {
     "text": "Передняя камера (FRONT)",
     "reviewed": true,

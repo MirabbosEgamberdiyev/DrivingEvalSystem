@@ -794,6 +794,51 @@
     "reviewed": true,
     "reviewer": "metodist_uz"
   },
+  "exam.mode_assessment": {
+    "text": "Расмий Имтиҳон",
+    "reviewed": true,
+    "reviewer": "metodist_uz"
+  },
+  "exam.mode_training": {
+    "text": "Машғулот Режими",
+    "reviewed": true,
+    "reviewer": "metodist_uz"
+  },
+  "exam.start_assessment": {
+    "text": "Расмий Имтиҳонни Бошлаш",
+    "reviewed": true,
+    "reviewer": "metodist_uz"
+  },
+  "exam.start_training": {
+    "text": "Машғулотни Бошлаш",
+    "reviewed": true,
+    "reviewer": "metodist_uz"
+  },
+  "exam.training_badge": {
+    "text": "МАШҒУЛОТ РЕЖИМИ",
+    "reviewed": true,
+    "reviewer": "metodist_uz"
+  },
+  "exam.assessment_badge": {
+    "text": "РАСМИЙ ИМТИҲОН",
+    "reviewed": true,
+    "reviewer": "metodist_uz"
+  },
+  "exam.training_watermark": {
+    "text": "ДИҚҚАТ: Ушбу синов машғулот режимида ўтказилди (Расмий ҳисобот ҳисобланмайди)",
+    "reviewed": true,
+    "reviewer": "metodist_uz"
+  },
+  "exam.training_notice": {
+    "text": "Машғулот режимида хатолар кўрсатилади ва овозда эшиттирилади, бироқ имтиҳон мажбурий тўхтатилмайди.",
+    "reviewed": true,
+    "reviewer": "metodist_uz"
+  },
+  "result.training_completed": {
+    "text": "МАШҒУЛОТ ЯКУНЛАНДИ",
+    "reviewed": true,
+    "reviewer": "metodist_uz"
+  },
   "camera.front": {
     "text": "Олд камера (FRONT)",
     "reviewed": true,

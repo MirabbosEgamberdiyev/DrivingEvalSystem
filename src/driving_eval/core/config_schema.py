@@ -38,7 +38,7 @@ class ScoringConfig(BaseModel):
 
 
 class CameraDeviceConfig(BaseModel):
-    name: Literal["FRONT", "REAR", "LEFT", "RIGHT"]
+    name: str = Field(description="Camera identifier, e.g. FRONT, REAR, LEFT, RIGHT, CABIN")
     device_index: int = Field(default=0, ge=0)
     stream_uri: str = ""
     sim_video_path: str = ""
@@ -57,10 +57,8 @@ class CamerasConfig(BaseModel):
     @field_validator("devices")
     @classmethod
     def validate_required_cameras(cls, v: dict[str, CameraDeviceConfig]) -> dict[str, CameraDeviceConfig]:
-        required_keys = {"front", "rear", "left", "right"}
-        missing = required_keys - set(v.keys())
-        if missing:
-            raise ValueError(f"Majburiy 4 kamera konfiguratsiyasi yetishmayapti: {missing}")
+        if not v:
+            raise ValueError("Kamida 1 ta kamera konfiguratsiyasi mavjud bo'lishi shart")
         return v
 
 

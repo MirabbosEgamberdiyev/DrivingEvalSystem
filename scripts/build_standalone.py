@@ -26,7 +26,9 @@ def assemble_distribution_tree(target_dir: Path, source_root: Path) -> None:
         ("data/audio", target_dir / "data" / "audio"),
         ("data/models", target_dir / "data" / "models"),
         ("src/driving_eval/ui_qml/qml", target_dir / "driving_eval" / "ui_qml" / "qml"),
+        ("src/driving_eval/ui_qml/assets", target_dir / "driving_eval" / "ui_qml" / "assets"),
         ("src/driving_eval/i18n/catalogs", target_dir / "driving_eval" / "i18n" / "catalogs"),
+        ("tools/admin_license_gen.py", target_dir / "tools" / "admin_license_gen.py"),
     ]
 
     for src_rel, dst in assets_to_copy:

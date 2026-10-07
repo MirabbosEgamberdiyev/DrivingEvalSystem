@@ -83,6 +83,27 @@ Item {
                 font.pixelSize: Theme.fontCaption
                 anchors.verticalCenter: parent.verticalCenter
             }
+
+            // Mode Badge (ASSESSMENT vs TRAINING)
+            Rectangle {
+                height: 24
+                radius: 12
+                color: backendBridge.examMode === "TRAINING" ? "#78350F" : "#14532D"
+                border.color: backendBridge.examMode === "TRAINING" ? Theme.colorWarning : Theme.colorSuccess
+                border.width: 1
+                anchors.verticalCenter: parent.verticalCenter
+                width: modeLabel.implicitWidth + 18
+
+                Text {
+                    id: modeLabel
+                    anchors.centerIn: parent
+                    text: backendBridge.examMode === "TRAINING" ? Theme.tr("exam.training_badge") : Theme.tr("exam.assessment_badge")
+                    color: backendBridge.examMode === "TRAINING" ? Theme.colorWarning : Theme.colorSuccess
+                    font.family: Theme.fontFamily
+                    font.pixelSize: 11
+                    font.bold: true
+                }
+            }
         }
 
         // Live Clock / Elapsed Timer

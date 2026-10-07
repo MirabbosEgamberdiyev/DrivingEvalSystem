@@ -7,6 +7,7 @@ Item {
     id: root
 
     signal startTestClicked()
+    signal startTrainingClicked()
     signal backClicked()
 
     Rectangle {
@@ -31,23 +32,23 @@ Item {
     // Center Hero
     Column {
         anchors.centerIn: parent
-        spacing: 32
+        spacing: 24
         width: Math.min(parent.width - 64, 820)
 
         // Green Success Badge Icon
         Rectangle {
             anchors.horizontalCenter: parent.horizontalCenter
-            width: 100
-            height: 100
-            radius: 50
+            width: 88
+            height: 88
+            radius: 44
             color: Theme.colorSuccessBg
             border.color: Theme.colorSuccess
             border.width: 3
 
             Image {
                 anchors.centerIn: parent
-                width: 52
-                height: 52
+                width: 48
+                height: 48
                 source: "../assets/icons/check.svg"
                 fillMode: Image.PreserveAspectFit
             }
@@ -56,7 +57,7 @@ Item {
         // Announcement
         Column {
             anchors.horizontalCenter: parent.horizontalCenter
-            spacing: 12
+            spacing: 8
 
             Text {
                 anchors.horizontalCenter: parent.horizontalCenter
@@ -79,15 +80,48 @@ Item {
             }
         }
 
-        // Action Button
-        BigButton {
+        // Action Buttons: Assessment vs Training
+        Column {
             anchors.horizontalCenter: parent.horizontalCenter
-            minWidth: Theme.buttonLargeWidth + 80
-            minHeight: Theme.buttonLargeHeight + 8
-            variant: "success"
-            iconSource: "../assets/icons/check.svg"
-            text: Theme.tr("btn_start_test")
-            onClicked: root.startTestClicked()
+            spacing: 12
+            width: Math.min(parent.width, 560)
+
+            // 1. Official Assessment (Rasmiy Imtihon)
+            BigButton {
+                width: parent.width
+                minHeight: Theme.buttonLargeHeight
+                variant: "success"
+                iconSource: "../assets/icons/check.svg"
+                text: Theme.tr("exam.start_assessment")
+                onClicked: {
+                    backendBridge.setExamMode("ASSESSMENT")
+                    root.startTestClicked()
+                }
+            }
+
+            // 2. Training / Practice Mode (Mashg'ulot Rejimi)
+            BigButton {
+                width: parent.width
+                minHeight: 56
+                variant: "secondary"
+                iconSource: "../assets/icons/play.svg"
+                text: Theme.tr("exam.start_training")
+                onClicked: {
+                    backendBridge.setExamMode("TRAINING")
+                    root.startTrainingClicked()
+                }
+            }
+
+            Text {
+                anchors.horizontalCenter: parent.horizontalCenter
+                text: Theme.tr("exam.training_notice")
+                color: Theme.textMuted
+                font.family: Theme.fontFamily
+                font.pixelSize: Theme.fontCaption
+                horizontalAlignment: Text.AlignHCenter
+                width: parent.width - 40
+                wrapMode: Text.WordWrap
+            }
         }
     }
 

@@ -30,11 +30,13 @@ class BackendBridge(QObject):
     reportExportFinished = Signal(bool, str)
     hashVerificationFinished = Signal(str, bool, str)
     roleChanged = Signal(str)
+    examModeChanged = Signal(str)
 
     def __init__(self, parent: QObject | None = None):
         super().__init__(parent)
         self._current_state: str = "HOME"
         self._current_role: str = "STUDENT"  # 'STUDENT', 'INSPECTOR', 'ADMIN'
+        self._exam_mode: str = "ASSESSMENT"  # 'ASSESSMENT' or 'TRAINING'
         self._finish_ready: bool = False
         self._is_connected: bool = True
         self._car_id: str = "CAR-01"
@@ -55,6 +57,16 @@ class BackendBridge(QObject):
             self.stateChanged.emit(state)
 
     currentState = Property(str, get_current_state, set_current_state, notify=stateChanged)
+
+    def get_exam_mode(self) -> str:
+        return self._exam_mode
+
+    def set_exam_mode(self, mode: str) -> None:
+        if self._exam_mode != mode:
+            self._exam_mode = mode
+            self.examModeChanged.emit(mode)
+
+    examMode = Property(str, get_exam_mode, set_exam_mode, notify=examModeChanged)
 
     def get_finish_ready(self) -> bool:
         return self._finish_ready
@@ -130,10 +142,21 @@ class BackendBridge(QObject):
         """Retries failed precheck diagnostics."""
         pass
 
+    @Slot(str)
+    def setExamMode(self, mode: str) -> None:
+        """Sets active examination mode: 'ASSESSMENT' or 'TRAINING'."""
+        self.set_exam_mode(mode)
+
+    @Slot(str)
+    @abstractmethod
+    def startTestWithMode(self, mode: str) -> None:
+        """Starts test in either 'ASSESSMENT' or 'TRAINING' mode."""
+        pass
+
     @Slot()
     @abstractmethod
     def startTest(self) -> None:
-        """Transitions to active test."""
+        """Transitions to active test using configured examMode."""
         pass
 
     @Slot()

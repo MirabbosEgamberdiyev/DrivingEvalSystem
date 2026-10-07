@@ -117,9 +117,9 @@ Item {
                         spacing: 4
 
                         Text {
-                            text: (root.resultData && root.resultData.passed) 
-                                ? Theme.tr("result_pass")
-                                : Theme.tr("result_fail")
+                            text: (root.resultData && (root.resultData.mode === "TRAINING" || backendBridge.examMode === "TRAINING"))
+                                ? Theme.tr("result.training_completed")
+                                : ((root.resultData && root.resultData.passed) ? Theme.tr("result_pass") : Theme.tr("result_fail"))
                             color: "#FFFFFF"
                             font.family: Theme.fontFamily
                             font.pixelSize: Theme.fontTitleLarge
@@ -127,15 +127,49 @@ Item {
                         }
 
                         Text {
-                            text: (root.resultData && root.resultData.passed) 
-                                ? Theme.tr("result_pass_desc")
-                                : ((root.resultData && root.resultData.critical_count > 0) 
-                                    ? Theme.tr("result_critical_desc") 
-                                    : Theme.tr("result_fail_desc"))
+                            text: (root.resultData && (root.resultData.mode === "TRAINING" || backendBridge.examMode === "TRAINING"))
+                                ? (root.resultData.passed ? Theme.tr("result_pass_desc") : Theme.tr("result_fail_desc"))
+                                : ((root.resultData && root.resultData.passed) 
+                                    ? Theme.tr("result_pass_desc") 
+                                    : ((root.resultData && root.resultData.critical_count > 0) 
+                                        ? Theme.tr("result_critical_desc") 
+                                        : Theme.tr("result_fail_desc")))
                             color: Theme.textSecondary
                             font.family: Theme.fontFamily
                             font.pixelSize: Theme.fontSub
                         }
+                    }
+                }
+            }
+
+            // Training Advisory Card
+            Rectangle {
+                visible: root.resultData && (root.resultData.mode === "TRAINING" || backendBridge.examMode === "TRAINING")
+                anchors.horizontalCenter: parent.horizontalCenter
+                width: parent.width
+                height: 48
+                radius: Theme.radiusSmall
+                color: "#78350F"
+                border.color: Theme.colorWarning
+                border.width: 1
+
+                Row {
+                    anchors.centerIn: parent
+                    spacing: 10
+                    Image {
+                        width: 22
+                        height: 22
+                        source: "../assets/icons/alert.svg"
+                        anchors.verticalCenter: parent.verticalCenter
+                        fillMode: Image.PreserveAspectFit
+                    }
+                    Text {
+                        text: Theme.tr("exam.training_watermark")
+                        color: "#FEF08A"
+                        font.family: Theme.fontFamily
+                        font.pixelSize: Theme.fontCaption
+                        font.bold: true
+                        anchors.verticalCenter: parent.verticalCenter
                     }
                 }
             }

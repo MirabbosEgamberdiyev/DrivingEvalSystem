@@ -384,9 +384,10 @@ class DatabaseRepository:
         self,
         session_id: str,
         final_score: int,
-        result: str,  # 'PASS' or 'FAIL'
+        result: str,  # 'PASS' or 'FAIL' or 'TRAINING'
         critical_count: int,
         suspect_count: int,
+        status: str | None = None,
     ) -> str:
         now_iso = datetime.now(UTC).isoformat()
         with self.get_connection() as conn:
@@ -435,14 +436,14 @@ class DatabaseRepository:
                 (session_id, final_score, result, critical_count, suspect_count, final_root_hash, root_signature, now_iso),
             )
 
-            status = "TERMINATED" if critical_count > 0 else "COMPLETED"
+            final_status = status or ("TERMINATED" if critical_count > 0 else "COMPLETED")
             conn.execute(
                 """
                 UPDATE test_sessions
                 SET finished_at = ?, status = ?, score = ?, result = ?, session_hash = ?
                 WHERE id = ?;
                 """,
-                (now_iso, status, final_score, result, final_root_hash, session_id),
+                (now_iso, final_status, final_score, result, final_root_hash, session_id),
             )
             conn.commit()
             return final_root_hash

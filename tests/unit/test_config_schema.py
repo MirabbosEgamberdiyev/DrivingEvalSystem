@@ -36,12 +36,28 @@ scoring:
   start_score: 100
   pass_score: 80
 cameras:
-  devices:
-    front:
-      name: "FRONT"
+  devices: {}
 """, encoding="utf-8")
     with pytest.raises(ConfigurationError):
         SystemConfig.load_from_yaml(bad_cfg)
+
+
+def test_system_config_n_camera_flexibility():
+    from driving_eval.core.config_schema import CamerasConfig
+    cameras_dict = {
+        "sync_tolerance_ms": 66.0,
+        "min_operational_fps": 20.0,
+        "max_drift_threshold_px": 15.0,
+        "devices": {
+            "front": {"name": "FRONT", "device_index": 0},
+            "cabin": {"name": "CABIN", "device_index": 1},
+        },
+    }
+    cfg = CamerasConfig.model_validate(cameras_dict)
+    assert len(cfg.devices) == 2
+    assert "front" in cfg.devices
+    assert "cabin" in cfg.devices
+    assert cfg.devices["cabin"].name == "CABIN"
 
 
 def test_rules_manifest_load_valid():

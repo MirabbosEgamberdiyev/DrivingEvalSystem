@@ -156,8 +156,10 @@ class RealBridge(BackendBridge):
 
     # --- Exam Lifecycle ---
 
-    @Slot()
-    def startTest(self) -> None:
+    @Slot(str)
+    def startTestWithMode(self, mode: str) -> None:
+        """Starts test session in either 'ASSESSMENT' or 'TRAINING' mode."""
+        self.set_exam_mode(mode)
         import uuid
         self._current_session_id = f"SES-{uuid.uuid4().hex[:8].upper()}"
         vehicle_id = self.repository.register_vehicle(
@@ -179,13 +181,18 @@ class RealBridge(BackendBridge):
             start_score=self.config.scoring.start_score,
             rules_version=self._rules_version,
             app_version=self.config.app.version,
+            mode=mode,
         )
         if self.state_machine.can_transition(ExamState.TEST_ACTIVE):
-            self.state_machine.transition_to(ExamState.TEST_ACTIVE, reason="Candidate tapped start")
+            self.state_machine.transition_to(ExamState.TEST_ACTIVE, reason=f"Started test in {mode} mode")
         self.set_current_state("TEST_ACTIVE")
         self.set_finish_ready(False)
         self._recorded_violations.clear()
         self._telemetry_timer.start()
+
+    @Slot()
+    def startTest(self) -> None:
+        self.startTestWithMode(self._exam_mode)
 
     def _poll_telemetry(self) -> None:
         if self.state_machine.current_state != ExamState.TEST_ACTIVE:
@@ -214,6 +221,15 @@ class RealBridge(BackendBridge):
         self._recorded_violations.append(record)
         self.violationRaised.emit(code, title, screen_text, penalty, critical)
 
+        # In ASSESSMENT mode, critical violation immediately terminates the exam.
+        # In TRAINING mode, candidate continues practice without premature termination.
+        if critical and not suspect and self._exam_mode == "ASSESSMENT":
+            if self.state_machine.can_transition(ExamState.CRITICAL_VIOLATION):
+                self.state_machine.transition_to(ExamState.CRITICAL_VIOLATION, reason=f"Critical violation: {code}")
+            if self.state_machine.can_transition(ExamState.TERMINATED):
+                self.state_machine.transition_to(ExamState.TERMINATED, reason="Assessment halted on critical failure")
+            self.finishTest()
+
     @Slot()
     def finishTest(self) -> None:
         self._telemetry_timer.stop()
@@ -222,14 +238,33 @@ class RealBridge(BackendBridge):
             if session:
                 start_sc = session.get("score", 100)
                 tot_pen = session.get("total_penalty", 0)
+                final_sc = max(0, start_sc - tot_pen)
+                crit_count = sum(1 for v in self._recorded_violations if v.get("critical") and not v.get("suspect"))
+                passed = (final_sc >= 70) and (crit_count == 0)
+
+                # Persist final status to DB
+                status_to_save = "TRAINING_COMPLETED" if self._exam_mode == "TRAINING" else ("PASSED" if passed else "FAILED")
+                result_str = "TRAINING" if self._exam_mode == "TRAINING" else ("PASS" if passed else "FAIL")
+                suspect_count = sum(1 for v in self._recorded_violations if v.get("suspect"))
+                self.repository.finalize_test_result(
+                    session_id=self._current_session_id,
+                    final_score=final_sc,
+                    result=result_str,
+                    critical_count=crit_count,
+                    suspect_count=suspect_count,
+                    status=status_to_save,
+                )
+
                 result_data = {
                     "car_id": self._car_id,
+                    "mode": self._exam_mode,
+                    "official": self._exam_mode == "ASSESSMENT",
                     "start_score": start_sc,
                     "total_penalty": tot_pen,
-                    "final_score": max(0, start_sc - tot_pen),
+                    "final_score": final_sc,
                     "mistake_count": len(self._recorded_violations),
-                    "critical_count": 0,
-                    "passed": session.get("status") != "FAILED",
+                    "critical_count": crit_count,
+                    "passed": passed,
                     "duration_str": "05:20",
                     "hash": session.get("session_hash") or "n/a",
                     "violations": self._recorded_violations,
@@ -240,7 +275,13 @@ class RealBridge(BackendBridge):
 
         # Fallback default finalize
         self.set_current_state("RESULT_READY")
-        self.resultReady.emit({"final_score": 100, "passed": True, "violations": []})
+        self.resultReady.emit({
+            "final_score": 100,
+            "passed": True,
+            "mode": self._exam_mode,
+            "official": self._exam_mode == "ASSESSMENT",
+            "violations": [],
+        })
 
     @Slot()
     def requestViolations(self) -> None:

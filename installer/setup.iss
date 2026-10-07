@@ -40,6 +40,7 @@ Source: "..\dist\driving_eval\*"; DestDir: "{app}"; Flags: ignoreversion recurse
 Source: "..\config\*"; DestDir: "{app}\config"; Flags: ignoreversion recursesubdirs createallsubdirs onlyifdoesntexist
 Source: "..\data\audio\*"; DestDir: "{app}\data\audio"; Flags: ignoreversion recursesubdirs createallsubdirs
 Source: "..\data\models\*"; DestDir: "{app}\data\models"; Flags: ignoreversion recursesubdirs createallsubdirs
+Source: "..\tools\admin_license_gen.py"; DestDir: "{app}\tools"; Flags: ignoreversion
 
 [Icons]
 Name: "{group}\{#MyAppName}"; Filename: "{app}\{#MyAppExeName}"

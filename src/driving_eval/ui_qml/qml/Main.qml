@@ -113,7 +113,10 @@ Window {
         id: systemReadyScreenComponent
         SystemReadyScreen {
             onStartTestClicked: {
-                backendBridge.startTest()
+                backendBridge.startTestWithMode("ASSESSMENT")
+            }
+            onStartTrainingClicked: {
+                backendBridge.startTestWithMode("TRAINING")
             }
             onBackClicked: {
                 stackView.pop()

@@ -794,6 +794,51 @@
     "reviewed": true,
     "reviewer": "metodist_uz"
   },
+  "exam.mode_assessment": {
+    "text": "Rasmiy Imtihon",
+    "reviewed": true,
+    "reviewer": "metodist_uz"
+  },
+  "exam.mode_training": {
+    "text": "Mashg'ulot Rejimi",
+    "reviewed": true,
+    "reviewer": "metodist_uz"
+  },
+  "exam.start_assessment": {
+    "text": "Rasmiy Imtihonni Boshlash",
+    "reviewed": true,
+    "reviewer": "metodist_uz"
+  },
+  "exam.start_training": {
+    "text": "Mashg'ulotni Boshlash",
+    "reviewed": true,
+    "reviewer": "metodist_uz"
+  },
+  "exam.training_badge": {
+    "text": "MASHG'ULOT REJIMI",
+    "reviewed": true,
+    "reviewer": "metodist_uz"
+  },
+  "exam.assessment_badge": {
+    "text": "RASMIY IMTIHON",
+    "reviewed": true,
+    "reviewer": "metodist_uz"
+  },
+  "exam.training_watermark": {
+    "text": "DIQQAT: Ushbu sinov mashg'ulot rejimida o'tkazildi (Rasmiy hisobot hisoblanmaydi)",
+    "reviewed": true,
+    "reviewer": "metodist_uz"
+  },
+  "exam.training_notice": {
+    "text": "Mashg'ulot rejimida xatolar ko'rsatiladi va ovozda eshittiriladi, biroq imtihon majburiy to'xtatilmaydi.",
+    "reviewed": true,
+    "reviewer": "metodist_uz"
+  },
+  "result.training_completed": {
+    "text": "MASHG'ULOT YAKUNLANDI",
+    "reviewed": true,
+    "reviewer": "metodist_uz"
+  },
   "camera.front": {
     "text": "Old kamera (FRONT)",
     "reviewed": true,

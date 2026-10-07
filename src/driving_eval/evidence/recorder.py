@@ -38,16 +38,15 @@ class EvidenceRecorder:
         repository: DatabaseRepository,
         buffer_duration_seconds: float = 5.0,
         fps: int = 30,
+        camera_names: list[str] | tuple[str, ...] | None = None,
     ):
         self.base_dir = Path(base_dir)
         self.base_dir.mkdir(parents=True, exist_ok=True)
         self.repository = repository
         self.buffer_size = int(buffer_duration_seconds * fps)
+        default_cams = camera_names or ["FRONT", "REAR", "LEFT", "RIGHT"]
         self._ring_buffer: dict[str, deque[BufferedFrame]] = {
-            "FRONT": deque(maxlen=self.buffer_size),
-            "REAR": deque(maxlen=self.buffer_size),
-            "LEFT": deque(maxlen=self.buffer_size),
-            "RIGHT": deque(maxlen=self.buffer_size),
+            cam: deque(maxlen=self.buffer_size) for cam in default_cams
         }
         self._lock = threading.Lock()
 
@@ -55,14 +54,15 @@ class EvidenceRecorder:
         """Pushes a synchronized bundle into the circular buffers."""
         with self._lock:
             for cam_name, cam_frame in bundle.frames.items():
-                if cam_name in self._ring_buffer:
-                    self._ring_buffer[cam_name].append(
-                        BufferedFrame(
-                            camera_name=cam_name,
-                            frame=cam_frame.frame.copy(),
-                            timestamp=cam_frame.timestamp,
-                        )
+                if cam_name not in self._ring_buffer:
+                    self._ring_buffer[cam_name] = deque(maxlen=self.buffer_size)
+                self._ring_buffer[cam_name].append(
+                    BufferedFrame(
+                        camera_name=cam_name,
+                        frame=cam_frame.frame.copy(),
+                        timestamp=cam_frame.timestamp,
                     )
+                )
 
     def record_evidence_package(
         self,
@@ -77,13 +77,17 @@ class EvidenceRecorder:
         dest_dir = self.base_dir / session_id / event.violation_id
         dest_dir.mkdir(parents=True, exist_ok=True)
 
-        target_cam = event.camera if event.camera in self._ring_buffer else "FRONT"
+        target_cam = (
+            event.camera
+            if event.camera in self._ring_buffer
+            else (next(iter(self._ring_buffer.keys())) if self._ring_buffer else "FRONT")
+        )
 
         with self._lock:
-            buf = list(self._ring_buffer[target_cam])
+            buf = list(self._ring_buffer.get(target_cam, []))
             all_cams_latest = {
                 cam: self._ring_buffer[cam][-1].frame.copy()
-                for cam in ("FRONT", "REAR", "LEFT", "RIGHT")
+                for cam in self._ring_buffer
                 if len(self._ring_buffer[cam]) > 0
             }
 
@@ -220,22 +224,73 @@ class EvidenceRecorder:
     def _create_4cam_composite(
         cams: dict[str, np.ndarray], target_shape: tuple[int, int]
     ) -> np.ndarray:
-        """Combines 4 camera frames into a 2x2 grid (FRONT, REAR, LEFT, RIGHT)."""
+        return EvidenceRecorder._create_multi_cam_composite(cams, target_shape)
+
+    @staticmethod
+    def _create_multi_cam_composite(
+        cams: dict[str, np.ndarray], target_shape: tuple[int, int]
+    ) -> np.ndarray:
+        """Dynamically arranges N camera frames into an appropriate composite grid.
+
+        - 1 camera: single full frame resized to target_shape
+        - 2 cameras: 1x2 horizontal split side-by-side
+        - 3 or 4 cameras: 2x2 grid
+        - >4 cameras: dynamic grid
+        """
         h, w = target_shape
+        num_cams = len(cams)
+        if num_cams == 0:
+            grid = np.zeros((h, w, 3), dtype=np.uint8)
+            cv2.putText(grid, "NO CAMERAS AVAILABLE", (50, h // 2), cv2.FONT_HERSHEY_SIMPLEX, 1.0, (120, 120, 120), 2)
+            return grid
+
+        if num_cams == 1:
+            name, frame = next(iter(cams.items()))
+            grid = cv2.resize(frame, (w, h))
+            cv2.putText(grid, name, (20, 40), cv2.FONT_HERSHEY_SIMPLEX, 0.9, (0, 255, 255), 2)
+            return grid
+
+        if num_cams == 2:
+            half_w = w // 2
+            grid = np.zeros((h, w, 3), dtype=np.uint8)
+            items = list(cams.items())
+            for idx, (name, frame) in enumerate(items[:2]):
+                x_offset = idx * half_w
+                resized = cv2.resize(frame, (half_w, h))
+                cv2.putText(resized, name, (15, 35), cv2.FONT_HERSHEY_SIMPLEX, 0.8, (0, 255, 255), 2)
+                grid[:, x_offset : x_offset + half_w] = resized
+            return grid
+
+        # 3, 4 or more cameras: 2x2 grid
         half_h, half_w = h // 2, w // 2
         grid = np.zeros((h, w, 3), dtype=np.uint8)
+        default_slots = [
+            ("FRONT", (0, 0)),
+            ("REAR", (half_w, 0)),
+            ("LEFT", (0, half_h)),
+            ("RIGHT", (half_w, half_h)),
+        ]
 
-        cam_names = [("FRONT", (0, 0)), ("REAR", (half_w, 0)), ("LEFT", (0, half_h)), ("RIGHT", (half_w, half_h))]
-
-        for name, (x, y) in cam_names:
-            frame = cams.get(name)
-            if frame is not None:
+        cam_keys = list(cams.keys())
+        standard_names = {"FRONT", "REAR", "LEFT", "RIGHT"}
+        if any(k in standard_names for k in cam_keys):
+            for name, (x, y) in default_slots:
+                frame = cams.get(name)
+                if frame is not None:
+                    resized = cv2.resize(frame, (half_w, half_h))
+                else:
+                    resized = np.zeros((half_h, half_w, 3), dtype=np.uint8)
+                    cv2.putText(resized, f"NO {name}", (20, half_h // 2), cv2.FONT_HERSHEY_SIMPLEX, 0.8, (120, 120, 120), 2)
+                cv2.putText(resized, name, (10, 25), cv2.FONT_HERSHEY_SIMPLEX, 0.7, (0, 255, 255), 2)
+                grid[y : y + half_h, x : x + half_w] = resized
+        else:
+            slots = [(0, 0), (half_w, 0), (0, half_h), (half_w, half_h)]
+            for idx, (name, frame) in enumerate(cams.items()):
+                if idx >= 4:
+                    break
+                x, y = slots[idx]
                 resized = cv2.resize(frame, (half_w, half_h))
-            else:
-                resized = np.zeros((half_h, half_w, 3), dtype=np.uint8)
-                cv2.putText(resized, f"NO {name}", (20, half_h // 2), cv2.FONT_HERSHEY_SIMPLEX, 0.8, (120, 120, 120), 2)
-
-            cv2.putText(resized, name, (10, 25), cv2.FONT_HERSHEY_SIMPLEX, 0.7, (0, 255, 255), 2)
-            grid[y : y + half_h, x : x + half_w] = resized
+                cv2.putText(resized, name, (10, 25), cv2.FONT_HERSHEY_SIMPLEX, 0.7, (0, 255, 255), 2)
+                grid[y : y + half_h, x : x + half_w] = resized
 
         return grid
