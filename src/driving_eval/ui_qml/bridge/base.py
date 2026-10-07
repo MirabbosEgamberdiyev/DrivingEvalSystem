@@ -4,6 +4,7 @@ Ensures strict separation of concerns: UI only renders state and dispatches comm
 """
 
 from abc import abstractmethod
+from typing import Any
 
 from PySide6.QtCore import Property, QObject, Signal, Slot
 
@@ -200,3 +201,14 @@ class BackendBridge(QObject):
     def exportSessionPdf(self, session_id: str) -> None:
         """Generates and exports official PDF report for session."""
         pass
+
+    @Slot(result=dict)
+    def getAutodromeConfig(self) -> dict[str, Any]:
+        """Returns autodrome configuration loaded from autodrome.json."""
+        return {}
+
+    @Slot(result=list)
+    def getAutodromeExercises(self) -> list[dict[str, Any]]:
+        """Returns the list of 8 exercises configured for the autodrome."""
+        return []
+

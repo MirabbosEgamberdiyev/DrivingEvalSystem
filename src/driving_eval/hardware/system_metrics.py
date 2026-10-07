@@ -119,3 +119,56 @@ def get_disk_free_gb(path: str = ".") -> float:
     except Exception as e:
         logger.debug("Disk usage lookup error: %s", e)
         return 20.0
+
+
+_last_temp_c: float | None = None
+_last_temp_time: float = 0.0
+
+
+def get_system_temperature_c() -> float | None:
+    """Returns actual system CPU / motherboard temperature in Celsius, or None if unsupported."""
+    global _last_temp_c, _last_temp_time
+    now = time.time()
+    if now - _last_temp_time < 5.0 and _last_temp_time > 0:
+        return _last_temp_c
+
+    _last_temp_time = now
+    if os.name != "nt":
+        try:
+            with open("/sys/class/thermal/thermal_zone0/temp") as f:
+                raw_t = int(f.read().strip())
+                _last_temp_c = round(raw_t / 1000.0, 1)
+                return _last_temp_c
+        except Exception:
+            _last_temp_c = None
+            return None
+
+    try:
+        import subprocess
+
+        cmd = [
+            "powershell",
+            "-NoProfile",
+            "-Command",
+            "(Get-CimInstance -Namespace root/wmi -ClassName MSAcpi_ThermalZoneTemperature -ErrorAction SilentlyContinue).CurrentTemperature",
+        ]
+        creation_flags = getattr(subprocess, "CREATE_NO_WINDOW", 0x08000000)
+        out = subprocess.check_output(
+            cmd,
+            text=True,
+            timeout=2.5,
+            creationflags=creation_flags,
+        ).strip()
+        if out:
+            first_val = out.split()[0]
+            raw_val = float(first_val)
+            celsius = round((raw_val - 2732) / 10.0, 1)
+            if -20.0 <= celsius <= 125.0:
+                _last_temp_c = celsius
+                return _last_temp_c
+    except Exception as e:
+        logger.debug("WMI temperature lookup failed: %s", e)
+
+    _last_temp_c = None
+    return None
+

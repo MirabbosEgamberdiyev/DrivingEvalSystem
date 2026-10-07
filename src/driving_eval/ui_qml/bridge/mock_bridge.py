@@ -462,3 +462,76 @@ class MockBridge(BackendBridge):
         QTimer.singleShot(600, lambda: self.reportExportFinished.emit(
             True, f"PDF Bayonnoma tayyorlandi: data/reports/bayonnoma_{session_id}.pdf"
         ))
+
+    @Slot(result=dict)
+    def getAutodromeConfig(self) -> dict[str, Any]:
+        """Loads and returns polygon configuration from autodrome.json."""
+        import json
+        from pathlib import Path
+
+        config_path = Path("config/autodrome.json")
+        if not config_path.exists():
+            return {
+                "name": "Tashkent Central Autodrome",
+                "datum": "WGS84",
+                "base_lat": 41.311081,
+                "base_lon": 69.240562,
+                "summary": "Poligon: Tashkent Central Autodrome (WGS84 | Lat: 41.311081, Lon: 69.240562)",
+            }
+        try:
+            with open(config_path, encoding="utf-8") as f:
+                data = json.load(f)
+            base_coords = data.get("base_coordinates", {})
+            lat = base_coords.get("lat", 41.311081)
+            lon = base_coords.get("lon", 69.240562)
+            name = data.get("autodrome_name", "Tashkent Central Autodrome")
+            datum = data.get("datum", "WGS84")
+            return {
+                "name": name,
+                "datum": datum,
+                "base_lat": lat,
+                "base_lon": lon,
+                "summary": f"Poligon: {name} ({datum} Datum | Lat: {lat}, Lon: {lon})",
+            }
+        except Exception:
+            return {
+                "name": "Tashkent Central Autodrome",
+                "datum": "WGS84",
+                "base_lat": 41.311081,
+                "base_lon": 69.240562,
+                "summary": "Poligon: Tashkent Central Autodrome",
+            }
+
+    @Slot(result=list)
+    def getAutodromeExercises(self) -> list[dict[str, Any]]:
+        """Loads and returns 8 polygon exercises dynamically from autodrome.json."""
+        import json
+        from pathlib import Path
+
+        config_path = Path("config/autodrome.json")
+        if not config_path.exists():
+            return []
+        try:
+            with open(config_path, encoding="utf-8") as f:
+                data = json.load(f)
+            sequence = data.get("sequence", [])
+            zones = data.get("zones", {})
+            exercises = []
+            for i, code in enumerate(sequence, start=1):
+                zone = zones.get(code, {})
+                radius = zone.get("radius_meters", 18.0)
+                desc = zone.get("name_uz", code)
+                exercises.append({
+                    "id": code,
+                    "name": f"{i}. {code}",
+                    "desc": desc,
+                    "active": True,
+                    "radius": f"{radius:.0f} m",
+                    "lat": zone.get("lat", 0.0),
+                    "lon": zone.get("lon", 0.0),
+                    "expected_heading": zone.get("expected_heading_deg", 0.0),
+                })
+            return exercises
+        except Exception:
+            return []
+

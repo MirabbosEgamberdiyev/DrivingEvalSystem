@@ -3,6 +3,7 @@
 Translates backend events into Qt signals without leaking business logic into the UI.
 """
 
+import logging
 import time
 from typing import Any
 
@@ -14,6 +15,8 @@ from driving_eval.db.repository import DatabaseRepository
 from driving_eval.evidence.recorder import EvidenceRecorder
 from driving_eval.hardware.precheck import PrecheckService
 from driving_eval.ui_qml.bridge.base import BackendBridge
+
+logger = logging.getLogger("driving_eval.ui_qml.bridge.real")
 
 
 class RealBridge(BackendBridge):
@@ -379,19 +382,38 @@ class RealBridge(BackendBridge):
             get_disk_free_gb,
             get_system_cpu_usage,
             get_system_ram_usage,
+            get_system_temperature_c,
         )
 
         free_gb = get_disk_free_gb(self.config.storage.base_dir)
         cpu_pct = get_system_cpu_usage()
         ram_pct = get_system_ram_usage()
+        temp_c = get_system_temperature_c()
+        temp_str = f"{temp_c} °C" if temp_c is not None else "MA'LUMOT YO'Q"
+
+        app_cfg = getattr(self.config, "app", None)
+        sensors_cfg = getattr(self.config, "sensors", None)
+        is_sim = (
+            getattr(self.config, "simulation_mode", False)
+            or (app_cfg is not None and getattr(app_cfg, "environment", "production") == "simulation")
+            or (sensors_cfg is not None and getattr(getattr(sensors_cfg, "gps", None), "sim_mode", False))
+        )
 
         cams_info = []
-        if hasattr(self, "precheck_service") and self.precheck_service and hasattr(self.precheck_service, "camera_service"):
+        if (
+            hasattr(self, "precheck_service")
+            and self.precheck_service
+            and hasattr(self.precheck_service, "camera_service")
+        ):
             cam_health = self.precheck_service.camera_service.get_all_health()
             for name, h in cam_health.items():
+                if h.status.value == "ONLINE":
+                    status_str = "[SIMULATION]" if is_sim else "ONLINE"
+                else:
+                    status_str = "DISCONNECTED"
                 cams_info.append({
                     "name": name,
-                    "status": h.status.value,
+                    "status": status_str,
                     "fps": round(h.fps, 1),
                     "latency_ms": 16.0,
                     "sharpness": round(h.sharpness_score, 1),
@@ -400,22 +422,64 @@ class RealBridge(BackendBridge):
             for name in ["FRONT", "REAR", "LEFT", "RIGHT"]:
                 cams_info.append({
                     "name": name,
-                    "status": "ONLINE",
-                    "fps": 30.0,
-                    "latency_ms": 16.0,
-                    "sharpness": 140.0,
+                    "status": "[SIMULATION]" if is_sim else "DISCONNECTED",
+                    "fps": 30.0 if is_sim else 0.0,
+                    "latency_ms": 16.0 if is_sim else 0.0,
+                    "sharpness": 140.0 if is_sim else 0.0,
                 })
+
+        if is_sim:
+            gps_info = {
+                "status": "[SIMULATION]",
+                "satellites": 14,
+                "fix_type": "Simulated 3D Fix",
+                "lat": 41.311081,
+                "lon": 69.240562,
+            }
+            obd_info = {
+                "status": "[SIMULATION]",
+                "protocol": "Simulated CAN ISO 15765-4",
+                "rpm": 850,
+                "speed_kmh": 0.0,
+            }
+            imu_info = {
+                "status": "[SIMULATION]",
+                "sample_rate": 100,
+                "pitch_deg": 0.0,
+                "roll_deg": 0.0,
+            }
+        else:
+            gps_info = {
+                "status": "DISCONNECTED",
+                "satellites": 0,
+                "fix_type": "No Fix (Apparat ulanmagan)",
+                "lat": 0.0,
+                "lon": 0.0,
+            }
+            obd_info = {
+                "status": "DISCONNECTED",
+                "protocol": "N/A (Port yopiq)",
+                "rpm": 0,
+                "speed_kmh": 0.0,
+            }
+            imu_info = {
+                "status": "DISCONNECTED",
+                "sample_rate": 0,
+                "pitch_deg": 0.0,
+                "roll_deg": 0.0,
+            }
 
         data = {
             "cpu_usage_pct": cpu_pct,
             "ram_usage_pct": ram_pct,
             "disk_free_gb": free_gb,
-            "system_temp_c": 42.0,
+            "system_temp_c": temp_c,
+            "system_temp_str": temp_str,
             "cameras": cams_info,
             "calibration_quality": {"FRONT": 98.4, "REAR": 97.2, "LEFT": 96.8, "RIGHT": 98.1},
-            "gps": {"status": "FIX_OK", "satellites": 14, "fix_type": "3D Fix", "lat": 41.311081, "lon": 69.240562},
-            "obd": {"status": "CONNECTED", "protocol": "CAN ISO 15765-4", "rpm": 850, "speed_kmh": 0.0},
-            "imu": {"status": "ACTIVE", "sample_rate": 100, "pitch_deg": 0.0, "roll_deg": 0.0},
+            "gps": gps_info,
+            "obd": obd_info,
+            "imu": imu_info,
             "ai": {"backend": self.config.ai_engine.backend, "fps": 30.0, "latency_ms": 20.0},
             "license": {"valid": True, "type": "STANDALONE_COMMERCIAL", "expires": "2027-12-31"},
         }
@@ -466,3 +530,78 @@ class RealBridge(BackendBridge):
                 self.reportExportFinished.emit(False, "Sessiya topilmadi.")
         except Exception as e:
             self.reportExportFinished.emit(False, f"Eksportda xatolik: {e}")
+
+    @Slot(result=dict)
+    def getAutodromeConfig(self) -> dict[str, Any]:
+        """Loads and returns polygon configuration from autodrome.json."""
+        import json
+        from pathlib import Path
+
+        config_path = Path("config/autodrome.json")
+        if not config_path.exists():
+            return {
+                "name": "Tashkent Central Autodrome",
+                "datum": "WGS84",
+                "base_lat": 41.311081,
+                "base_lon": 69.240562,
+                "summary": "Poligon: Tashkent Central Autodrome (WGS84 | Lat: 41.311081, Lon: 69.240562)",
+            }
+        try:
+            with open(config_path, encoding="utf-8") as f:
+                data = json.load(f)
+            base_coords = data.get("base_coordinates", {})
+            lat = base_coords.get("lat", 41.311081)
+            lon = base_coords.get("lon", 69.240562)
+            name = data.get("autodrome_name", "Tashkent Central Autodrome")
+            datum = data.get("datum", "WGS84")
+            return {
+                "name": name,
+                "datum": datum,
+                "base_lat": lat,
+                "base_lon": lon,
+                "summary": f"Poligon: {name} ({datum} Datum | Lat: {lat}, Lon: {lon})",
+            }
+        except Exception as e:
+            logger.error("Failed loading autodrome.json: %s", e)
+            return {
+                "name": "Tashkent Central Autodrome",
+                "datum": "WGS84",
+                "base_lat": 41.311081,
+                "base_lon": 69.240562,
+                "summary": "Poligon: Tashkent Central Autodrome",
+            }
+
+    @Slot(result=list)
+    def getAutodromeExercises(self) -> list[dict[str, Any]]:
+        """Loads and returns 8 polygon exercises dynamically from autodrome.json."""
+        import json
+        from pathlib import Path
+
+        config_path = Path("config/autodrome.json")
+        if not config_path.exists():
+            return []
+        try:
+            with open(config_path, encoding="utf-8") as f:
+                data = json.load(f)
+            sequence = data.get("sequence", [])
+            zones = data.get("zones", {})
+            exercises = []
+            for i, code in enumerate(sequence, start=1):
+                zone = zones.get(code, {})
+                radius = zone.get("radius_meters", 18.0)
+                desc = zone.get("name_uz", code)
+                exercises.append({
+                    "id": code,
+                    "name": f"{i}. {code}",
+                    "desc": desc,
+                    "active": True,
+                    "radius": f"{radius:.0f} m",
+                    "lat": zone.get("lat", 0.0),
+                    "lon": zone.get("lon", 0.0),
+                    "expected_heading": zone.get("expected_heading_deg", 0.0),
+                })
+            return exercises
+        except Exception as e:
+            logger.error("Failed loading exercises from autodrome.json: %s", e)
+            return []
+

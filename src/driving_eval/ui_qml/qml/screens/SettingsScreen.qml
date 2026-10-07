@@ -36,6 +36,7 @@ Item {
     property string selectedCameraModal: ""
 
     // Polygon exercise state (toggleable active/maintenance)
+    property string autodromeSummary: "Poligon: Tashkent Central Autodrome (WGS84 Datum | Lat: 41.311081, Lon: 69.240562)"
     property var exercisesList: [
         {"id": "START", "name": "1. START", "desc": "Boshlang'ich start chizig'i (12x4m)", "active": true, "radius": "18 m"},
         {"id": "ESTAKADA", "name": "2. ESTAKADA", "desc": "Nishabda to'xtash va harakat (16%, max 20sm)", "active": true, "radius": "18 m"},
@@ -46,6 +47,21 @@ Item {
         {"id": "STOP_LINE", "name": "7. STOP CHIZIG'I", "desc": "Chorraha to'xtash chizig'i / Svetofor", "active": true, "radius": "15 m"},
         {"id": "FINISH", "name": "8. YAKUNLASH", "desc": "Imtihonni muvaffaqiyatli yakunlash chizig'i", "active": true, "radius": "18 m"}
     ]
+
+    function loadAutodromeData() {
+        if (backendBridge && typeof backendBridge.getAutodromeConfig === "function") {
+            var cfg = backendBridge.getAutodromeConfig()
+            if (cfg && cfg.summary) {
+                root.autodromeSummary = cfg.summary
+            }
+        }
+        if (backendBridge && typeof backendBridge.getAutodromeExercises === "function") {
+            var list = backendBridge.getAutodromeExercises()
+            if (list && list.length > 0) {
+                root.exercisesList = list
+            }
+        }
+    }
 
     // Rules passport model
     property var rulesList: [
@@ -73,6 +89,7 @@ Item {
             if (!unlocked) {
                 root.pinHasError = true
             } else {
+                root.loadAutodromeData()
                 backendBridge.requestDiagnostics()
             }
         }
@@ -87,6 +104,7 @@ Item {
     }
 
     Component.onCompleted: {
+        root.loadAutodromeData()
         if (root.isUnlocked) {
             backendBridge.requestDiagnostics()
         }
@@ -364,8 +382,28 @@ Item {
                                 anchors.centerIn: parent
                                 spacing: 6
                                 Text { text: "TIZIM HARORATI"; color: Theme.textMuted; font.pixelSize: Theme.fontCaption; font.family: Theme.fontFamily; anchors.horizontalCenter: parent.horizontalCenter }
-                                Text { text: (root.diagData.system_temp_c || 46.2) + " °C"; color: Theme.colorSuccess; font.bold: true; font.pixelSize: Theme.fontHeadline; font.family: Theme.fontFamily; anchors.horizontalCenter: parent.horizontalCenter }
-                                Text { text: "Termal rejim: Normal"; color: Theme.textSecondary; font.pixelSize: 11; font.family: Theme.fontFamily; anchors.horizontalCenter: parent.horizontalCenter }
+                                Text {
+                                    text: (root.diagData.system_temp_str
+                                          ? root.diagData.system_temp_str
+                                          : (root.diagData.system_temp_c !== undefined && root.diagData.system_temp_c !== null
+                                             ? (root.diagData.system_temp_c + " °C")
+                                             : "MA'LUMOT YO'Q"))
+                                    color: (root.diagData.system_temp_c !== undefined && root.diagData.system_temp_c !== null && root.diagData.system_temp_c > 75)
+                                           ? Theme.colorDanger : Theme.colorSuccess
+                                    font.bold: true
+                                    font.pixelSize: Theme.fontHeadline
+                                    font.family: Theme.fontFamily
+                                    anchors.horizontalCenter: parent.horizontalCenter
+                                }
+                                Text {
+                                    text: (root.diagData.system_temp_c !== undefined && root.diagData.system_temp_c !== null)
+                                          ? "Termal rejim: Normal"
+                                          : "Termal datchik: Mavjud emas"
+                                    color: Theme.textSecondary
+                                    font.pixelSize: 11
+                                    font.family: Theme.fontFamily
+                                    anchors.horizontalCenter: parent.horizontalCenter
+                                }
                             }
                         }
                     }
@@ -419,12 +457,37 @@ Item {
                                 Row {
                                     spacing: 8
                                     Text { text: "🛰 GPS / GNSS MODUL"; color: Theme.colorAccent; font.bold: true; font.pixelSize: Theme.fontSub; font.family: Theme.fontFamily }
-                                    Rectangle { width: 8; height: 8; radius: 4; color: Theme.colorSuccess; anchors.verticalCenter: parent.verticalCenter }
+                                    Rectangle {
+                                        width: 8; height: 8; radius: 4
+                                        color: (root.diagData.gps && root.diagData.gps.status === "FIX_OK")
+                                               ? Theme.colorSuccess
+                                               : (root.diagData.gps && root.diagData.gps.status.indexOf("SIMULATION") !== -1
+                                                  ? Theme.colorWarning
+                                                  : Theme.colorDanger)
+                                        anchors.verticalCenter: parent.verticalCenter
+                                    }
                                 }
 
-                                Text { text: "Holat: " + (root.diagData.gps ? root.diagData.gps.fix_type : "3D RTK Fix") + " (" + (root.diagData.gps ? root.diagData.gps.satellites : 14) + " ta sun'iy yo'ldosh)"; color: Theme.colorSuccess; font.bold: true; font.pixelSize: Theme.fontSub; font.family: Theme.fontFamily }
-                                Text { text: "Koordinatalar: Lat " + (root.diagData.gps ? root.diagData.gps.lat : 41.311081) + ", Lon " + (root.diagData.gps ? root.diagData.gps.lon : 69.240562); color: Theme.textPrimary; font.pixelSize: Theme.fontSub; font.family: Theme.fontFamily }
-                                Text { text: "HDOP: 0.8 (Yuqori aniqlik) | Tezlik yangilanishi: 10 Hz"; color: Theme.textMuted; font.pixelSize: 12; font.family: Theme.fontFamily }
+                                Text {
+                                    text: "Holat: " + (root.diagData.gps ? root.diagData.gps.status : "DISCONNECTED") + (root.diagData.gps && root.diagData.gps.status === "FIX_OK" ? (" (" + root.diagData.gps.satellites + " ta yo'ldosh)") : (root.diagData.gps ? (" [" + root.diagData.gps.fix_type + "]") : ""))
+                                    color: (root.diagData.gps && root.diagData.gps.status === "FIX_OK")
+                                           ? Theme.colorSuccess
+                                           : (root.diagData.gps && root.diagData.gps.status.indexOf("SIMULATION") !== -1
+                                              ? Theme.colorWarning
+                                              : Theme.colorDanger)
+                                    font.bold: true
+                                    font.pixelSize: Theme.fontSub
+                                    font.family: Theme.fontFamily
+                                }
+                                Text {
+                                    text: (root.diagData.gps && root.diagData.gps.lat > 0)
+                                          ? ("Koordinatalar: Lat " + root.diagData.gps.lat + ", Lon " + root.diagData.gps.lon)
+                                          : "Koordinatalar: Noma'lum (Signal yo'q)"
+                                    color: Theme.textPrimary
+                                    font.pixelSize: Theme.fontSub
+                                    font.family: Theme.fontFamily
+                                }
+                                Text { text: "HDOP: 0.8 | Yangilanish: 10 Hz"; color: Theme.textMuted; font.pixelSize: 12; font.family: Theme.fontFamily }
                             }
                         }
 
@@ -445,11 +508,36 @@ Item {
                                 Row {
                                     spacing: 8
                                     Text { text: "🔌 OBD-II / CAN SHINASI"; color: Theme.colorAccent; font.bold: true; font.pixelSize: Theme.fontSub; font.family: Theme.fontFamily }
-                                    Rectangle { width: 8; height: 8; radius: 4; color: Theme.colorSuccess; anchors.verticalCenter: parent.verticalCenter }
+                                    Rectangle {
+                                        width: 8; height: 8; radius: 4
+                                        color: (root.diagData.obd && root.diagData.obd.status === "CONNECTED")
+                                               ? Theme.colorSuccess
+                                               : (root.diagData.obd && root.diagData.obd.status.indexOf("SIMULATION") !== -1
+                                                  ? Theme.colorWarning
+                                                  : Theme.colorDanger)
+                                        anchors.verticalCenter: parent.verticalCenter
+                                    }
                                 }
 
-                                Text { text: "Protokol: " + (root.diagData.obd ? root.diagData.obd.protocol : "CAN ISO 15765-4 (500 kbps)"); color: Theme.textPrimary; font.pixelSize: Theme.fontSub; font.family: Theme.fontFamily }
-                                Text { text: "Dvigatel: " + (root.diagData.obd ? root.diagData.obd.rpm : 850) + " RPM | Tezlik: " + (root.diagData.obd ? root.diagData.obd.speed_kmh : 0.0) + " km/h"; color: Theme.colorSuccess; font.bold: true; font.pixelSize: Theme.fontSub; font.family: Theme.fontFamily }
+                                Text {
+                                    text: "Holat: " + (root.diagData.obd ? root.diagData.obd.status : "DISCONNECTED") + " | " + (root.diagData.obd ? root.diagData.obd.protocol : "N/A")
+                                    color: (root.diagData.obd && root.diagData.obd.status === "CONNECTED")
+                                           ? Theme.colorSuccess
+                                           : (root.diagData.obd && root.diagData.obd.status.indexOf("SIMULATION") !== -1
+                                              ? Theme.colorWarning
+                                              : Theme.colorDanger)
+                                    font.bold: true
+                                    font.pixelSize: Theme.fontSub
+                                    font.family: Theme.fontFamily
+                                }
+                                Text {
+                                    text: (root.diagData.obd && root.diagData.obd.status !== "DISCONNECTED")
+                                          ? ("Dvigatel: " + root.diagData.obd.rpm + " RPM | Tezlik: " + root.diagData.obd.speed_kmh + " km/h")
+                                          : "Avtomobil telemetriyasi uzilgan"
+                                    color: Theme.textPrimary
+                                    font.pixelSize: Theme.fontSub
+                                    font.family: Theme.fontFamily
+                                }
                                 Text { text: "Ulanish: USB/Serial FTDI UART @ 115200 baud"; color: Theme.textMuted; font.pixelSize: 12; font.family: Theme.fontFamily }
                             }
                         }
@@ -471,11 +559,36 @@ Item {
                                 Row {
                                     spacing: 8
                                     Text { text: "📐 IMU (Girokop & Akselerometr 6-o'q)"; color: Theme.colorAccent; font.bold: true; font.pixelSize: Theme.fontSub; font.family: Theme.fontFamily }
-                                    Rectangle { width: 8; height: 8; radius: 4; color: Theme.colorSuccess; anchors.verticalCenter: parent.verticalCenter }
+                                    Rectangle {
+                                        width: 8; height: 8; radius: 4
+                                        color: (root.diagData.imu && root.diagData.imu.status === "ACTIVE")
+                                               ? Theme.colorSuccess
+                                               : (root.diagData.imu && root.diagData.imu.status.indexOf("SIMULATION") !== -1
+                                                  ? Theme.colorWarning
+                                                  : Theme.colorDanger)
+                                        anchors.verticalCenter: parent.verticalCenter
+                                    }
                                 }
 
-                                Text { text: "Holat: ACTIVE (" + (root.diagData.imu ? root.diagData.imu.sample_rate : 100) + " Hz)"; color: Theme.colorSuccess; font.bold: true; font.pixelSize: Theme.fontSub; font.family: Theme.fontFamily }
-                                Text { text: "Qiyalik: Pitch " + (root.diagData.imu ? root.diagData.imu.pitch_deg : 0.2) + "° | Roll " + (root.diagData.imu ? root.diagData.imu.roll_deg : -0.1) + "°"; color: Theme.textPrimary; font.pixelSize: Theme.fontSub; font.family: Theme.fontFamily }
+                                Text {
+                                    text: "Holat: " + (root.diagData.imu ? root.diagData.imu.status : "DISCONNECTED") + (root.diagData.imu && root.diagData.imu.sample_rate > 0 ? (" (" + root.diagData.imu.sample_rate + " Hz)") : "")
+                                    color: (root.diagData.imu && root.diagData.imu.status === "ACTIVE")
+                                           ? Theme.colorSuccess
+                                           : (root.diagData.imu && root.diagData.imu.status.indexOf("SIMULATION") !== -1
+                                              ? Theme.colorWarning
+                                              : Theme.colorDanger)
+                                    font.bold: true
+                                    font.pixelSize: Theme.fontSub
+                                    font.family: Theme.fontFamily
+                                }
+                                Text {
+                                    text: (root.diagData.imu && root.diagData.imu.status !== "DISCONNECTED")
+                                          ? ("Qiyalik: Pitch " + root.diagData.imu.pitch_deg + "° | Roll " + root.diagData.imu.roll_deg + "°")
+                                          : "IMU datchigi uzilgan"
+                                    color: Theme.textPrimary
+                                    font.pixelSize: Theme.fontSub
+                                    font.family: Theme.fontFamily
+                                }
                                 Text { text: "Estakada orqaga siljish datchigi aniqligi: ±1.2 sm"; color: Theme.textMuted; font.pixelSize: 12; font.family: Theme.fontFamily }
                             }
                         }
@@ -675,7 +788,7 @@ Item {
                         Column {
                             spacing: 4
                             Text { text: Theme.tr("admin.polygon_title"); color: Theme.textPrimary; font.bold: true; font.pixelSize: Theme.fontHeadline; font.family: Theme.fontFamily }
-                            Text { text: "Poligon: Tashkent Central Autodrome (WGS84 Datum | Lat: 41.311081, Lon: 69.240562)"; color: Theme.textSecondary; font.pixelSize: Theme.fontSub; font.family: Theme.fontFamily }
+                            Text { text: root.autodromeSummary; color: Theme.textSecondary; font.pixelSize: Theme.fontSub; font.family: Theme.fontFamily }
                         }
                     }
 
