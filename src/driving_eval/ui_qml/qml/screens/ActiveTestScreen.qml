@@ -391,6 +391,7 @@ Item {
 
         // Prompt when driving
         Text {
+            objectName: "movingPrompt"
             anchors.centerIn: parent
             visible: !backendBridge.finishReady
             text: Theme.tr("hud_moving_prompt")
@@ -401,9 +402,11 @@ Item {
 
         // Finish Ready Container (Only visible when finishReady == true!)
         Row {
+            objectName: "finishContainer"
             anchors.centerIn: parent
             spacing: 24
             visible: backendBridge.finishReady
+
 
             Text {
                 text: Theme.tr("hud_finish_prompt")

@@ -44,3 +44,15 @@ Ushbu hujjat loyihaning texnik, operatsion va biznes chegaralaridagi oqilona tax
 2. **Ovozli Xabarlar**:
    - Har bir til uchun barcha qoidalar bo'yicha to'liq diktor ovozi (.wav) taqdim etiladi.
    - Sifatli offline TTS topilmagan taqdirda, audio yo'qligi pre-check diagnostikasida ko'rsatiladi va rasmiy imtihon bloklanadi.
+
+---
+
+## 5. Audit va Ishlab Chiqish Muhiti Cheklovlari
+1. **AI ONNX Runtime va Modellar**:
+   - Ishlab chiqish va sinov muhitida DirectML GPU yoki CUDA drayveri mavjud bo'lmaganda yoki ONNX runtime o'rnatilmaganda, tizim `MockDetector` orqali to'liq simulyatsiya rejimiga o'tadi va buni UI'da ochiq ko'rsatadi (`[SIMULATION]`).
+   - Ishlab chiqarish (production) avtomobilida ONNX model fayllari (`data/models/yolov8_autodrome.onnx`) litsenziyalangan drayver bilan o'rnatiladi.
+2. **Ovozli Fayllar (WAV)**:
+   - Hozirgi repoda mavjud 36 ta WAV fayllari funksional sinovlar uchun sintetik audiodir. Haqiqiy diktor ovozlari avtomaktab metodikasi bo'yicha maxsus yozib olinib almashtiriladi (`VOICE_TODO.md`).
+3. **Datchiklar va COM Portlar**:
+   - Haqiqiy avtomobil bo'lmagan muhitda GPS/OBD portlari virtual/simulyatsiya rejimida tekshiriladi; bu holat `HARDWARE_REQUIRED` deb tasniflanadi.
+

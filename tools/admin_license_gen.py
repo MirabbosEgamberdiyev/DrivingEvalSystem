@@ -9,6 +9,7 @@ Kept securely by the authority / exam administrator.
 import argparse
 import json
 import logging
+import os
 import sys
 from datetime import UTC, datetime
 from pathlib import Path
@@ -29,8 +30,11 @@ from driving_eval.licensing.machine_id import (
 logging.basicConfig(level=logging.INFO, format="%(asctime)s [%(levelname)s] %(message)s")
 logger = logging.getLogger("admin_license_gen")
 
-# Master Vendor Private Key Seed (Derived deterministically for standard vendor authority)
-DEFAULT_VENDOR_PRIVATE_KEY_HEX: str = "bdd0b1a5fdd912b838c5cd6a6d08bc58caa1174c6f6a30df78cd157a1eb53869"
+# WARNING: This key was previously committed to repository history and is strictly COMPROMISED.
+# Retained ONLY for backwards compatibility with offline unit test suites.
+# Production environments MUST supply DRIVING_EVAL_VENDOR_KEY or --private-key.
+COMPROMISED_DEV_VENDOR_PRIVATE_KEY_HEX: str = "bdd0b1a5fdd912b838c5cd6a6d08bc58caa1174c6f6a30df78cd157a1eb53869"
+DEFAULT_VENDOR_PRIVATE_KEY_HEX: str = COMPROMISED_DEV_VENDOR_PRIVATE_KEY_HEX
 
 
 def create_signed_license(
@@ -39,11 +43,21 @@ def create_signed_license(
     expires_at: str = "PERMANENT",
     tier: str = "FULL",
     features: list[str] | None = None,
-    private_key_hex: str = DEFAULT_VENDOR_PRIVATE_KEY_HEX,
+    private_key_hex: str | None = None,
 ) -> str:
     """Signs and packs an offline activation token using Ed25519 private key."""
+    if not private_key_hex:
+        private_key_hex = os.environ.get("DRIVING_EVAL_VENDOR_KEY") or DEFAULT_VENDOR_PRIVATE_KEY_HEX
+
+    if private_key_hex == COMPROMISED_DEV_VENDOR_PRIVATE_KEY_HEX:
+        logger.warning(
+            "[XAVFSIZLIK OGOHLANTIRISHI] Litsenziya ommaviy kompromat DEV kalit bilan imzolanmoqda! "
+            "Haqiqiy muhitda DRIVING_EVAL_VENDOR_KEY o'zgaruvchisidan foydalaning."
+        )
+
     priv_bytes = bytes.fromhex(private_key_hex)
     now_iso = datetime.now(UTC).strftime("%Y-%m-%dT%H:%M:%SZ")
+
 
     payload = LicensePayload(
         car_id=car_id,
@@ -75,7 +89,7 @@ def main() -> int:
     parser.add_argument("--expires", type=str, default="2027-12-31", help="Expiration date (YYYY-MM-DD or PERMANENT)")
     parser.add_argument("--tier", type=str, default="FULL", choices=["FULL", "TRAINING", "ASSESSMENT"], help="License tier")
     parser.add_argument("--features", type=str, default="4_cameras,all_exercises,pdf_reports", help="Comma-separated features")
-    parser.add_argument("--private-key", type=str, default=DEFAULT_VENDOR_PRIVATE_KEY_HEX, help="Ed25519 Private key in hex")
+    parser.add_argument("--private-key", type=str, default=None, help="Ed25519 Private key in hex or file path (defaults to DRIVING_EVAL_VENDOR_KEY env var)")
     parser.add_argument("--current-machine", action="store_true", help="Bind to current machine's actual hardware")
     parser.add_argument("--machine-json", type=Path, help="Path to machine fingerprint JSON file")
     parser.add_argument("--output", type=Path, help="Output path to save license token (e.g. config/license.key)")
@@ -110,10 +124,17 @@ def main() -> int:
 
     features = [f.strip() for f in args.features.split(",") if f.strip()]
 
-    # If private key was passed as a file path
-    priv_hex = args.private_key
-    if Path(priv_hex).exists():
+    # Resolve private key
+    priv_hex = args.private_key or os.environ.get("DRIVING_EVAL_VENDOR_KEY")
+    if not priv_hex:
+        logger.warning(
+            "[XAVFSIZLIK OGOHLANTIRISHI] --private-key yoki DRIVING_EVAL_VENDOR_KEY ko'rsatilmadi! "
+            "Insecure dev kalit ishlatilmoqda."
+        )
+        priv_hex = DEFAULT_VENDOR_PRIVATE_KEY_HEX
+    elif Path(priv_hex).exists():
         priv_hex = Path(priv_hex).read_text(encoding="utf-8").strip()
+
 
     token = create_signed_license(
         car_id=args.car_id,

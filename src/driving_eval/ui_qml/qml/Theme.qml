@@ -79,7 +79,13 @@ QtObject {
     // Touch Target
     readonly property int minTouchTarget: 48
 
+    // --- Timings & Animations ---
+    readonly property int debounceDelayMs: 300
+    readonly property int animDurationFast: 150
+    readonly property int animDurationNormal: 250
+
     // --- Reactive Translation Helpers ---
+
     function tr(key) {
         if (typeof i18n !== "undefined" && i18n) {
             var _l = i18n.currentLanguage

@@ -16,7 +16,13 @@ Item {
     property string toastMessage: ""
     property bool toastVisible: false
 
+    function maskPassport(pid) {
+        if (!pid || pid.length < 5) return "AA****567";
+        return pid.substring(0, 2) + "****" + pid.substring(pid.length - 3);
+    }
+
     Component.onCompleted: {
+
         backendBridge.requestSessions()
     }
 
@@ -238,8 +244,9 @@ Item {
                         anchors.verticalCenter: parent.verticalCenter
                         spacing: 2
                         Text {
-                            text: (modelData.passport_id || "AA1234567")
+                            text: root.maskPassport(modelData.passport_id || "AA1234567")
                             color: Theme.textPrimary
+
                             font.family: Theme.fontFamily
                             font.pixelSize: Theme.fontBodySmall
                             font.bold: true

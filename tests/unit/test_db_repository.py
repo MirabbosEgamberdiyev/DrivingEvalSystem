@@ -98,3 +98,55 @@ def test_interrupted_session_handling(repo):
     sess = repo.get_session(session_id)
     assert sess["status"] == "INTERRUPTED"
     assert sess["result"] == "INCOMPLETE"
+
+
+def test_tampered_violation_breaks_hash_integrity(repo):
+    repo.sync_rules("config/rules.yaml")
+    student_id = repo.register_or_get_student("CC8888888", "Aziz", "Sultonov")
+    vehicle_id = repo.register_vehicle("CAR-03", "VIN88888", "01C888CC", "Cobalt", 2024)
+    session_id = "SESS-TAMPER-001"
+
+
+    repo.create_session(session_id, student_id, vehicle_id, 100, "1.0", "1.0")
+    v_id = "V-TAMPER-01"
+    repo.record_violation(
+        violation_id=v_id,
+        session_id=session_id,
+        status="CONFIRMED",
+        confidence=0.98,
+        camera="FRONT",
+        exercise="ZMEIKA",
+        rule_code="CONE_TOUCH",
+        description="Konusga tegildi",
+    )
+    repo.record_penalty(violation_id=v_id, session_id=session_id, points=25)
+    repo.finalize_test_result(
+        session_id=session_id,
+        final_score=75,
+        result="FAIL",
+        critical_count=0,
+        suspect_count=0,
+    )
+
+    # Initial untampered state MUST pass
+    assert repo.verify_session_hash_integrity(session_id) is True
+
+    # Tamper 1: modify violation rule_code directly in DB
+    with repo.get_connection() as conn:
+        conn.execute("UPDATE violations SET rule_code = 'SEATBELT_UNFASTENED' WHERE id = ?", (v_id,))
+        conn.commit()
+
+    # Must detect tampering!
+    assert repo.verify_session_hash_integrity(session_id) is False
+
+
+
+    # Restore violation, but tamper with test_results final_score
+    with repo.get_connection() as conn:
+        conn.execute("UPDATE violations SET rule_code = 'CONE_TOUCH' WHERE id = ?", (v_id,))
+        conn.execute("UPDATE test_results SET final_score = 100 WHERE session_id = ?", (session_id,))
+        conn.commit()
+
+    # Must detect tampered score!
+    assert repo.verify_session_hash_integrity(session_id) is False
+

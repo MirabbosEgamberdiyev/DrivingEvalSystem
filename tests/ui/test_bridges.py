@@ -208,3 +208,32 @@ def test_real_bridge_with_precheck_service_passed_and_failed(qapp, tmp_path):
     assert bridge.precheckPassed is False
     assert bridge.currentState == "PRECHECK_BLOCKED"
     assert "Kamera FRONT ishlamayapti" in bridge.precheckBlockedReason
+
+
+def test_real_bridge_admin_login_security_and_audit_log(qapp, tmp_path):
+    config = SystemConfig.load_from_yaml("config/config.yaml")
+    db_file = tmp_path / "test_admin_audit.db"
+    repo = DatabaseRepository(db_file)
+
+    bridge = RealBridge(config=config, repository=repo)
+
+    # 1. Incorrect PIN fails and records audit log
+    bridge.adminLogin("wrong_pin")
+    assert bridge.settingsUnlocked is False
+
+    with repo.get_connection() as conn:
+        cur = conn.execute("SELECT action, details FROM admin_audit_log ORDER BY id DESC LIMIT 1;")
+        log_row = cur.fetchone()
+        assert log_row["action"] == "LOGIN_FAILED"
+        assert "Invalid PIN attempt" in log_row["details"]
+
+    # 2. Correct PIN (1234 whose hash is configured) succeeds and records audit log
+    bridge.adminLogin("1234")
+    assert bridge.settingsUnlocked is True
+
+    with repo.get_connection() as conn:
+        cur = conn.execute("SELECT action, details FROM admin_audit_log ORDER BY id DESC LIMIT 1;")
+        log_row = cur.fetchone()
+        assert log_row["action"] == "LOGIN_SUCCESS"
+        assert "Admin PIN authentication succeeded" in log_row["details"]
+

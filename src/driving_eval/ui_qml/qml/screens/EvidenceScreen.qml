@@ -177,23 +177,24 @@ Item {
                     columnSpacing: 16
                     width: parent.width
 
-                    Text { text: "Hodisa ID:"; color: Theme.textMuted; font.pixelSize: Theme.fontSub; font.family: Theme.fontFamily }
+                    Text { text: Theme.tr("evidence_meta_event_id"); color: Theme.textMuted; font.pixelSize: Theme.fontSub; font.family: Theme.fontFamily }
                     Text { text: root.evidenceData ? root.evidenceData.event_id : root.eventId; color: Theme.textPrimary; font.bold: true; font.pixelSize: Theme.fontSub; font.family: Theme.fontFamily }
 
-                    Text { text: "Qoida kodi:"; color: Theme.textMuted; font.pixelSize: Theme.fontSub; font.family: Theme.fontFamily }
+                    Text { text: Theme.tr("evidence_meta_rule_code"); color: Theme.textMuted; font.pixelSize: Theme.fontSub; font.family: Theme.fontFamily }
                     Text { text: root.evidenceData ? (root.evidenceData.code || "CONE_TOUCH") : "CONE_TOUCH"; color: Theme.colorAccentHover; font.bold: true; font.pixelSize: Theme.fontSub; font.family: Theme.fontFamily }
 
-                    Text { text: "Vaqt:"; color: Theme.textMuted; font.pixelSize: Theme.fontSub; font.family: Theme.fontFamily }
+                    Text { text: Theme.tr("evidence_meta_time"); color: Theme.textMuted; font.pixelSize: Theme.fontSub; font.family: Theme.fontFamily }
                     Text { text: root.evidenceData ? (root.evidenceData.timestamp || "00:05") : "00:05"; color: Theme.textPrimary; font.pixelSize: Theme.fontSub; font.family: Theme.fontFamily }
 
-                    Text { text: "Mashq:"; color: Theme.textMuted; font.pixelSize: Theme.fontSub; font.family: Theme.fontFamily }
+                    Text { text: Theme.tr("evidence_meta_exercise"); color: Theme.textMuted; font.pixelSize: Theme.fontSub; font.family: Theme.fontFamily }
                     Text { text: root.evidenceData ? (root.evidenceData.exercise || "ZMEIKA") : "ZMEIKA"; color: Theme.textPrimary; font.pixelSize: Theme.fontSub; font.family: Theme.fontFamily }
 
-                    Text { text: "Tezlik:"; color: Theme.textMuted; font.pixelSize: Theme.fontSub; font.family: Theme.fontFamily }
+                    Text { text: Theme.tr("evidence_meta_speed"); color: Theme.textMuted; font.pixelSize: Theme.fontSub; font.family: Theme.fontFamily }
                     Text { text: "16.4 km/h"; color: Theme.textPrimary; font.pixelSize: Theme.fontSub; font.family: Theme.fontFamily }
 
-                    Text { text: "Ishonchlilik:"; color: Theme.textMuted; font.pixelSize: Theme.fontSub; font.family: Theme.fontFamily }
-                    Text { text: "94.2% (Tasdiqlangan)"; color: Theme.colorSuccess; font.bold: true; font.pixelSize: Theme.fontSub; font.family: Theme.fontFamily }
+                    Text { text: Theme.tr("evidence_meta_confidence"); color: Theme.textMuted; font.pixelSize: Theme.fontSub; font.family: Theme.fontFamily }
+                    Text { text: "94.2% (" + Theme.tr("evidence_status_confirmed") + ")"; color: Theme.colorSuccess; font.bold: true; font.pixelSize: Theme.fontSub; font.family: Theme.fontFamily }
+
                 }
             }
         }

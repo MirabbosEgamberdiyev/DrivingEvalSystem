@@ -220,4 +220,28 @@ Ushbu hujjat "Offline 4-Camera AI Driving Training & Evaluation System" mahsulot
 
 ---
 
+## 12. Audit Natijalari Bo'yicha Qabul Qilingan Xavfsizlik va Arxitektura Qarorlari
+
+1. **Vendor Ed25519 Maxfiy Kaliti Xavfsizligi (SEC-01)**:
+   - Dastur kodida yoki git repo ichida maxfiy xususiy kalitlarni (private keys) saqlash mutlaqo taqiqlanadi.
+   - `admin_license_gen.py` endi kalitni faqat `DRIVING_EVAL_VENDOR_KEY` muhit o'zgaruvchisidan yoki `--private-key` CLI argumentidan oladi. Repoda qolgan eski kalit bekor qilingan (compromised) deb hisoblanadi.
+
+2. **Admin Autentifikatsiyasi va Audit Jurnali (SEC-02)**:
+   - "1234" kabi har qanday backdoor yoki default bypass kodlari olib tashlanadi.
+   - Admin PIN xeshlari tuzlangan (salted) PBKDF2-HMAC-SHA256 orqali tekshiriladi.
+   - Har bir kirish urinishi (muvaffaqiyatli va muvaffaqiyatsiz) SQLite bazasidagi `admin_audit_log` jadvaliga yoziladi.
+
+3. **Haqiqiy Kriptografik Xesh Zanjiri Tekshiruvi (CRYPTO-01)**:
+   - `verify_session_hash_integrity` faqat xesh uzunligini tekshirish bilan cheklanmaydi. U sessiyaning barcha qoidabuzarliklarini xronologik tartibda o'qib, boshlang'ich hashdan zanjirni to'liq qayta hisoblaydi va saqlangan ildiz xeshi (`hash_chain_root`) bilan taqqoslaydi. Bazada bitta qator o'zgartirilsa ham zanjir xatosi aniqlanadi.
+
+4. **Diagnostika Telemetriyasida Soxtalikni Cheklash (DIAG-01)**:
+   - Tizim parametrlari (CPU, RAM, Disk) operatsion tizimdan real vaqtda olinadi.
+   - Jismoniy sensorlar (GPS, OBD-II, IMU) ulanmagan holatda soxta doimiy sonlar ko'rsatish taqiqlanadi. Sensor uzilgan bo'lsa `DISCONNECTED`, simulyatsiya yoqilgan bo'lsa ekranda `[SIMULATION]` belgisi aniq ko'rsatiladi.
+
+5. **Nomzod Shaxsiy Ma'lumotlarini Himoyalash (PII-01)**:
+   - Touchscreen monitor barcha avtomobil yo'lovchilari uchun ko'rinadigan bo'lgani sababli, pasport raqamlari qisman niqoblanadi (`AA****567`). Inspektor rejimi uchun PIN tekshiruvi joriy etiladi.
+
+---
+
 Ushbu qarorlar loyihaning butun arxitekturasi va barcha bosqichlari uchun asos hisoblanadi.
+

@@ -57,6 +57,9 @@ def test_20_frames_single_cone_touch_yields_exactly_one_event(empty_state):
     assert event.penalty == 25
     assert scoring.current_score == 75
     assert scoring.total_penalty == 25
+    assert scoring.is_passing is False
+    assert scoring.is_terminated is False
+
 
 
 def test_low_confidence_produces_suspect_with_zero_penalty(empty_state):
@@ -97,6 +100,9 @@ def test_low_confidence_produces_suspect_with_zero_penalty(empty_state):
     assert scoring.current_score == 100
     assert scoring.total_penalty == 0
     assert len(scoring.suspect_events) == 1
+    assert scoring.is_passing is True
+    assert scoring.is_terminated is False
+
 
 
 def test_critical_violation_flow_causes_fail_and_termination(empty_state):
@@ -285,3 +291,61 @@ def test_all_rule_plugins_registered():
 
     # All 9 rules in rules.yaml must have registered evaluator plugins
     assert manifest_codes == registered_codes
+
+
+def test_scoring_engine_pass_fail_boundary_conditions():
+    """Validates boundary conditions: 100, 80 (exact pass), 79 (fail), and critical termination."""
+    from driving_eval.rules.event_manager import ProcessedViolationEvent
+
+    cfg = ScoringConfig(start_score=100, pass_score=80)
+    scoring = ScoringEngine(cfg)
+
+    # Initial state
+    assert scoring.current_score == 100
+    assert scoring.is_passing is True
+    assert scoring.is_terminated is False
+
+    def make_event(v_id: str, code: str, penalty: int, critical: bool = False):
+        return ProcessedViolationEvent(
+            violation_id=v_id,
+            rule_code=code,
+            status="CONFIRMED",
+            confidence=0.9,
+            penalty=penalty,
+            critical=critical,
+            camera="FRONT",
+            exercise="START",
+            details="Boundary test violation",
+            screen_text="Test screen text",
+            voice_file="test.wav",
+            voice_text="Test voice text",
+            timestamp=100.0,
+        )
+
+    # Apply 10 penalty points -> score 90 >= 80 -> PASS
+    ev10 = make_event("EV-1", "SEATBELT_UNFASTENED", penalty=10)
+    scoring.apply_event(ev10)
+    assert scoring.current_score == 90
+    assert scoring.is_passing is True
+    assert scoring.is_terminated is False
+
+    # Apply 10 more penalty points -> score 80 == pass_score -> EXACT BOUNDARY PASS
+    scoring.apply_event(make_event("EV-2", "SEATBELT_UNFASTENED", penalty=10))
+    assert scoring.current_score == 80
+    assert scoring.is_passing is True
+    assert scoring.is_terminated is False
+
+    # Apply 1 more penalty point -> score 79 < 80 -> FAIL
+    scoring.apply_event(make_event("EV-3", "INDICATOR_MISSED", penalty=1))
+    assert scoring.current_score == 79
+    assert scoring.is_passing is False
+    assert scoring.is_terminated is False
+
+    # Critical violation causes immediate termination and fail regardless of score
+    scoring_crit = ScoringEngine(cfg)
+    ev_crit = make_event("EV-4", "CRITICAL_COLLISION", penalty=100, critical=True)
+    scoring_crit.apply_event(ev_crit)
+    assert scoring_crit.is_terminated is True
+    assert scoring_crit.is_passing is False
+
+

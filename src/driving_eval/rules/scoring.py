@@ -58,6 +58,11 @@ class ScoringEngine:
         """Candidate PASSES only if final score >= pass_score AND 0 critical violations."""
         return (self.current_score >= self.pass_score) and (self._critical_count == 0)
 
+
+
+
+
+
     @property
     def is_terminated(self) -> bool:
         """True if any critical violation has occurred."""

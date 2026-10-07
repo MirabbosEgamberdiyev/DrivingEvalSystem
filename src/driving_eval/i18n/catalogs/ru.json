@@ -1467,5 +1467,110 @@
     "text": "Завершить настройку",
     "reviewed": true,
     "reviewer": "metodist_ru"
+  },
+  "evidence_meta_event_id": {
+    "text": "ID события:",
+    "reviewed": true,
+    "reviewer": "qa_audit_team"
+  },
+  "evidence_meta_rule_code": {
+    "text": "Код правила:",
+    "reviewed": true,
+    "reviewer": "qa_audit_team"
+  },
+  "evidence_meta_time": {
+    "text": "Время:",
+    "reviewed": true,
+    "reviewer": "qa_audit_team"
+  },
+  "evidence_meta_exercise": {
+    "text": "Упражнение:",
+    "reviewed": true,
+    "reviewer": "qa_audit_team"
+  },
+  "evidence_meta_speed": {
+    "text": "Скорость:",
+    "reviewed": true,
+    "reviewer": "qa_audit_team"
+  },
+  "evidence_meta_confidence": {
+    "text": "Уверенность:",
+    "reviewed": true,
+    "reviewer": "qa_audit_team"
+  },
+  "evidence_status_confirmed": {
+    "text": "Подтверждено",
+    "reviewed": true,
+    "reviewer": "qa_audit_team"
+  },
+  "settings_bev_rear_error": {
+    "text": "REAR Ошибка",
+    "reviewed": true,
+    "reviewer": "qa_audit_team"
+  },
+  "settings_bev_left_error": {
+    "text": "LEFT Ошибка",
+    "reviewed": true,
+    "reviewer": "qa_audit_team"
+  },
+  "settings_bev_right_error": {
+    "text": "RIGHT Ошибка",
+    "reviewed": true,
+    "reviewer": "qa_audit_team"
+  },
+  "settings_bev_drift_label": {
+    "text": "Контроль смещения: 2.1 см (< 5.0 см допустимо) — Камера не смещена.",
+    "reviewed": true,
+    "reviewer": "qa_audit_team"
+  },
+  "settings_bev_front_error": {
+    "text": "FRONT Ошибка",
+    "reviewed": true,
+    "reviewer": "qa_audit_team"
+  },
+  "wizard.eula_terms": {
+    "text": "Условия конфиденциальности и офлайн-режима:\n1. Система работает 100% офлайн, данные в сеть не передаются.\n2. Доказательства хранятся только на локальном SSD.\n3. Гарантируется справедливая и объективная оценка.",
+    "reviewed": true,
+    "reviewer": "qa_audit_team"
+  },
+  "wizard.camera_front_label": {
+    "text": "FRONT (Передняя камера)",
+    "reviewed": true,
+    "reviewer": "qa_audit_team"
+  },
+  "wizard.camera_rear_label": {
+    "text": "REAR (Задняя камера)",
+    "reviewed": true,
+    "reviewer": "qa_audit_team"
+  },
+  "wizard.camera_left_label": {
+    "text": "LEFT (Левая камера)",
+    "reviewed": true,
+    "reviewer": "qa_audit_team"
+  },
+  "wizard.camera_right_label": {
+    "text": "RIGHT (Правая камера)",
+    "reviewed": true,
+    "reviewer": "qa_audit_team"
+  },
+  "wizard.calibration_desc": {
+    "text": "Плоскость земли измерена с помощью опорных меток.",
+    "reviewed": true,
+    "reviewer": "qa_audit_team"
+  },
+  "wizard.polygon_geofence": {
+    "text": "Радиус GPS геозоны: 35 метров | Допуск направления: 75 градусов",
+    "reviewed": true,
+    "reviewer": "qa_audit_team"
+  },
+  "wizard.audio_desc": {
+    "text": "Голосовые оповещения должны четко звучать через автомобильные динамики.",
+    "reviewed": true,
+    "reviewer": "qa_audit_team"
+  },
+  "wizard.summary_success": {
+    "text": "Все 6 начальных этапов успешно проверены.\nСистема полностью готова.",
+    "reviewed": true,
+    "reviewer": "qa_audit_team"
   }
 }

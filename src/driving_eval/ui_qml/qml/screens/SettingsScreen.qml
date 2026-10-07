@@ -626,28 +626,29 @@ Item {
 
                                 Rectangle {
                                     width: (bevCol.width - 36) / 4; height: 64; radius: Theme.radiusSmall; color: Theme.surfaceElevated
-                                    Column { anchors.centerIn: parent; spacing: 4; Text { text: "FRONT Xatolik"; color: Theme.textMuted; font.pixelSize: 11; font.family: Theme.fontFamily; anchors.horizontalCenter: parent.horizontalCenter } Text { text: "0.8 px (98.4%)"; color: Theme.colorSuccess; font.bold: true; font.pixelSize: 13; font.family: Theme.fontFamily; anchors.horizontalCenter: parent.horizontalCenter } }
+                                    Column { anchors.centerIn: parent; spacing: 4; Text { text: Theme.tr("settings_bev_front_error"); color: Theme.textMuted; font.pixelSize: 11; font.family: Theme.fontFamily; anchors.horizontalCenter: parent.horizontalCenter } Text { text: "0.8 px (98.4%)"; color: Theme.colorSuccess; font.bold: true; font.pixelSize: 13; font.family: Theme.fontFamily; anchors.horizontalCenter: parent.horizontalCenter } }
                                 }
                                 Rectangle {
                                     width: (bevCol.width - 36) / 4; height: 64; radius: Theme.radiusSmall; color: Theme.surfaceElevated
-                                    Column { anchors.centerIn: parent; spacing: 4; Text { text: "REAR Xatolik"; color: Theme.textMuted; font.pixelSize: 11; font.family: Theme.fontFamily; anchors.horizontalCenter: parent.horizontalCenter } Text { text: "1.1 px (97.2%)"; color: Theme.colorSuccess; font.bold: true; font.pixelSize: 13; font.family: Theme.fontFamily; anchors.horizontalCenter: parent.horizontalCenter } }
+                                    Column { anchors.centerIn: parent; spacing: 4; Text { text: Theme.tr("settings_bev_rear_error"); color: Theme.textMuted; font.pixelSize: 11; font.family: Theme.fontFamily; anchors.horizontalCenter: parent.horizontalCenter } Text { text: "1.1 px (97.2%)"; color: Theme.colorSuccess; font.bold: true; font.pixelSize: 13; font.family: Theme.fontFamily; anchors.horizontalCenter: parent.horizontalCenter } }
                                 }
                                 Rectangle {
                                     width: (bevCol.width - 36) / 4; height: 64; radius: Theme.radiusSmall; color: Theme.surfaceElevated
-                                    Column { anchors.centerIn: parent; spacing: 4; Text { text: "LEFT Xatolik"; color: Theme.textMuted; font.pixelSize: 11; font.family: Theme.fontFamily; anchors.horizontalCenter: parent.horizontalCenter } Text { text: "1.2 px (96.8%)"; color: Theme.colorSuccess; font.bold: true; font.pixelSize: 13; font.family: Theme.fontFamily; anchors.horizontalCenter: parent.horizontalCenter } }
+                                    Column { anchors.centerIn: parent; spacing: 4; Text { text: Theme.tr("settings_bev_left_error"); color: Theme.textMuted; font.pixelSize: 11; font.family: Theme.fontFamily; anchors.horizontalCenter: parent.horizontalCenter } Text { text: "1.2 px (96.8%)"; color: Theme.colorSuccess; font.bold: true; font.pixelSize: 13; font.family: Theme.fontFamily; anchors.horizontalCenter: parent.horizontalCenter } }
                                 }
                                 Rectangle {
                                     width: (bevCol.width - 36) / 4; height: 64; radius: Theme.radiusSmall; color: Theme.surfaceElevated
-                                    Column { anchors.centerIn: parent; spacing: 4; Text { text: "RIGHT Xatolik"; color: Theme.textMuted; font.pixelSize: 11; font.family: Theme.fontFamily; anchors.horizontalCenter: parent.horizontalCenter } Text { text: "0.9 px (98.1%)"; color: Theme.colorSuccess; font.bold: true; font.pixelSize: 13; font.family: Theme.fontFamily; anchors.horizontalCenter: parent.horizontalCenter } }
+                                    Column { anchors.centerIn: parent; spacing: 4; Text { text: Theme.tr("settings_bev_right_error"); color: Theme.textMuted; font.pixelSize: 11; font.family: Theme.fontFamily; anchors.horizontalCenter: parent.horizontalCenter } Text { text: "0.9 px (98.1%)"; color: Theme.colorSuccess; font.bold: true; font.pixelSize: 13; font.family: Theme.fontFamily; anchors.horizontalCenter: parent.horizontalCenter } }
                                 }
                             }
 
                             Text {
-                                text: "Fiducial drift nazorati: 2.1 sm (< 5.0 sm ruxsat etilgan chegara) — Kamera yo'nalishi siljimagan."
+                                text: Theme.tr("settings_bev_drift_label")
                                 color: Theme.colorSuccess
                                 font.pixelSize: Theme.fontSub
                                 font.family: Theme.fontFamily
                             }
+
                         }
                     }
                 }

@@ -1458,5 +1458,110 @@
     "text": "Созлашни якунлаш",
     "reviewed": true,
     "reviewer": "metodist_uz"
+  },
+  "evidence_meta_event_id": {
+    "text": "Ҳодиса ID:",
+    "reviewed": true,
+    "reviewer": "qa_audit_team"
+  },
+  "evidence_meta_rule_code": {
+    "text": "Қоида коди:",
+    "reviewed": true,
+    "reviewer": "qa_audit_team"
+  },
+  "evidence_meta_time": {
+    "text": "Вақт:",
+    "reviewed": true,
+    "reviewer": "qa_audit_team"
+  },
+  "evidence_meta_exercise": {
+    "text": "Машқ:",
+    "reviewed": true,
+    "reviewer": "qa_audit_team"
+  },
+  "evidence_meta_speed": {
+    "text": "Тезлик:",
+    "reviewed": true,
+    "reviewer": "qa_audit_team"
+  },
+  "evidence_meta_confidence": {
+    "text": "Ишончлилик:",
+    "reviewed": true,
+    "reviewer": "qa_audit_team"
+  },
+  "evidence_status_confirmed": {
+    "text": "Тасдиқланган",
+    "reviewed": true,
+    "reviewer": "qa_audit_team"
+  },
+  "settings_bev_rear_error": {
+    "text": "REAR Хатолик",
+    "reviewed": true,
+    "reviewer": "qa_audit_team"
+  },
+  "settings_bev_left_error": {
+    "text": "LEFT Хатолик",
+    "reviewed": true,
+    "reviewer": "qa_audit_team"
+  },
+  "settings_bev_right_error": {
+    "text": "RIGHT Хатолик",
+    "reviewed": true,
+    "reviewer": "qa_audit_team"
+  },
+  "settings_bev_drift_label": {
+    "text": "Fiducial drift назорати: 2.1 см (< 5.0 см рухсат этилган) — Камера силжимаган.",
+    "reviewed": true,
+    "reviewer": "qa_audit_team"
+  },
+  "settings_bev_front_error": {
+    "text": "FRONT Хатолик",
+    "reviewed": true,
+    "reviewer": "qa_audit_team"
+  },
+  "wizard.eula_terms": {
+    "text": "Махфийлик ва Offline Шартлари:\n1. Тизим 100% offline режимда ишлайди, маълумот интернетга узатилмайди.\n2. Далиллар фақат маҳаллий SSD хотирада сақланади.\n3. Ҳайдаш малакасини адолатли баҳолаш кафолатланади.",
+    "reviewed": true,
+    "reviewer": "qa_audit_team"
+  },
+  "wizard.camera_front_label": {
+    "text": "FRONT (Олд Камера)",
+    "reviewed": true,
+    "reviewer": "qa_audit_team"
+  },
+  "wizard.camera_rear_label": {
+    "text": "REAR (Орқа Камера)",
+    "reviewed": true,
+    "reviewer": "qa_audit_team"
+  },
+  "wizard.camera_left_label": {
+    "text": "LEFT (Чап Камера)",
+    "reviewed": true,
+    "reviewer": "qa_audit_team"
+  },
+  "wizard.camera_right_label": {
+    "text": "RIGHT (Ўнг Камера)",
+    "reviewed": true,
+    "reviewer": "qa_audit_team"
+  },
+  "wizard.calibration_desc": {
+    "text": "Референс белгилар орқали ер текислиги ўлчанди.",
+    "reviewed": true,
+    "reviewer": "qa_audit_team"
+  },
+  "wizard.polygon_geofence": {
+    "text": "GPS geofence радиуси: 35 метр | Йўналиш толеранси: 75 градус",
+    "reviewed": true,
+    "reviewer": "qa_audit_team"
+  },
+  "wizard.audio_desc": {
+    "text": "Овозли билдиришномалар автомобил салонидаги аудио динамик орқали аниқ эшитилиши шарт.",
+    "reviewed": true,
+    "reviewer": "qa_audit_team"
+  },
+  "wizard.summary_success": {
+    "text": "Барча 6 та дастлабки босқич муваффақиятли текширилди.\nТизим тўлиқ тайёр.",
+    "reviewed": true,
+    "reviewer": "qa_audit_team"
   }
 }

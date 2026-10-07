@@ -23,14 +23,24 @@ def test_finish_button_gating_in_active_test(qapp):
     screen_file = qml_dir / "screens" / "ActiveTestScreen.qml"
     engine.load(QUrl.fromLocalFile(str(screen_file)))
     assert len(engine.rootObjects()) > 0
-    assert engine.rootObjects()[0] is not None
+    screen = engine.rootObjects()[0]
+    assert screen is not None
 
-    # While driving, finishReady is False
+    moving_prompt = screen.findChild(object, "movingPrompt")
+    finish_container = screen.findChild(object, "finishContainer")
+    assert moving_prompt is not None
+    assert finish_container is not None
+
+    # While driving, finishReady is False: moving prompt visible, finish container hidden
     assert bridge.finishReady is False
+    assert moving_prompt.property("visible") is True
+    assert finish_container.property("visible") is False
 
-    # Simulate stopping at finish zone
+    # Simulate stopping at finish zone: finish ready toggles visibility
     bridge.set_finish_ready(True)
     assert bridge.finishReady is True
+    assert moving_prompt.property("visible") is False
+    assert finish_container.property("visible") is True
 
 
 def test_big_button_debounce_logic(qapp, qtbot):
@@ -47,10 +57,20 @@ def test_big_button_debounce_logic(qapp, qtbot):
     clicks = []
     btn.clicked.connect(lambda: clicks.append(1))
 
-    # MouseArea trigger simulation
-    assert btn.findChild(object, "mouseArea") is not None
     assert btn.property("_isDebounced") is False
 
-    # First click emits
-    btn.clicked.emit()
+    # First click emits and activates debounce lock
+    btn.triggerClick()
     assert len(clicks) == 1
+    assert btn.property("_isDebounced") is True
+
+    # Immediate second click while debounced is blocked
+    btn.triggerClick()
+    assert len(clicks) == 1
+
+    # After debounce clears, subsequent click emits
+    btn.setProperty("_isDebounced", False)
+    btn.triggerClick()
+    assert len(clicks) == 2
+
+

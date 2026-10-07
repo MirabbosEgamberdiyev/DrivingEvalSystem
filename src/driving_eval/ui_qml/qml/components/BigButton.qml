@@ -91,17 +91,20 @@ Item {
         }
     }
 
+    function triggerClick() {
+        if (!root._isDebounced && root.enabled) {
+            root._isDebounced = true
+            debounceTimer.start()
+            root.clicked()
+        }
+    }
+
     MouseArea {
         id: mouseArea
         objectName: "mouseArea"
         anchors.fill: parent
         enabled: root.enabled
-        onClicked: {
-            if (!root._isDebounced) {
-                root._isDebounced = true
-                debounceTimer.start()
-                root.clicked()
-            }
-        }
+        onClicked: root.triggerClick()
     }
 }
+

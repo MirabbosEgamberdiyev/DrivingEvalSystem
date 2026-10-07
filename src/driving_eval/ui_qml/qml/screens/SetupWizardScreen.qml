@@ -157,12 +157,9 @@ Rectangle {
                             color: Theme.textSecondary
                             font.family: Theme.fontFamily
                             font.pixelSize: Theme.fontBody
-                            text: "Maxfiylik va Offline Shartlari:\n" +
-                                  "1. Tizim 100% offline rejimda ishlaydi, hech qanday ma'lumot internetga uzatilmaydi.\n" +
-                                  "2. Avtomobil ichidagi barcha video va telemetriya dalillari faqat mahalliy SSD xotirada saqlanadi.\n" +
-                                  "3. Ushbu dastur haydash malakasini obyektiv va adolatli baholash uchun mo'ljallangan.\n" +
-                                  "4. Sertifikatlangan va kalibrovka qilingan poligon sharoitida to'liq aniqlik kafolatlanadi."
+                            text: Theme.tr("wizard.eula_terms")
                         }
+
                     }
 
                     RowLayout {
@@ -312,7 +309,7 @@ Rectangle {
                             radius: Theme.radiusSmall
                             ColumnLayout {
                                 anchors.centerIn: parent
-                                Text { text: "📷 FRONT (Old Kamera)"; color: Theme.colorAccent; font.bold: true }
+                                Text { text: "📷 " + Theme.tr("wizard.camera_front_label"); color: Theme.colorAccent; font.bold: true }
                                 Text { text: "1920x1080 @ 30 FPS [MJPEG]"; color: Theme.colorSuccess }
                             }
                         }
@@ -323,7 +320,7 @@ Rectangle {
                             radius: Theme.radiusSmall
                             ColumnLayout {
                                 anchors.centerIn: parent
-                                Text { text: "📷 REAR (Orqa Kamera)"; color: Theme.colorAccent; font.bold: true }
+                                Text { text: "📷 " + Theme.tr("wizard.camera_rear_label"); color: Theme.colorAccent; font.bold: true }
                                 Text { text: "1920x1080 @ 30 FPS [MJPEG]"; color: Theme.colorSuccess }
                             }
                         }
@@ -334,7 +331,7 @@ Rectangle {
                             radius: Theme.radiusSmall
                             ColumnLayout {
                                 anchors.centerIn: parent
-                                Text { text: "📷 LEFT (Chap Kamera)"; color: Theme.colorAccent; font.bold: true }
+                                Text { text: "📷 " + Theme.tr("wizard.camera_left_label"); color: Theme.colorAccent; font.bold: true }
                                 Text { text: "1920x1080 @ 30 FPS [MJPEG]"; color: Theme.colorSuccess }
                             }
                         }
@@ -345,10 +342,11 @@ Rectangle {
                             radius: Theme.radiusSmall
                             ColumnLayout {
                                 anchors.centerIn: parent
-                                Text { text: "📷 RIGHT (O'ng Kamera)"; color: Theme.colorAccent; font.bold: true }
+                                Text { text: "📷 " + Theme.tr("wizard.camera_right_label"); color: Theme.colorAccent; font.bold: true }
                                 Text { text: "1920x1080 @ 30 FPS [MJPEG]"; color: Theme.colorSuccess }
                             }
                         }
+
                     }
                 }
             }
@@ -380,11 +378,12 @@ Rectangle {
                     }
 
                     Text {
-                        text: "Referens belgilar (bumper offset 2.0m, kenglik 1.0m) orqali yer tekisligi o'lchandi."
+                        text: Theme.tr("wizard.calibration_desc")
                         color: Theme.textSecondary
                         font.family: Theme.fontFamily
                         font.pixelSize: Theme.fontBody
                     }
+
 
                     Item { Layout.fillHeight: true }
 
@@ -430,7 +429,7 @@ Rectangle {
                     }
 
                     Text {
-                        text: "GPS geofence radiusi: 35 metr | Yo'nalish toleransi: 75 gradus"
+                        text: Theme.tr("wizard.polygon_geofence")
                         color: Theme.textSecondary
                         font.family: Theme.fontFamily
                         font.pixelSize: Theme.fontBody
@@ -461,7 +460,7 @@ Rectangle {
                     }
 
                     Text {
-                        text: "Ovozli bildirishnomalar avtomobil salonidagi audio dinamik orqali aniq eshitilishi shart."
+                        text: Theme.tr("wizard.audio_desc")
                         color: Theme.textSecondary
                         font.family: Theme.fontFamily
                         font.pixelSize: Theme.fontBody
@@ -502,14 +501,14 @@ Rectangle {
                     }
 
                     Text {
-                        text: "Barcha 6 ta dastlabki bosqich muvaffaqiyatli tekshirildi.\n" +
-                              "Sozlamalar config/config.yaml fayliga yoziladi va tizim READY holatiga o'tadi."
+                        text: Theme.tr("wizard.summary_success")
                         color: Theme.textPrimary
                         font.family: Theme.fontFamily
                         font.pixelSize: Theme.fontBody
                         wrapMode: Text.Wrap
                         Layout.fillWidth: true
                     }
+
 
                     Item { Layout.fillHeight: true }
 

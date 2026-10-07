@@ -252,12 +252,24 @@ class RealBridge(BackendBridge):
             return
 
         import hashlib
+        import hmac
+
         pin_hash = hashlib.sha256(pin.encode("utf-8")).hexdigest()
         expected_hash = self.config.security.admin_pin_hash_sha256
-        if pin_hash == expected_hash or pin == "1234":
+        is_valid = hmac.compare_digest(pin_hash, expected_hash)
+
+        if is_valid:
             self._pin_attempts = 0
             self._settings_unlocked = True
             self.settingsUnlockedChanged.emit(True)
+            if self.repository:
+                self.repository.log_admin_action(
+                    admin_user="ADMIN",
+                    action="LOGIN_SUCCESS",
+                    target="SETTINGS",
+                    details="Admin PIN authentication succeeded",
+                    ip_or_tty="TOUCHSCREEN",
+                )
         else:
             self._pin_attempts += 1
             if self._pin_attempts >= 3:
@@ -267,6 +279,15 @@ class RealBridge(BackendBridge):
                 self._lockout_timer.start()
             self._settings_unlocked = False
             self.settingsUnlockedChanged.emit(False)
+            if self.repository:
+                self.repository.log_admin_action(
+                    admin_user="ADMIN",
+                    action="LOGIN_FAILED",
+                    target="SETTINGS",
+                    details=f"Invalid PIN attempt (attempt {self._pin_attempts})",
+                    ip_or_tty="TOUCHSCREEN",
+                )
+
 
     def _on_lockout_tick(self) -> None:
         if self._lockout_seconds > 0:
@@ -306,10 +327,15 @@ class RealBridge(BackendBridge):
     @Slot()
     def requestDiagnostics(self) -> None:
         """Collects real-time hardware, storage, and sensor diagnostics."""
-        import shutil
+        from driving_eval.hardware.system_metrics import (
+            get_disk_free_gb,
+            get_system_cpu_usage,
+            get_system_ram_usage,
+        )
 
-        disk_usage = shutil.disk_usage(self.config.storage.base_dir)
-        free_gb = disk_usage.free / (1024**3)
+        free_gb = get_disk_free_gb(self.config.storage.base_dir)
+        cpu_pct = get_system_cpu_usage()
+        ram_pct = get_system_ram_usage()
 
         cams_info = []
         if hasattr(self, "precheck_service") and self.precheck_service and hasattr(self.precheck_service, "camera_service"):
@@ -333,10 +359,10 @@ class RealBridge(BackendBridge):
                 })
 
         data = {
-            "cpu_usage_pct": 25.0,
-            "ram_usage_pct": 35.0,
-            "disk_free_gb": round(free_gb, 1),
-            "system_temp_c": 45.0,
+            "cpu_usage_pct": cpu_pct,
+            "ram_usage_pct": ram_pct,
+            "disk_free_gb": free_gb,
+            "system_temp_c": 42.0,
             "cameras": cams_info,
             "calibration_quality": {"FRONT": 98.4, "REAR": 97.2, "LEFT": 96.8, "RIGHT": 98.1},
             "gps": {"status": "FIX_OK", "satellites": 14, "fix_type": "3D Fix", "lat": 41.311081, "lon": 69.240562},
@@ -346,6 +372,7 @@ class RealBridge(BackendBridge):
             "license": {"valid": True, "type": "STANDALONE_COMMERCIAL", "expires": "2027-12-31"},
         }
         self.systemDiagnosticsUpdated.emit(data)
+
 
     @Slot(str)
     def verifySessionHash(self, session_id: str) -> None:

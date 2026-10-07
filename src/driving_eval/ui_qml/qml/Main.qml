@@ -68,11 +68,16 @@ Window {
                 stackView.push(precheckScreenComponent)
             }
             onInspectorClicked: {
-                stackView.push(inspectorScreenComponent)
+                if (backendBridge.settingsUnlocked) {
+                    stackView.push(inspectorScreenComponent)
+                } else {
+                    stackView.push(settingsScreenComponent)
+                }
             }
             onSettingsClicked: {
                 stackView.push(settingsScreenComponent)
             }
+
         }
     }
 

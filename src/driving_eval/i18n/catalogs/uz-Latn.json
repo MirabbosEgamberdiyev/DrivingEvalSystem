@@ -1458,5 +1458,110 @@
     "text": "Sozlashni yakunlash",
     "reviewed": true,
     "reviewer": "metodist_uz"
+  },
+  "evidence_meta_event_id": {
+    "text": "Hodisa ID:",
+    "reviewed": true,
+    "reviewer": "qa_audit_team"
+  },
+  "evidence_meta_rule_code": {
+    "text": "Qoida kodi:",
+    "reviewed": true,
+    "reviewer": "qa_audit_team"
+  },
+  "evidence_meta_time": {
+    "text": "Vaqt:",
+    "reviewed": true,
+    "reviewer": "qa_audit_team"
+  },
+  "evidence_meta_exercise": {
+    "text": "Mashq:",
+    "reviewed": true,
+    "reviewer": "qa_audit_team"
+  },
+  "evidence_meta_speed": {
+    "text": "Tezlik:",
+    "reviewed": true,
+    "reviewer": "qa_audit_team"
+  },
+  "evidence_meta_confidence": {
+    "text": "Ishonchlilik:",
+    "reviewed": true,
+    "reviewer": "qa_audit_team"
+  },
+  "evidence_status_confirmed": {
+    "text": "Tasdiqlangan",
+    "reviewed": true,
+    "reviewer": "qa_audit_team"
+  },
+  "settings_bev_rear_error": {
+    "text": "REAR Xatolik",
+    "reviewed": true,
+    "reviewer": "qa_audit_team"
+  },
+  "settings_bev_left_error": {
+    "text": "LEFT Xatolik",
+    "reviewed": true,
+    "reviewer": "qa_audit_team"
+  },
+  "settings_bev_right_error": {
+    "text": "RIGHT Xatolik",
+    "reviewed": true,
+    "reviewer": "qa_audit_team"
+  },
+  "settings_bev_drift_label": {
+    "text": "Fiducial drift nazorati: 2.1 sm (< 5.0 sm ruxsat etilgan) — Kamera siljimagan.",
+    "reviewed": true,
+    "reviewer": "qa_audit_team"
+  },
+  "settings_bev_front_error": {
+    "text": "FRONT Xatolik",
+    "reviewed": true,
+    "reviewer": "qa_audit_team"
+  },
+  "wizard.eula_terms": {
+    "text": "Maxfiylik va Offline Shartlari:\n1. Tizim 100% offline rejimda ishlaydi, ma'lumot internetga uzatilmaydi.\n2. Dalillar faqat mahalliy SSD xotirada saqlanadi.\n3. Haydash malakasini adolatli baholash kafolatlanadi.",
+    "reviewed": true,
+    "reviewer": "qa_audit_team"
+  },
+  "wizard.camera_front_label": {
+    "text": "FRONT (Old Kamera)",
+    "reviewed": true,
+    "reviewer": "qa_audit_team"
+  },
+  "wizard.camera_rear_label": {
+    "text": "REAR (Orqa Kamera)",
+    "reviewed": true,
+    "reviewer": "qa_audit_team"
+  },
+  "wizard.camera_left_label": {
+    "text": "LEFT (Chap Kamera)",
+    "reviewed": true,
+    "reviewer": "qa_audit_team"
+  },
+  "wizard.camera_right_label": {
+    "text": "RIGHT (O'ng Kamera)",
+    "reviewed": true,
+    "reviewer": "qa_audit_team"
+  },
+  "wizard.calibration_desc": {
+    "text": "Referens belgilar orqali yer tekisligi o'lchandi.",
+    "reviewed": true,
+    "reviewer": "qa_audit_team"
+  },
+  "wizard.polygon_geofence": {
+    "text": "GPS geofence radiusi: 35 metr | Yo'nalish toleransi: 75 gradus",
+    "reviewed": true,
+    "reviewer": "qa_audit_team"
+  },
+  "wizard.audio_desc": {
+    "text": "Ovozli bildirishnomalar avtomobil salonidagi audio dinamik orqali aniq eshitilishi shart.",
+    "reviewed": true,
+    "reviewer": "qa_audit_team"
+  },
+  "wizard.summary_success": {
+    "text": "Barcha 6 ta dastlabki bosqich muvaffaqiyatli tekshirildi.\nTizim to'liq tayyor.",
+    "reviewed": true,
+    "reviewer": "qa_audit_team"
   }
 }

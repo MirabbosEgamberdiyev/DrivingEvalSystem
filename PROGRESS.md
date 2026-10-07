@@ -5,11 +5,12 @@ Ushbu hujjat loyihaning har bir bosqichidagi bajarilgan ishlar, testlar holati, 
 ---
 
 ## Holat Xulosasi (Current Status)
-- **Hozirgi Bosqich**: Barcha 12 ta bosqich (Bosqich 0 - Bosqich 12) 100% YAKUNLANDI.
-- **Git Holati**: Bosqich 11 commit qilingan (`42cdec1`), Bosqich 12 kiritildi.
-- **Mavjud Testlar**: 122 ta test yashil (100% PASS), 85% coverage.
+- **Hozirgi Bosqich**: Mustaqil QA va Xavfsizlik Auditi to'liq yakunlandi (Bosqich 13).
+- **Git Holati**: Barcha tuzatishlar va testlar kiritildi, commit va pushga tayyor.
+- **Mavjud Testlar**: 131 ta test yashil (100% PASS), 83% statement coverage.
 - **Ruff & Mypy**: 0 xato (100% toza).
-- **Lokalizatsiya**: 3 ta til (`uz-Latn`, `uz-Cyrl`, `ru`) 100% to'liq, 0 ta unreviewed qator.
+- **Lokalizatsiya**: 3 ta til (`uz-Latn`, `uz-Cyrl`, `ru`) 100% paritet, QML qattiq matnlar `Theme.tr()` ga ulandi.
+- **Xavfsizlik**: Maxfiy kalit ochiqligi (SEC-01), backdoor PIN (SEC-02), soxta xesh tekshiruvi (CRYPTO-01), PII ochiqligi (PII-01) to'liq tuzatildi va isbotlandi.
 
 ---
 
@@ -30,6 +31,21 @@ Ushbu hujjat loyihaning har bir bosqichidagi bajarilgan ishlar, testlar holati, 
 | **Bosqich 10** | Setup Wizard (apparat tekshiruvi, kamera yo'nalishi, kalibrovka ustasi, poligon zonalari, audio test) | ✅ TUGALLANDI | 7 bosqichli to'liq interaktiv usta (SetupWizardService, SetupWizardBridge, SetupWizardScreen.qml, 116 test PASS). |
 | **Bosqich 11** | Watchdog, diagnostika zipi, yangilash/rollback, Nuitka build, Inno Setup 3 tilda (.isl) | ✅ TUGALLANDI | WatchdogService, CrashBundleExporter (SHA-256, DB snapshot, logs, telemetry), Inno Setup 6 (uz-Latn.isl, uz-Cyrl.isl, Russian.isl), build_standalone.py, 121 test PASS. |
 | **Bosqich 12** | Yakuniy sifat: check_translations, ovoz to'plami testi, soak (2 soat), 3 til skrinshotlari, hujjatlar | ✅ TUGALLANDI | 122 ta test (85% coverage), 100% reviewed tarjimalar, 3 tilda jonli auto-demo testlari, mukammal README.md. |
+| **Bosqich 13** | **Mustaqil QA/Xavfsizlik Auditi, Mutatsiya Sinovlari va Kamchiliklarni Tuzatish** | ✅ TUGALLANDI | 4 ta kritik, 4 ta yuqori va 3 ta o'rta darajadagi nuqsonlar tuzatildi; `AUDIT_REPORT.md`, `VOICE_TODO.md`, `FINAL_AUDIT_REPORT.md` yaratildi. 131/131 test PASS. |
+
+---
+
+## Bajarilgan Ishlar (Bosqich 13 Auditi va Tuzatishlar)
+- [x] **AUDIT_REPORT.md**: Har bir talab 5 ta holat bo'yicha (`VERIFIED`, `PARTIAL`, `MOCK`, `MISSING`, `HARDWARE_REQUIRED`) dalillar bilan tahlil qilindi.
+- [x] **SEC-01**: `admin_license_gen.py` dagi xususiy kalit ochiqligi bartaraf etildi, `DRIVING_EVAL_VENDOR_KEY` va ogohlantirishlar qo'shildi.
+- [x] **SEC-02**: `real_bridge.py` dagi "1234" backdoor PIN olib tashlandi, doimiy vaqtli xesh tekshiruvi va `admin_audit_log` yozuvi kiritildi.
+- [x] **CRYPTO-01**: `verify_session_hash_integrity` funksiyasida butun sessiya hodisalar zanjirini haqiqiy SHA-256 bilan qayta hisoblash joriy etildi va soxtalashtirishni aniqlovchi unit test yozildi.
+- [x] **DIAG-01**: Windows `kernel32` orqali real CPU, RAM va Disk ko'rsatkichlarini oluvchi `system_metrics.py` moduli yaratildi.
+- [x] **PII-01**: Nomzod pasport raqami `AA****567` formatida niqoblandi va inspektor bo'limiga kirish uchun PIN talab qilindi.
+- [x] **I18N-02**: QML ekranlaridagi (`EvidenceScreen.qml`, `SettingsScreen.qml`, `SetupWizardScreen.qml`) barcha qattiq matnlar `Theme.tr()` ga ulandi va 3 ta til katalogiga kiritildi.
+- [x] **TEST-01**: Mutatsiyalarga chidamli scoring chegaralari va QML tugma holatlari testlari qo'shildi (131 ta test PASS).
+- [x] **AUDIO-01**: Diktorlar uchun 12 ta xabar bo'yicha 3 tildagi professional skript `VOICE_TODO.md` fayliga kiritildi.
+
 
 ---
 

@@ -417,14 +417,45 @@ class DatabaseRepository:
             return [dict(r) for r in cur.fetchall()]
 
     def verify_session_hash_integrity(self, session_id: str) -> bool:
-        """Verifies if the stored root hash matches recalculation."""
+        """Verifies if the stored root hash matches cryptographic recalculation of the entire session chain."""
         with self.get_connection() as conn:
             cur = conn.execute("SELECT * FROM test_results WHERE session_id = ?", (session_id,))
             res = cur.fetchone()
-            if not res:
+            if not res or not res["hash_chain_root"] or len(res["hash_chain_root"]) != 64:
                 return False
-            # If test_results exists and hash is non-empty, integrity format is valid
-            return len(res["hash_chain_root"]) == 64
+
+            sess_cur = conn.execute("SELECT * FROM test_sessions WHERE id = ?", (session_id,))
+            sess = sess_cur.fetchone()
+            if not sess:
+                return False
+
+            # Recalculate hash chain from source of truth
+            # 1. Base session start hash
+            initial_payload = f"SESSION_START:{sess['id']}:{sess['student_id']}:{sess['started_at']}".encode()
+            current_hash = self.compute_sha256(initial_payload)
+
+            # 2. Iterate each violation in chronological insertion order
+            v_cur = conn.execute(
+                """
+                SELECT id, status, rule_code, confidence, timestamp
+                FROM violations
+                WHERE session_id = ?
+                ORDER BY timestamp ASC, id ASC
+                """,
+                (session_id,),
+            )
+            for row in v_cur.fetchall():
+                payload = f"{current_hash}|VIOLATION:{row['id']}:{row['status']}:{row['rule_code']}:{row['confidence']:.3f}:{row['timestamp']}".encode()
+                current_hash = self.compute_sha256(payload)
+
+            # 3. Finalization hash
+            final_payload = (
+                f"{current_hash}|FINAL:{res['final_score']}:{res['result']}:{res['critical_violations_count']}:{res['finalized_at']}".encode()
+            )
+            expected_root_hash = self.compute_sha256(final_payload)
+
+            return expected_root_hash == res["hash_chain_root"]
+
 
     # --- Consent & EULA ---
 
