@@ -5,11 +5,14 @@ Ushbu hujjat loyihaning har bir bosqichidagi bajarilgan ishlar, testlar holati, 
 ---
 
 ## Holat Xulosasi (Current Status)
-- **Hozirgi Bosqich**: 2-Raund QA va Xavfsizlik Auditi: Bosqich 1, 2, 3, 4 to'liq yakunlandi; Bosqich 5 (Lokalizatsiya) boshlanmoqda.
-- **Git Holati**: Bosqich 1, 2, 3 va 4 tuzatishlari kiritildi, barcha testlar yashil.
-- **Mavjud Testlar**: 157 ta test yashil (100% PASS).
+- **Hozirgi Bosqich**: 2-Raund QA, Xavfsizlik va Mukammallashtirish Auditi: BARCHA 8 TA BOSQICH TO'LIQ YAKUNLANDI (✅ PRODUCTION-READY).
+- **Git Holati**: Barcha 8 bosqich tuzatishlari, testlar, mutatsiyalar va skrinshotlar kiritildi, barcha testlar yashil.
+- **Mavjud Testlar**: 167 ta test yashil (100% PASS).
+- **Test Coverage**: 84% statement coverage (5,887 qator kod).
 - **Ruff & Mypy**: 0 xato (100% toza).
 - **Kriptografiya va Xavfsizlik**: Standart Ed25519 (`cryptography`), PBKDF2 tuzli PIN, 5 daqiqalik doimiy lockout, apparatga bog'langan HMAC ildiz imzosi, monoto'n `session_hash_ledger` orqali tartib buzilishi, o'chirish, qo'shish va soxtalashtirishni 100% aniqlash kafolatlangan.
+- **Lokalizatsiya**: 3 tilda (`uz-Latn`, `uz-Cyrl`, `ru`) 322 ta kalit, 0 ta yetishmayotgan kalit, 0 ta skript sizib chiqishi (leakage), avtomatlashtirilgan linter.
+- **UI/UX**: Avtomobil standartidagi sensorli tugmalar (>=96x72px), 76px HUD spidometri, haydash paytida chalg'itmaydigan kokpit.
 - **Spetsifikatsiya Bo'shliqlari**: Training vs Assessment rejimlarining to'liq ajratilishi, N-kamera (1, 2, 3, 4) moslashuvchan kompozitlari, mustaqil `tools/admin_license_gen.py`, Inno Setup o'rnatuvchisi.
 
 ---
@@ -22,10 +25,10 @@ Ushbu hujjat loyihaning har bir bosqichidagi bajarilgan ishlar, testlar holati, 
 | **Raund 2: Bosqich 2** | Kriptografiya va Yaxlitlik | ✅ VERIFIED | Standard Ed25519 (`cryptography`), 10 ta aktivatsiya holati, PBKDF2-HMAC-SHA256 (100,000 iteratsiya) PIN, SQLite da saqlanuvchi doimiy lockout (5 daqiqa / 3 urinish), apparat kaliti bilan HMAC imzo (`root_signature`), monoto'n `session_hash_ledger` (152 ta test PASS). |
 | **Raund 2: Bosqich 3** | Mock vs Real (Diagnostika va Sozlamalar) | ✅ VERIFIED | Real harorat (WMI `MSAcpi_ThermalZoneTemperature` yoki None), real kamera va sensorlar holati (hardware bo'lmaganda `[SIMULATION]` yoki `DISCONNECTED`), dinamik `autodrome.json` yuklovchi (`getAutodromeConfig` / `getAutodromeExercises`), SettingsScreen da dinamik ko'rsatish (152 ta test PASS). |
 | **Raund 2: Bosqich 4** | Spetsifikatsiya Bo'shliqlari | ✅ VERIFIED | Training vs Assessment gating (`startTestWithMode`), N-camera moslashuvchanligi (1, 2, 3, 4 kamerali dinamik kompozit), mustaqil `admin_license_gen.py` (sys.path & import fallback), Inno Setup & build_standalone (157 ta test PASS). |
-| **Raund 2: Bosqich 5** | Lokalizatsiya (Haqiqiy Holat) | 🔄 JARAYONDA | Ko'rib chiqilmagan qatorlarni qaytarish, translation linter. |
-| **Raund 2: Bosqich 6** | UI/UX (Haqiqiy Baholash) | ⏳ NAVBATDA | Sensorli tugmalar o'lchamlari (>=96x72), haydovchi kokpiti minimalizmi. |
-| **Raund 2: Bosqich 7** | Soak, Latency, Replay & Edge Cases | ⏳ NAVBATDA | Disk to'lishi, DB bloklanishi, kamera uzilishi, soat orqaga surilishi. |
-| **Raund 2: Bosqich 8** | Mutatsion Sinov & Yakuniy Hisobot | ⏳ NAVBATDA | Qasddan mutatsiya sinovi, dalillar bilan `FINAL_AUDIT_REPORT_2.md`. |
+| **Raund 2: Bosqich 5** | Lokalizatsiya (Haqiqiy Holat) | ✅ VERIFIED | 322 ta kalit 3 tilda 100% ko'rib chiqilgan, skript sizib chiqishi (leakage) 0 ga tushirildi ("CAN shina"), `check_translations.py` linter toza. |
+| **Raund 2: Bosqich 6** | UI/UX (Haqiqiy Baholash) | ✅ VERIFIED | Sensorli tugmalar o'lchamlari (>=96x72px), 76px HUD tezlik ko'rsatkichi, haydash paytida xalaqit bermaydigan kokpit, 1024x600, 1280x800, 1920x1080 skrinshotlari yangilandi. |
+| **Raund 2: Bosqich 7** | Soak, Latency, Replay & Edge Cases | ✅ VERIFIED | Disk to'lishi (<10GB tozalash, <2GB halt), DB concurrency (RLock + context manager, 0 lock xatosi), kamera uzilishi tahlili, soat manipulyatsiyasi aniqlanishi. |
+| **Raund 2: Bosqich 8** | Mutatsion Sinov & Yakuniy Hisobot | ✅ VERIFIED | Qasddan mutatsiya sinovlari (80 vs 79 chegara, kritik ustuvorlik, debounce/cooldown, tezlik), 167/167 test PASS, `FINAL_AUDIT_REPORT_2.md` tayyorlandi. |
 
 ---
 
@@ -85,5 +88,5 @@ Ushbu hujjat loyihaning har bir bosqichidagi bajarilgan ishlar, testlar holati, 
 | **Bosqich 5: Lokalizatsiya va Yozuv Sofligi** | 100% kalit pariteti, skript sizib chiqishini (leakage) to'liq bartaraf etish, avtomatlashtirilgan tekshiruv | ✅ TUGALLANDI | `uz-Latn`, `uz-Cyrl` va `ru` kataloglaridagi 322 ta kalit 100% ko'rib chiqilgan. Kirill yozuvidagi barcha ingliz/lotin so'zlari (EULA, Pre-check, Suspect, Replay, Logs, Drift, geofence, avtobus) tozalandi ("CAN shina"). `check_translations.py` skript sizib chiqishini avtomatik aniqlaydi (`TRANSLATION_REVIEW.md`: 0 xato). 10/10 i18n test PASS. |
 | **Bosqich 6: UI/UX (Avtomobil Sensorli Ekrani)** | Avtomobil standartidagi sensorli tugmalar (>=96x72px), chalg'itmaslik tamoyili, HUD tezlik (>=72px) | ✅ TUGALLANDI | `Theme.qml` da `minTouchTarget: 72`, `buttonMinHeight: 72`, `buttonMinWidth: 96`. `TopBar.qml` da 80px balandlik, 64px orqaga/sozlamalar tugmalari, 48px til tugmalari. `ActiveTestScreen.qml` da 76px HUD spidometri va chalg'itmaslik tamoyili. 1024x600, 1280x800, 1920x1080 skrinshotlari yangilandi. 20/20 UI test PASS. |
 | **Bosqich 7: Soak, Kechikish, Replay va Chekka Holatlar** | Disk to'lishi, DB qulflanishi, kamera uzilishi, soat orqaga surilishi | ✅ TUGALLANDI | `StorageManager.check_disk_space()` va `is_critically_low()` bilan <10GB tozalash va <2GB favqulodda to'xtatish. `DatabaseRepository` da `_write_lock` va auto-closing context manager orqali 90 ta parallel tranzaksiya (6 oqim) 0 qulf xatosi bilan o'tdi. `MultiCameraService.get_disconnected_cameras()` kamera uzilishini aniqlaydi. `ClockTamperGuard` soat manipulyatsiyasini aniqlaydi. 7/7 soak/replay/edge test PASS. |
-| **Bosqich 8: Mutatsion Sinovlar va FINAL_AUDIT_REPORT_2.md** | Baholash dvigateli mutatsiyalari, yakuniy daliliy hisobot | ⏳ NAVBATDA | Rejalashtirilgan. |
+| **Bosqich 8: Mutatsion Sinovlar va FINAL_AUDIT_REPORT_2.md** | Baholash dvigateli mutatsiyalari, yakuniy daliliy hisobot | ✅ TUGALLANDI | Baholash chegarasi (80 vs 79), kritik xato ustuvorligi, debounce/cooldown duplikat filtri va tezlik chegarasi (20.0 vs 20.5 km/h) mutatsion testlari o'tkazildi (`test_mutation_sensitivity.py`). 167/167 test PASS, 84% coverage. To'liq dalillar bilan `FINAL_AUDIT_REPORT_2.md` hisoboti tayyorlandi. |
 
