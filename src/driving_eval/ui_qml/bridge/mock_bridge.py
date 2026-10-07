@@ -362,3 +362,103 @@ class MockBridge(BackendBridge):
         """Simulates brief network/daemon disconnection."""
         self.set_is_connected(False)
         QTimer.singleShot(duration_ms, lambda: self.set_is_connected(True))
+
+    @Slot()
+    def requestSessions(self) -> None:
+        """Simulates historical session list for Inspector Mode."""
+        mock_sessions = [
+            {
+                "id": "SES-9821A4B0",
+                "passport_id": "AA1234567",
+                "first_name": "Alisher",
+                "last_name": "Navoiy",
+                "created_at": "2026-10-07 09:15:22",
+                "final_score": 90,
+                "result": "PASS",
+                "status": "COMPLETED",
+                "violations_count": 1,
+                "suspect_count": 0,
+                "duration": "08:14",
+                "hash": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            },
+            {
+                "id": "SES-8412F1C2",
+                "passport_id": "AB7654321",
+                "first_name": "Bobur",
+                "last_name": "Mirzo",
+                "created_at": "2026-10-07 08:30:10",
+                "final_score": 65,
+                "result": "FAIL",
+                "status": "COMPLETED",
+                "violations_count": 3,
+                "suspect_count": 1,
+                "duration": "11:05",
+                "hash": "ca978112ca1bbdcafac231b39a23dc4da786eff8147c4e72b9807785afee48bb",
+            },
+            {
+                "id": "SES-7104E391",
+                "passport_id": "AC9876543",
+                "first_name": "Nodira",
+                "last_name": "Begim",
+                "created_at": "2026-10-06 16:45:00",
+                "final_score": 0,
+                "result": "FAIL",
+                "status": "CRITICAL_FAIL",
+                "violations_count": 1,
+                "suspect_count": 0,
+                "duration": "03:12",
+                "hash": "4e07408562bedb8b60ce05c1decfe3ad16b72230967de01f640b7e4729b49fce",
+            },
+            {
+                "id": "SES-6530B218",
+                "passport_id": "AD5432109",
+                "first_name": "Temur",
+                "last_name": "Barlos",
+                "created_at": "2026-10-06 14:10:45",
+                "final_score": 85,
+                "result": "PASS",
+                "status": "COMPLETED",
+                "violations_count": 2,
+                "suspect_count": 1,
+                "duration": "09:40",
+                "hash": "4b227777d4dd1fc61c6f884f48641d02b4d121d3fd328cb08b5531fcacdabf8a",
+            },
+        ]
+        self.sessionsListReady.emit(mock_sessions)
+
+    @Slot()
+    def requestDiagnostics(self) -> None:
+        """Emits rich live diagnostics telemetry for Admin/Maintenance Mode."""
+        data = {
+            "cpu_usage_pct": 28.4,
+            "ram_usage_pct": 42.1,
+            "disk_free_gb": 428.5,
+            "system_temp_c": 46.2,
+            "cameras": [
+                {"name": "FRONT", "status": "ONLINE", "fps": 30.0, "latency_ms": 16.4, "sharpness": 145.0},
+                {"name": "REAR", "status": "ONLINE", "fps": 30.0, "latency_ms": 17.2, "sharpness": 139.2},
+                {"name": "LEFT", "status": "ONLINE", "fps": 30.0, "latency_ms": 15.9, "sharpness": 142.8},
+                {"name": "RIGHT", "status": "ONLINE", "fps": 30.0, "latency_ms": 16.1, "sharpness": 140.5},
+            ],
+            "calibration_quality": {"FRONT": 98.4, "REAR": 97.2, "LEFT": 96.8, "RIGHT": 98.1},
+            "gps": {"status": "FIX_OK", "satellites": 14, "fix_type": "3D RTK Fix", "lat": 41.311081, "lon": 69.240562},
+            "obd": {"status": "CONNECTED", "protocol": "CAN ISO 15765-4", "rpm": 850, "speed_kmh": 0.0},
+            "imu": {"status": "ACTIVE", "sample_rate": 100, "pitch_deg": 0.2, "roll_deg": -0.1},
+            "ai": {"backend": "DirectML (GPU)", "fps": 45.0, "latency_ms": 18.2},
+            "license": {"valid": True, "type": "STANDALONE_COMMERCIAL", "expires": "2027-12-31"},
+        }
+        self.systemDiagnosticsUpdated.emit(data)
+
+    @Slot(str)
+    def verifySessionHash(self, session_id: str) -> None:
+        """Simulates hash chain and Ed25519 signature verification."""
+        QTimer.singleShot(400, lambda: self.hashVerificationFinished.emit(
+            session_id, True, "SHA-256 zanjir va Ed25519 imzo tasdiqlandi (100% haqiqiy)."
+        ))
+
+    @Slot(str)
+    def exportSessionPdf(self, session_id: str) -> None:
+        """Simulates official PDF report export."""
+        QTimer.singleShot(600, lambda: self.reportExportFinished.emit(
+            True, f"PDF Bayonnoma tayyorlandi: data/reports/bayonnoma_{session_id}.pdf"
+        ))

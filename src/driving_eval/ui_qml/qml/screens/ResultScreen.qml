@@ -41,8 +41,8 @@ Item {
         anchors.top: parent.top
         anchors.left: parent.left
         anchors.right: parent.right
-        title: (typeof i18n !== "undefined" && i18n) ? i18n.t("result_title") : "IMTIHON YAKUNIY NATIJASI"
-        subtitle: root.resultData ? (((typeof i18n !== "undefined" && i18n) ? i18n.t("car_id_label") : "Avtomobil:") + " " + (root.resultData.car_id || "CAR-01")) : ""
+        title: Theme.tr("result_title")
+        subtitle: root.resultData ? (Theme.tr("car_id_label") + " " + (root.resultData.car_id || "CAR-01")) : ""
         carId: backendBridge.carId
         showBack: false
         showSettings: true
@@ -118,8 +118,8 @@ Item {
 
                         Text {
                             text: (root.resultData && root.resultData.passed) 
-                                ? ((typeof i18n !== "undefined" && i18n) ? i18n.t("result_pass") : "MUVAFFAQIYATLI O'TDI (PASS)")
-                                : ((typeof i18n !== "undefined" && i18n) ? i18n.t("result_fail") : "YIQILDI (FAIL)")
+                                ? Theme.tr("result_pass")
+                                : Theme.tr("result_fail")
                             color: "#FFFFFF"
                             font.family: Theme.fontFamily
                             font.pixelSize: Theme.fontTitleLarge
@@ -128,10 +128,10 @@ Item {
 
                         Text {
                             text: (root.resultData && root.resultData.passed) 
-                                ? ((typeof i18n !== "undefined" && i18n) ? i18n.t("result_pass_desc") : "Barcha mashqlar belgilangan talablarga muvofiq bajarildi.")
+                                ? Theme.tr("result_pass_desc")
                                 : ((root.resultData && root.resultData.critical_count > 0) 
-                                    ? ((typeof i18n !== "undefined" && i18n) ? i18n.t("result_critical_desc") : "Kritik qoidabuzarlik sababli test bekor qilindi.") 
-                                    : ((typeof i18n !== "undefined" && i18n) ? i18n.t("result_fail_desc") : "To'plangan ball o'tish chegarasidan past."))
+                                    ? Theme.tr("result_critical_desc") 
+                                    : Theme.tr("result_fail_desc"))
                             color: Theme.textSecondary
                             font.family: Theme.fontFamily
                             font.pixelSize: Theme.fontSub
@@ -159,7 +159,7 @@ Item {
 
                     // Final Score
                     Text { 
-                        text: (typeof i18n !== "undefined" && i18n) ? i18n.t("result_score_label") : "Yakuniy ball:"
+                        text: Theme.tr("result_score_label")
                         color: Theme.textSecondary
                         font.pixelSize: Theme.fontHeadline
                         font.family: Theme.fontFamily 
@@ -172,35 +172,35 @@ Item {
 
                     // Total Penalty
                     Text { 
-                        text: (typeof i18n !== "undefined" && i18n) ? i18n.t("result_penalty_deducted") : "Ayrilgan jarima:"
+                        text: Theme.tr("result_penalty_deducted")
                         color: Theme.textSecondary
                         font.pixelSize: Theme.fontHeadline
                         font.family: Theme.fontFamily 
                     }
                     Text { 
                         text: root.resultData 
-                            ? ("-" + ((typeof i18n !== "undefined" && i18n) ? i18n.t_plural("penalty_points_plural", root.resultData.total_penalty) : (root.resultData.total_penalty + " ball")))
+                            ? ("-" + Theme.trPlural("penalty_points_plural", root.resultData.total_penalty))
                             : "0 ball"
                         color: Theme.textPrimary; font.pixelSize: Theme.fontHeadline; font.bold: true; font.family: Theme.fontFamily 
                     }
 
                     // Violations Count
                     Text { 
-                        text: (typeof i18n !== "undefined" && i18n) ? i18n.t("result_errors_count") : "Qoidabuzarliklar soni:"
+                        text: Theme.tr("result_errors_count")
                         color: Theme.textSecondary
                         font.pixelSize: Theme.fontHeadline
                         font.family: Theme.fontFamily 
                     }
                     Text { 
                         text: root.resultData 
-                            ? ((typeof i18n !== "undefined" && i18n) ? i18n.t_plural("errors_count_plural", root.resultData.mistake_count) : (root.resultData.mistake_count + " ta"))
+                            ? Theme.trPlural("errors_count_plural", root.resultData.mistake_count)
                             : "0 ta"
                         color: Theme.textPrimary; font.pixelSize: Theme.fontHeadline; font.bold: true; font.family: Theme.fontFamily 
                     }
 
                     // Duration
                     Text { 
-                        text: (typeof i18n !== "undefined" && i18n) ? i18n.t("result_duration") : "Umumiy vaqt:"
+                        text: Theme.tr("result_duration")
                         color: Theme.textSecondary
                         font.pixelSize: Theme.fontHeadline
                         font.family: Theme.fontFamily 
@@ -227,7 +227,7 @@ Item {
                     spacing: 12
 
                     Text {
-                        text: (typeof i18n !== "undefined" && i18n) ? i18n.t("result_hash_label") : "SHA-256 Xesh:"
+                        text: Theme.tr("result_hash_label")
                         color: Theme.textMuted
                         font.family: Theme.fontFamily
                         font.pixelSize: Theme.fontSub
@@ -261,7 +261,7 @@ Item {
                 minHeight: 64
                 variant: "secondary"
                 iconSource: "../assets/icons/alert.svg"
-                text: (typeof i18n !== "undefined" && i18n) ? i18n.t("btn_view_violations") : "QOIDABUZARLIKLAR"
+                text: Theme.tr("btn_view_violations")
                 onClicked: root.viewViolationsClicked()
             }
 
@@ -270,7 +270,7 @@ Item {
                 minHeight: 64
                 variant: "secondary"
                 iconSource: "../assets/icons/usb.svg"
-                text: (typeof i18n !== "undefined" && i18n) ? i18n.t("btn_export_usb") : "USB GA EKSPORT"
+                text: Theme.tr("btn_export_usb")
                 onClicked: {
                     backendBridge.exportUsb()
                     root.exportUsbClicked()
@@ -282,7 +282,7 @@ Item {
                 minHeight: 64
                 variant: "primary"
                 iconSource: "../assets/icons/car.svg"
-                text: (typeof i18n !== "undefined" && i18n) ? i18n.t("btn_home") : "ASOSIY EKRAN"
+                text: Theme.tr("btn_home")
                 onClicked: root.homeClicked()
             }
         }

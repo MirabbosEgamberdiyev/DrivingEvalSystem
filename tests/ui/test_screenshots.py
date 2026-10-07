@@ -79,6 +79,8 @@ def test_generate_all_screen_screenshots(qapp, qtbot):
         ("06_violations_list", "screens/ViolationsListScreen.qml"),
         ("07_evidence", "screens/EvidenceScreen.qml"),
         ("08_settings", "screens/SettingsScreen.qml"),
+        ("09_inspector", "screens/InspectorScreen.qml"),
+        ("10_wizard", "screens/SetupWizardScreen.qml"),
     ]
 
     for screen_name, screen_rel in screens_to_capture:

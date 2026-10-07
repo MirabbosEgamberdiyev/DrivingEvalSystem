@@ -46,7 +46,7 @@ Rectangle {
             spacing: 16
 
             Text {
-                text: "SETUP WIZARD"
+                text: Theme.tr("wizard.title")
                 color: Theme.colorAccent
                 font.family: Theme.fontFamily
                 font.pixelSize: Theme.fontTitleLarge
@@ -108,7 +108,7 @@ Rectangle {
                     spacing: 16
 
                     Text {
-                        text: "1. Tilni Tanlash va Foydalanuvchi Shartnomasi (EULA)"
+                        text: Theme.tr("wizard.step1")
                         color: Theme.textPrimary
                         font.family: Theme.fontFamily
                         font.pixelSize: Theme.fontTitle
@@ -123,6 +123,7 @@ Rectangle {
                             onClicked: {
                                 root.selectedLanguage = "uz-Latn"
                                 root.languageSelected("uz-Latn")
+                                if (typeof i18n !== "undefined" && i18n) i18n.set_language("uz-Latn")
                             }
                         }
                         BigButton {
@@ -131,6 +132,7 @@ Rectangle {
                             onClicked: {
                                 root.selectedLanguage = "uz-Cyrl"
                                 root.languageSelected("uz-Cyrl")
+                                if (typeof i18n !== "undefined" && i18n) i18n.set_language("uz-Cyrl")
                             }
                         }
                         BigButton {
@@ -139,6 +141,7 @@ Rectangle {
                             onClicked: {
                                 root.selectedLanguage = "ru"
                                 root.languageSelected("ru")
+                                if (typeof i18n !== "undefined" && i18n) i18n.set_language("ru")
                             }
                         }
                     }
@@ -173,7 +176,7 @@ Rectangle {
                             }
                         }
                         Text {
-                            text: "Foydalanuvchi shartnomasiga to'liq roziman"
+                            text: Theme.tr("wizard.eula_agree")
                             color: Theme.textPrimary
                             font.family: Theme.fontFamily
                             font.pixelSize: Theme.fontBody
@@ -195,7 +198,7 @@ Rectangle {
                     spacing: 16
 
                     Text {
-                        text: "2. Apparat Ta'minoti va USB Host Topologiyasi"
+                        text: Theme.tr("wizard.step2")
                         color: Theme.textPrimary
                         font.family: Theme.fontFamily
                         font.pixelSize: Theme.fontTitle
@@ -265,7 +268,7 @@ Rectangle {
                     Item { Layout.fillHeight: true }
 
                     BigButton {
-                        text: "APPARAT VA USB'NI QAYTA SCAN QILISH"
+                        text: Theme.tr("wizard.btn_rescan")
                         variant: "secondary"
                         onClicked: {
                             root.hardwareScanRequested()
@@ -288,7 +291,7 @@ Rectangle {
                     spacing: 16
 
                     Text {
-                        text: "3. 4 Kamera Oqimi va Yo'nalishlari"
+                        text: Theme.tr("wizard.step3")
                         color: Theme.textPrimary
                         font.family: Theme.fontFamily
                         font.pixelSize: Theme.fontTitle
@@ -363,7 +366,7 @@ Rectangle {
                     spacing: 16
 
                     Text {
-                        text: "4. Bird's-Eye Kalibrovka va Siljish (Drift) Nazorati"
+                        text: Theme.tr("wizard.step4")
                         color: Theme.textPrimary
                         font.family: Theme.fontFamily
                         font.pixelSize: Theme.fontTitle
@@ -386,7 +389,7 @@ Rectangle {
                     Item { Layout.fillHeight: true }
 
                     BigButton {
-                        text: "KALIBROVKANI TEKSHIRISH"
+                        text: Theme.tr("admin.btn_calibrate")
                         variant: "secondary"
                         onClicked: {
                             root.calibrationCheckRequested()
@@ -409,7 +412,7 @@ Rectangle {
                     spacing: 16
 
                     Text {
-                        text: "5. Poligon Mashqlari Geofence Sozlamalari (8 ta Mashq)"
+                        text: Theme.tr("wizard.step5")
                         color: Theme.textPrimary
                         font.family: Theme.fontFamily
                         font.pixelSize: Theme.fontTitle
@@ -450,7 +453,7 @@ Rectangle {
                     spacing: 16
 
                     Text {
-                        text: "6. Salondagi Ovozli Ogohlantirish Sinovi"
+                        text: Theme.tr("wizard.step6")
                         color: Theme.textPrimary
                         font.family: Theme.fontFamily
                         font.pixelSize: Theme.fontTitle
@@ -458,14 +461,14 @@ Rectangle {
                     }
 
                     Text {
-                        text: "Mashina ichidagi dinamiklar ovozini tekshiring. Sinov ovozi eshitildimi?"
+                        text: "Ovozli bildirishnomalar avtomobil salonidagi audio dinamik orqali aniq eshitilishi shart."
                         color: Theme.textSecondary
                         font.family: Theme.fontFamily
                         font.pixelSize: Theme.fontBody
                     }
 
                     BigButton {
-                        text: "SINOV OVOZINI CHALISH (PLAY TEST AUDIO)"
+                        text: Theme.tr("wizard.btn_test_audio")
                         variant: "primary"
                         onClicked: {
                             root.audioTestRequested()
@@ -491,7 +494,7 @@ Rectangle {
                     spacing: 16
 
                     Text {
-                        text: "7. O'rnatish Yakuni va Tizimni Faollashtirish"
+                        text: Theme.tr("wizard.step7")
                         color: Theme.colorSuccess
                         font.family: Theme.fontFamily
                         font.pixelSize: Theme.fontTitleLarge
@@ -511,7 +514,7 @@ Rectangle {
                     Item { Layout.fillHeight: true }
 
                     BigButton {
-                        text: "SOZLAMALARNI SAQLASH VA TIZIMNI ISHGA TUSHIRISH"
+                        text: Theme.tr("wizard.btn_complete")
                         variant: "primary"
                         onClicked: root.requestSave()
                     }
@@ -525,7 +528,7 @@ Rectangle {
             spacing: 16
 
             BigButton {
-                text: "ORQAGA"
+                text: Theme.tr("btn_back")
                 variant: "secondary"
                 enabled: root.currentStepIndex > 0
                 onClicked: root.requestPrev()
@@ -534,7 +537,7 @@ Rectangle {
             Item { Layout.fillWidth: true }
 
             BigButton {
-                text: root.currentStepIndex < root.totalSteps - 1 ? "KEYINGISI" : "YAKUNLASH"
+                text: root.currentStepIndex < root.totalSteps - 1 ? Theme.tr("btn_proceed") : Theme.tr("wizard.btn_complete")
                 variant: "primary"
                 enabled: root.currentStepIndex === (root.totalSteps - 1) || root.canProceed
                 onClicked: root.requestNext()

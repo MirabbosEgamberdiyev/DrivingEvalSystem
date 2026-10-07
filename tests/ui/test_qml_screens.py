@@ -35,6 +35,7 @@ def test_individual_screens_compile(qapp):
     qml_dir = Path("src/driving_eval/ui_qml/qml").resolve()
     screens = [
         "screens/HomeScreen.qml",
+        "screens/InspectorScreen.qml",
         "screens/PrecheckScreen.qml",
         "screens/SystemReadyScreen.qml",
         "screens/ActiveTestScreen.qml",

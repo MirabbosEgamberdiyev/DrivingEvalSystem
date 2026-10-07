@@ -8,6 +8,7 @@ Item {
 
     signal startTestClicked()
     signal precheckClicked()
+    signal inspectorClicked()
     signal settingsClicked()
 
     // Background
@@ -22,111 +23,197 @@ Item {
         anchors.top: parent.top
         anchors.left: parent.left
         anchors.right: parent.right
-        title: (typeof i18n !== "undefined" && i18n) ? i18n.t("app_title") : "AVTOMATLASHTIRILGAN HAYDASH IMTIHONI"
-        subtitle: (typeof i18n !== "undefined" && i18n) ? i18n.t("app_subtitle") : "4-Kamerali Offline AI Baholash Tizimi"
+        title: Theme.tr("app_title")
+        subtitle: Theme.tr("app_subtitle")
         carId: backendBridge.carId
+        mode: "STUDENT"
         showBack: false
         showSettings: true
         onSettingsClicked: root.settingsClicked()
     }
 
     // Main Center Content
-    Column {
-        anchors.centerIn: parent
-        spacing: 36
-        width: Math.min(parent.width - 64, 800)
+    Flickable {
+        anchors.top: topBar.bottom
+        anchors.bottom: bottomBar.top
+        anchors.left: parent.left
+        anchors.right: parent.right
+        contentHeight: mainCol.implicitHeight + 40
+        clip: true
 
-        // Car / Driving Evaluation Emblem
-        Image {
-            anchors.horizontalCenter: parent.horizontalCenter
-            width: 110
-            height: 110
-            source: "../assets/icons/car.svg"
-            fillMode: Image.PreserveAspectFit
-        }
-
-        // Title & Description
         Column {
+            id: mainCol
             anchors.horizontalCenter: parent.horizontalCenter
-            spacing: 8
+            anchors.top: parent.top
+            anchors.topMargin: 20
+            spacing: 24
+            width: Math.min(parent.width - 48, 920)
 
-            Text {
-                anchors.horizontalCenter: parent.horizontalCenter
-                text: (typeof i18n !== "undefined" && i18n) ? i18n.t("home_title") : "HAYDASH MALAKASINI BAHOLASH"
-                color: Theme.textPrimary
-                font.family: Theme.fontFamily
-                font.pixelSize: Theme.fontTitleLarge
-                font.bold: true
+            // System Readiness Banner
+            Rectangle {
+                width: parent.width
+                height: 56
+                radius: Theme.radiusMedium
+                color: backendBridge.precheckPassed ? Theme.colorSuccessBg : Theme.colorWarningBg
+                border.color: backendBridge.precheckPassed ? Theme.colorSuccess : Theme.colorWarning
+                border.width: 1
+
+                Row {
+                    anchors.centerIn: parent
+                    spacing: 12
+
+                    Image {
+                        width: 24
+                        height: 24
+                        source: backendBridge.precheckPassed ? "../assets/icons/check.svg" : "../assets/icons/alert.svg"
+                        anchors.verticalCenter: parent.verticalCenter
+                        fillMode: Image.PreserveAspectFit
+                    }
+
+                    Text {
+                        text: backendBridge.precheckPassed
+                            ? "● " + Theme.tr("system.ready") + " — " + Theme.tr("home_ready_msg")
+                            : "⚠️ " + Theme.tr("system.warning") + " — " + Theme.tr("home_not_ready_msg")
+                        color: backendBridge.precheckPassed ? Theme.colorSuccess : Theme.colorWarning
+                        font.family: Theme.fontFamily
+                        font.pixelSize: Theme.fontBodySmall
+                        font.bold: true
+                        anchors.verticalCenter: parent.verticalCenter
+                    }
+                }
             }
 
-            Text {
-                anchors.horizontalCenter: parent.horizontalCenter
-                text: backendBridge.precheckPassed 
-                    ? ((typeof i18n !== "undefined" && i18n) ? i18n.t("home_ready_msg") : "Barcha tizimlar soz holatda. Imtihonni boshlashga tayyor.")
-                    : ((typeof i18n !== "undefined" && i18n) ? i18n.t("home_not_ready_msg") : "⚠️ Tizim ishga tushirildi. Avval uskunalar tekshiruvini (Pre-check) o'tkazing.")
-                color: backendBridge.precheckPassed ? Theme.colorSuccess : Theme.colorWarning
-                font.family: Theme.fontFamily
-                font.pixelSize: Theme.fontBody
-                horizontalAlignment: Text.AlignHCenter
-                wrapMode: Text.WordWrap
-                width: Math.min(parent.width, 700)
+            // Hardware Status Summary (6 Grid Cards)
+            Grid {
+                id: hwGrid
+                columns: parent.width >= 800 ? 3 : 2
+                spacing: 12
+                width: parent.width
+
+                Repeater {
+                    model: [
+                        { name: "CAMERA", val: "4 / 4", icon: "../assets/icons/camera.svg", ok: true },
+                        { name: "GPS / GNSS", val: "CONNECTED", icon: "../assets/icons/check.svg", ok: true },
+                        { name: "OBD-II CAN", val: "CONNECTED", icon: "../assets/icons/speed.svg", ok: true },
+                        { name: "IMU 6-DOF", val: "CONNECTED", icon: "../assets/icons/check.svg", ok: true },
+                        { name: "AI MODEL", val: "READY", icon: "../assets/icons/car.svg", ok: true },
+                        { name: "LICENSE", val: "VALID", icon: "../assets/icons/lock.svg", ok: true }
+                    ]
+
+                    delegate: Rectangle {
+                        width: (hwGrid.width - (hwGrid.columns - 1) * hwGrid.spacing) / hwGrid.columns
+                        height: 58
+                        radius: Theme.radiusSmall
+                        color: Theme.surfaceDark
+                        border.color: Theme.surfaceBorder
+                        border.width: 1
+
+                        Row {
+                            anchors.fill: parent
+                            anchors.leftMargin: 14
+                            anchors.rightMargin: 14
+                            spacing: 10
+
+                            Image {
+                                width: 22
+                                height: 22
+                                source: modelData.icon
+                                anchors.verticalCenter: parent.verticalCenter
+                                fillMode: Image.PreserveAspectFit
+                            }
+
+                            Column {
+                                anchors.verticalCenter: parent.verticalCenter
+                                spacing: 2
+
+                                Text {
+                                    text: modelData.name
+                                    color: Theme.textMuted
+                                    font.family: Theme.fontFamily
+                                    font.pixelSize: 11
+                                    font.bold: true
+                                }
+                                Text {
+                                    text: modelData.val + " ✓"
+                                    color: Theme.colorSuccess
+                                    font.family: Theme.fontFamily
+                                    font.pixelSize: 13
+                                    font.bold: true
+                                }
+                            }
+                        }
+                    }
+                }
             }
-        }
 
-        // Action Buttons
-        Column {
-            anchors.horizontalCenter: parent.horizontalCenter
-            spacing: 20
-
-            BigButton {
+            // Role Entrypoint Action Buttons
+            Column {
                 anchors.horizontalCenter: parent.horizontalCenter
-                minWidth: Theme.buttonLargeWidth + 60
-                minHeight: Theme.buttonLargeHeight
-                variant: backendBridge.precheckPassed ? "success" : "secondary"
-                enabled: backendBridge.precheckPassed
-                iconSource: "../assets/icons/check.svg"
-                text: (typeof i18n !== "undefined" && i18n) ? i18n.t("btn_start_test") : "TESTNI BOSHLASH"
-                onClicked: root.startTestClicked()
-            }
+                spacing: 16
+                width: Math.min(parent.width, 680)
 
-            BigButton {
-                anchors.horizontalCenter: parent.horizontalCenter
-                minWidth: Theme.buttonLargeWidth + 60
-                minHeight: 64
-                variant: backendBridge.precheckPassed ? "secondary" : "primary"
-                iconSource: "../assets/icons/refresh.svg"
-                text: backendBridge.precheckPassed 
-                    ? ((typeof i18n !== "undefined" && i18n) ? i18n.t("btn_recheck") : "QAYTA TEKSHIRISH")
-                    : ((typeof i18n !== "undefined" && i18n) ? i18n.t("btn_precheck") : "TIZIMNI TEKSHIRISH (PRE-CHECK)")
-                onClicked: root.precheckClicked()
+                // 1. STUDENT MODE: Yangi Imtihon
+                BigButton {
+                    width: parent.width
+                    minHeight: Theme.buttonLargeHeight
+                    variant: backendBridge.precheckPassed ? "success" : "primary"
+                    iconSource: "../assets/icons/check.svg"
+                    text: backendBridge.precheckPassed ? Theme.tr("exam.new_exam") : Theme.tr("btn_precheck")
+                    onClicked: {
+                        if (backendBridge.precheckPassed) {
+                            root.startTestClicked()
+                        } else {
+                            root.precheckClicked()
+                        }
+                    }
+                }
+
+                // 2. INSPECTOR MODE: Natijalar va Bayonnomalar
+                BigButton {
+                    width: parent.width
+                    minHeight: 64
+                    variant: "secondary"
+                    iconSource: "../assets/icons/photo.svg"
+                    text: Theme.tr("nav.inspector_mode")
+                    onClicked: root.inspectorClicked()
+                }
+
+                // 3. ADMIN MODE: Tizim va Diagnostika
+                BigButton {
+                    width: parent.width
+                    minHeight: 64
+                    variant: "secondary"
+                    iconSource: "../assets/icons/gear.svg"
+                    text: Theme.tr("nav.admin_mode")
+                    onClicked: root.settingsClicked()
+                }
             }
         }
     }
 
     // Bottom Status Strip
     BottomBar {
+        id: bottomBar
         anchors.bottom: parent.bottom
         anchors.left: parent.left
         anchors.right: parent.right
 
         Row {
             anchors.centerIn: parent
-            spacing: 40
+            spacing: 32
 
             Text {
-                text: ((typeof i18n !== "undefined" && i18n) ? i18n.t("rules_ver_label") : "Qoidalar versiyasi:") + " " + backendBridge.rulesVersion
+                text: Theme.tr("rules_ver_label") + " " + backendBridge.rulesVersion
                 color: Theme.textMuted
                 font.family: Theme.fontFamily
-                font.pixelSize: Theme.fontSub
+                font.pixelSize: Theme.fontCaption
             }
 
             Text {
-                text: (typeof i18n !== "undefined" && i18n)
-                    ? (backendBridge.isConnected ? "100% OFFLINE" : i18n.t("status_failed"))
-                    : (backendBridge.isConnected ? "100% OFFLINE" : "ALOQA YO'Q")
+                text: backendBridge.isConnected ? "100% OFFLINE STANDALONE" : Theme.tr("status_failed")
                 color: backendBridge.isConnected ? Theme.colorSuccess : Theme.colorError
                 font.family: Theme.fontFamily
-                font.pixelSize: Theme.fontSub
+                font.pixelSize: Theme.fontCaption
                 font.bold: true
             }
         }

@@ -30,10 +30,10 @@ Item {
         anchors.top: parent.top
         anchors.left: parent.left
         anchors.right: parent.right
-        title: (typeof i18n !== "undefined" && i18n) ? i18n.t("precheck_title") : "USKUNALAR VA TIZIM PRE-CHECK"
+        title: Theme.tr("precheck_title")
         subtitle: backendBridge.precheckPassed 
-            ? ((typeof i18n !== "undefined" && i18n) ? i18n.t("precheck_passed") : "Barcha 12 ta majburiy komponent muvaffaqiyatli tekshirildi.")
-            : ((typeof i18n !== "undefined" && i18n) ? i18n.t("precheck_in_progress") : "Diagnostika o'tkazilmoqda...")
+            ? Theme.tr("precheck_passed")
+            : Theme.tr("precheck_in_progress")
         carId: backendBridge.carId
         showBack: true
         showSettings: false
@@ -65,7 +65,7 @@ Item {
             }
 
             Text {
-                text: ((typeof i18n !== "undefined" && i18n) ? i18n.t("precheck_blocked_title") : "TEST START BLOCKED") + ": " + backendBridge.precheckBlockedReason
+                text: Theme.tr("precheck_blocked_title") + ": " + backendBridge.precheckBlockedReason
                 color: "#FFFFFF"
                 font.family: Theme.fontFamily
                 font.pixelSize: Theme.fontHeadline
@@ -89,7 +89,7 @@ Item {
 
         delegate: StatusRow {
             width: statusList.width - 12
-            componentTitle: (typeof i18n !== "undefined" && i18n && modelData.id) ? i18n.t(modelData.id) : (modelData.title || "")
+            componentTitle: (modelData.id ? Theme.tr(modelData.id) : (modelData.title || ""))
             status: modelData.status || "CHECKING"
             detail: modelData.detail || ""
             isRequired: modelData.required !== undefined ? modelData.required : true
@@ -112,7 +112,7 @@ Item {
                 minHeight: 64
                 variant: "secondary"
                 iconSource: "../assets/icons/back.svg"
-                text: (typeof i18n !== "undefined" && i18n) ? i18n.t("btn_back") : "ORQAGA"
+                text: Theme.tr("btn_back")
                 onClicked: root.backClicked()
             }
 
@@ -121,7 +121,7 @@ Item {
                 minHeight: 64
                 variant: backendBridge.precheckPassed ? "secondary" : "warning"
                 iconSource: "../assets/icons/refresh.svg"
-                text: (typeof i18n !== "undefined" && i18n) ? i18n.t("btn_recheck") : "QAYTA TEKSHIRISH"
+                text: Theme.tr("btn_recheck")
                 onClicked: {
                     backendBridge.retryPrecheck()
                     root.retryClicked()
@@ -133,7 +133,7 @@ Item {
                 minHeight: 64
                 variant: "success"
                 iconSource: "../assets/icons/check.svg"
-                text: (typeof i18n !== "undefined" && i18n) ? i18n.t("btn_proceed") : "DAVOM ETISH"
+                text: Theme.tr("btn_proceed")
                 enabled: backendBridge.precheckPassed
                 onClicked: root.proceedClicked()
             }

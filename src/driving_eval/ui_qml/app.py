@@ -90,7 +90,7 @@ def run_qml_app(argv: list[str] | None = None) -> int:
     width, height = parse_resolution(args.resolution)
 
     # Initialize i18n
-    i18n = I18nService(default_lang=args.lang)
+    i18n = I18nService(default_lang=args.lang, load_saved_locale=True)
 
     # Initialize Bridge (Mock or Real)
     if args.simulate:

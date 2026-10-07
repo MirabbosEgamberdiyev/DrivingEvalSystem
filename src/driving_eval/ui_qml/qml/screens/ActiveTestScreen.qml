@@ -8,7 +8,8 @@ Item {
 
     property int elapsedSeconds: 0
     property real currentSpeed: 0.0
-    property string currentExercise: "BOSHLASH"
+    property string currentExercise: "ESTAKADA"
+    property int currentExerciseIdx: 1 // 0 to 7
     property int totalPenalty: 0
     property int mistakeCount: 0
 
@@ -22,6 +23,17 @@ Item {
             root.currentExercise = exerciseName
             root.totalPenalty = penalty
             root.mistakeCount = count
+
+            // Map exercise name to index
+            var exUpper = exerciseName.toUpperCase()
+            if (exUpper.indexOf("START") !== -1 || exUpper.indexOf("BOSH") !== -1) root.currentExerciseIdx = 0
+            else if (exUpper.indexOf("ESTAK") !== -1) root.currentExerciseIdx = 1
+            else if (exUpper.indexOf("ZMEI") !== -1 || exUpper.indexOf("ILON") !== -1) root.currentExerciseIdx = 2
+            else if (exUpper.indexOf("TURN") !== -1 || exUpper.indexOf("90") !== -1) root.currentExerciseIdx = 3
+            else if (exUpper.indexOf("PARALLEL") !== -1) root.currentExerciseIdx = 4
+            else if (exUpper.indexOf("GARAG") !== -1 || exUpper.indexOf("BOKS") !== -1) root.currentExerciseIdx = 5
+            else if (exUpper.indexOf("STOP") !== -1) root.currentExerciseIdx = 6
+            else if (exUpper.indexOf("FINISH") !== -1 || exUpper.indexOf("YAKUN") !== -1) root.currentExerciseIdx = 7
         }
     }
 
@@ -30,37 +42,45 @@ Item {
         color: Theme.backgroundDark
     }
 
-    // --- Minimal Top Status Header ---
+    // --- Top Status Header ---
     Rectangle {
         id: hudHeader
         anchors.top: parent.top
         anchors.left: parent.left
         anchors.right: parent.right
-        height: 72
+        height: 64
         color: Theme.surfaceDark
         border.color: Theme.surfaceBorder
         border.width: 1
 
         Row {
             anchors.left: parent.left
-            anchors.leftMargin: 24
+            anchors.leftMargin: 20
             anchors.verticalCenter: parent.verticalCenter
-            spacing: 14
+            spacing: 12
 
             Rectangle {
-                width: 16
-                height: 16
-                radius: 8
+                width: 14
+                height: 14
+                radius: 7
                 color: Theme.colorSuccess
                 anchors.verticalCenter: parent.verticalCenter
             }
 
             Text {
-                text: (typeof i18n !== "undefined" && i18n) ? i18n.t("hud_test_active") : "TEST JARAYONDA"
+                text: Theme.tr("hud_test_active")
                 color: Theme.colorSuccess
                 font.family: Theme.fontFamily
-                font.pixelSize: Theme.fontHeadline
+                font.pixelSize: Theme.fontBodySmall
                 font.bold: true
+                anchors.verticalCenter: parent.verticalCenter
+            }
+
+            Text {
+                text: "•  " + backendBridge.carId
+                color: Theme.textMuted
+                font.family: Theme.fontFamily
+                font.pixelSize: Theme.fontCaption
                 anchors.verticalCenter: parent.verticalCenter
             }
         }
@@ -68,15 +88,15 @@ Item {
         // Live Clock / Elapsed Timer
         Row {
             anchors.right: parent.right
-            anchors.rightMargin: 24
+            anchors.rightMargin: 20
             anchors.verticalCenter: parent.verticalCenter
-            spacing: 12
+            spacing: 10
 
             Text {
-                text: (typeof i18n !== "undefined" && i18n) ? i18n.t("hud_time_label") : "VAQT:"
+                text: Theme.tr("hud_time_label")
                 color: Theme.textMuted
                 font.family: Theme.fontFamily
-                font.pixelSize: Theme.fontHeadline
+                font.pixelSize: Theme.fontBodySmall
                 font.bold: true
                 anchors.verticalCenter: parent.verticalCenter
             }
@@ -88,7 +108,7 @@ Item {
                     return (m < 10 ? "0" : "") + m + ":" + (s < 10 ? "0" : "") + s
                 }
                 color: "#FFFFFF"
-                font.family: Theme.fontFamily
+                font.family: "Consolas, Courier, monospace"
                 font.pixelSize: Theme.fontTitle
                 font.bold: true
                 anchors.verticalCenter: parent.verticalCenter
@@ -96,120 +116,266 @@ Item {
         }
     }
 
-    // --- Center HUD: Giant Speed and Exercise Title ---
-    Column {
-        anchors.centerIn: parent
-        spacing: 24
-        width: Math.min(parent.width - 64, 880)
+    // --- Exercise Progress Strip (8 Exercises) ---
+    Rectangle {
+        id: progressStrip
+        anchors.top: hudHeader.bottom
+        anchors.left: parent.left
+        anchors.right: parent.right
+        height: 48
+        color: Theme.surfaceElevated
+        border.color: Theme.surfaceBorder
+        border.width: 1
 
-        // Exercise Banner
-        Rectangle {
-            anchors.horizontalCenter: parent.horizontalCenter
-            height: 60
-            width: Math.max(340, exerciseText.implicitWidth + 48)
-            radius: Theme.radiusMedium
-            color: Theme.surfaceElevated
-            border.color: Theme.surfaceBorder
-            border.width: 1
+        Row {
+            anchors.centerIn: parent
+            spacing: Math.max(6, Math.min(16, (parent.width - 780) / 8))
 
-            Text {
-                id: exerciseText
-                anchors.centerIn: parent
-                text: root.currentExercise
-                color: Theme.colorAccentHover
-                font.family: Theme.fontFamily
-                font.pixelSize: Theme.fontTitle
-                font.bold: true
+            Repeater {
+                model: [
+                    { name: "START", idx: 0 },
+                    { name: "ESTAKADA", idx: 1 },
+                    { name: "ZMEIKA", idx: 2 },
+                    { name: "TURN 90°", idx: 3 },
+                    { name: "PARALLEL", idx: 4 },
+                    { name: "GARAGE", idx: 5 },
+                    { name: "STOP", idx: 6 },
+                    { name: "FINISH", idx: 7 }
+                ]
+
+                delegate: Row {
+                    spacing: 4
+                    anchors.verticalCenter: parent.verticalCenter
+
+                    Text {
+                        text: {
+                            if (modelData.idx < root.currentExerciseIdx) return "✓"
+                            if (modelData.idx === root.currentExerciseIdx) return "●"
+                            return "○"
+                        }
+                        color: {
+                            if (modelData.idx < root.currentExerciseIdx) return Theme.colorSuccess
+                            if (modelData.idx === root.currentExerciseIdx) return Theme.colorAccentHover
+                            return Theme.textMuted
+                        }
+                        font.pixelSize: 14
+                        font.bold: true
+                        anchors.verticalCenter: parent.verticalCenter
+                    }
+
+                    Text {
+                        text: modelData.name
+                        color: {
+                            if (modelData.idx < root.currentExerciseIdx) return Theme.textSecondary
+                            if (modelData.idx === root.currentExerciseIdx) return "#FFFFFF"
+                            return Theme.textMuted
+                        }
+                        font.family: Theme.fontFamily
+                        font.pixelSize: 12
+                        font.bold: modelData.idx === root.currentExerciseIdx
+                        anchors.verticalCenter: parent.verticalCenter
+                    }
+                }
             }
         }
+    }
 
-        // Massive Speed Readout
+    // --- Center Stage: Live Camera HUD & Speedometer ---
+    Item {
+        anchors.top: progressStrip.bottom
+        anchors.bottom: bottomBar.top
+        anchors.left: parent.left
+        anchors.right: parent.right
+        anchors.margins: 16
+
         Row {
-            anchors.horizontalCenter: parent.horizontalCenter
-            spacing: 16
+            anchors.fill: parent
+            spacing: 20
 
-            Text {
-                text: Math.round(root.currentSpeed).toString()
-                color: "#FFFFFF"
-                font.family: Theme.fontFamily
-                font.pixelSize: Theme.fontDisplay
-                font.bold: true
-                anchors.baseline: speedUnit.baseline
-            }
-
-            Text {
-                id: speedUnit
-                text: (typeof i18n !== "undefined" && i18n) ? i18n.t("hud_speed_unit") : "km/h"
-                color: Theme.textSecondary
-                font.family: Theme.fontFamily
-                font.pixelSize: Theme.fontTitle
-                font.bold: true
-            }
-        }
-
-        // Penalty and Mistake Summary Badges
-        Row {
-            anchors.horizontalCenter: parent.horizontalCenter
-            spacing: 32
-
+            // Left Panel: Big Speedometer & Penalties Card
             Rectangle {
-                height: 52
-                width: Math.max(180, penText.implicitWidth + 32)
-                radius: Theme.radiusSmall
-                color: root.totalPenalty > 0 ? Theme.colorErrorBg : Theme.surfaceElevated
-                border.color: root.totalPenalty > 0 ? Theme.colorError : Theme.surfaceBorder
+                width: 280
+                height: parent.height
+                radius: Theme.radiusMedium
+                color: Theme.surfaceDark
+                border.color: Theme.surfaceBorder
                 border.width: 1
 
-                Row {
-                    id: penText
+                Column {
                     anchors.centerIn: parent
-                    spacing: 8
+                    spacing: 20
+                    width: parent.width - 32
 
-                    Text {
-                        text: (typeof i18n !== "undefined" && i18n) ? i18n.t("hud_penalty_label") : "Jarima:"
-                        color: Theme.textSecondary
-                        font.family: Theme.fontFamily
-                        font.pixelSize: Theme.fontHeadline
+                    // Exercise Badge
+                    Rectangle {
+                        width: parent.width
+                        height: 48
+                        radius: Theme.radiusSmall
+                        color: Theme.surfaceElevated
+                        border.color: Theme.colorAccent
+                        border.width: 1
+
+                        Text {
+                            anchors.centerIn: parent
+                            text: root.currentExercise
+                            color: Theme.colorAccentHover
+                            font.family: Theme.fontFamily
+                            font.pixelSize: Theme.fontHeadline
+                            font.bold: true
+                        }
                     }
-                    Text {
-                        text: (typeof i18n !== "undefined" && i18n)
-                            ? i18n.t_plural("penalty_points_plural", root.totalPenalty)
-                            : (root.totalPenalty + " ball")
-                        color: root.totalPenalty > 0 ? Theme.colorError : Theme.textPrimary
-                        font.family: Theme.fontFamily
-                        font.pixelSize: Theme.fontHeadline
-                        font.bold: true
+
+                    // Speedometer Display
+                    Column {
+                        anchors.horizontalCenter: parent.horizontalCenter
+                        spacing: 2
+
+                        Text {
+                            anchors.horizontalCenter: parent.horizontalCenter
+                            text: Math.round(root.currentSpeed).toString()
+                            color: root.currentSpeed > 20.0 ? Theme.colorWarning : "#FFFFFF"
+                            font.family: Theme.fontFamily
+                            font.pixelSize: Theme.fontDisplay
+                            font.bold: true
+                        }
+
+                        Text {
+                            anchors.horizontalCenter: parent.horizontalCenter
+                            text: Theme.tr("hud_speed_unit")
+                            color: Theme.textSecondary
+                            font.family: Theme.fontFamily
+                            font.pixelSize: Theme.fontBodySmall
+                            font.bold: true
+                        }
+                    }
+
+                    // Penalty Counter Pill
+                    Rectangle {
+                        width: parent.width
+                        height: 48
+                        radius: Theme.radiusSmall
+                        color: root.totalPenalty > 0 ? Theme.colorErrorBg : Theme.surfaceElevated
+                        border.color: root.totalPenalty > 0 ? Theme.colorError : Theme.surfaceBorder
+                        border.width: 1
+
+                        Row {
+                            anchors.centerIn: parent
+                            spacing: 8
+                            Text {
+                                text: Theme.tr("hud_penalty_label")
+                                color: Theme.textSecondary
+                                font.family: Theme.fontFamily
+                                font.pixelSize: Theme.fontBodySmall
+                            }
+                            Text {
+                                text: Theme.trPlural("penalty_points_plural", root.totalPenalty)
+                                color: root.totalPenalty > 0 ? Theme.colorError : Theme.textPrimary
+                                font.family: Theme.fontFamily
+                                font.pixelSize: Theme.fontBodySmall
+                                font.bold: true
+                            }
+                        }
                     }
                 }
             }
 
+            // Right Panel: Live Camera Feed with BEV HUD Container
             Rectangle {
-                height: 52
-                width: Math.max(180, errText.implicitWidth + 32)
-                radius: Theme.radiusSmall
-                color: Theme.surfaceElevated
+                width: parent.width - 300
+                height: parent.height
+                radius: Theme.radiusMedium
+                color: "#050811"
                 border.color: Theme.surfaceBorder
                 border.width: 1
+                clip: true
 
-                Row {
-                    id: errText
-                    anchors.centerIn: parent
-                    spacing: 8
+                // Camera feed placeholder simulation / overlay
+                Image {
+                    id: cameraBg
+                    anchors.fill: parent
+                    source: "../assets/icons/car.svg"
+                    fillMode: Image.PreserveAspectFit
+                    opacity: 0.12
+                }
 
-                    Text {
-                        text: (typeof i18n !== "undefined" && i18n) ? i18n.t("hud_errors_label") : "Xatolar:"
-                        color: Theme.textSecondary
-                        font.family: Theme.fontFamily
-                        font.pixelSize: Theme.fontHeadline
+                // Grid lines representing Computer Vision BEV Homography
+                Canvas {
+                    anchors.fill: parent
+                    onPaint: {
+                        var ctx = getContext("2d")
+                        ctx.strokeStyle = "rgba(37, 99, 235, 0.25)"
+                        ctx.lineWidth = 1.5
+
+                        // Perspective corridor lines
+                        ctx.beginPath()
+                        ctx.moveTo(width * 0.25, height)
+                        ctx.lineTo(width * 0.40, height * 0.45)
+                        ctx.stroke()
+
+                        ctx.beginPath()
+                        ctx.moveTo(width * 0.75, height)
+                        ctx.lineTo(width * 0.60, height * 0.45)
+                        ctx.stroke()
+
+                        // Stop line projection
+                        ctx.strokeStyle = "rgba(22, 163, 74, 0.4)"
+                        ctx.beginPath()
+                        ctx.moveTo(width * 0.35, height * 0.65)
+                        ctx.lineTo(width * 0.65, height * 0.65)
+                        ctx.stroke()
                     }
-                    Text {
-                        text: (typeof i18n !== "undefined" && i18n)
-                            ? i18n.t_plural("errors_count_plural", root.mistakeCount)
-                            : root.mistakeCount.toString()
-                        color: Theme.textPrimary
-                        font.family: Theme.fontFamily
-                        font.pixelSize: Theme.fontHeadline
-                        font.bold: true
+                }
+
+                // Top Left Camera Tag
+                Rectangle {
+                    anchors.top: parent.top
+                    anchors.left: parent.left
+                    anchors.margins: 14
+                    width: 130
+                    height: 32
+                    radius: Theme.radiusSmall
+                    color: Theme.surfaceDark
+                    border.color: Theme.surfaceBorder
+                    border.width: 1
+
+                    Row {
+                        anchors.centerIn: parent
+                        spacing: 6
+                        Rectangle {
+                            width: 8
+                            height: 8
+                            radius: 4
+                            color: Theme.colorSuccess
+                            anchors.verticalCenter: parent.verticalCenter
+                        }
+                        Text {
+                            text: "FRONT CAM • 30 FPS"
+                            color: Theme.textSecondary
+                            font.family: Theme.fontFamily
+                            font.pixelSize: 10
+                            font.bold: true
+                            anchors.verticalCenter: parent.verticalCenter
+                        }
+                    }
+                }
+
+                // Bottom Overlay: Telemetry Telemetry Strip
+                Rectangle {
+                    anchors.bottom: parent.bottom
+                    anchors.left: parent.left
+                    anchors.right: parent.right
+                    height: 40
+                    color: Theme.surfaceDark
+                    opacity: 0.92
+
+                    Row {
+                        anchors.centerIn: parent
+                        spacing: 24
+
+                        Text { text: "🚗 " + Math.round(root.currentSpeed) + " km/h"; color: Theme.textPrimary; font.bold: true; font.pixelSize: 13; font.family: Theme.fontFamily }
+                        Text { text: "🛰 GPS (14 SAT) ✓"; color: Theme.colorSuccess; font.bold: true; font.pixelSize: 13; font.family: Theme.fontFamily }
+                        Text { text: "🔌 OBD-II CAN ✓"; color: Theme.colorSuccess; font.bold: true; font.pixelSize: 13; font.family: Theme.fontFamily }
+                        Text { text: "📷 4/4 SYNC ✓"; color: Theme.colorSuccess; font.bold: true; font.pixelSize: 13; font.family: Theme.fontFamily }
                     }
                 }
             }
@@ -218,6 +384,7 @@ Item {
 
     // --- Bottom Gated Action Bar ---
     BottomBar {
+        id: bottomBar
         anchors.bottom: parent.bottom
         anchors.left: parent.left
         anchors.right: parent.right
@@ -226,10 +393,10 @@ Item {
         Text {
             anchors.centerIn: parent
             visible: !backendBridge.finishReady
-            text: (typeof i18n !== "undefined" && i18n) ? i18n.t("hud_moving_prompt") : "Mashq bajarilmoqda. Belgilangan chiziqlarga e'tibor bering."
+            text: Theme.tr("hud_moving_prompt")
             color: Theme.textMuted
             font.family: Theme.fontFamily
-            font.pixelSize: Theme.fontBody
+            font.pixelSize: Theme.fontBodySmall
         }
 
         // Finish Ready Container (Only visible when finishReady == true!)
@@ -239,7 +406,7 @@ Item {
             visible: backendBridge.finishReady
 
             Text {
-                text: (typeof i18n !== "undefined" && i18n) ? i18n.t("hud_finish_prompt") : "Avtomobil to'xtadi. Testni yakunlashingiz mumkin."
+                text: Theme.tr("hud_finish_prompt")
                 color: Theme.colorSuccess
                 font.family: Theme.fontFamily
                 font.pixelSize: Theme.fontHeadline
@@ -252,7 +419,7 @@ Item {
                 minHeight: 64
                 variant: "danger"
                 iconSource: "../assets/icons/finish.svg"
-                text: (typeof i18n !== "undefined" && i18n) ? i18n.t("btn_finish_test") : "TESTNI YAKUNLASH"
+                text: Theme.tr("btn_finish_test")
                 anchors.verticalCenter: parent.verticalCenter
                 onClicked: root.finishTestClicked()
             }

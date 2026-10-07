@@ -70,41 +70,96 @@ Rectangle {
         }
     }
 
+    property string mode: "STUDENT" // STUDENT, INSPECTOR, ADMIN
+    property string currentTime: Qt.formatTime(new Date(), "hh:mm")
+
+    Timer {
+        interval: 1000
+        running: true
+        repeat: true
+        onTriggered: {
+            root.currentTime = Qt.formatTime(new Date(), "hh:mm")
+        }
+    }
+
     Row {
         anchors.right: parent.right
         anchors.rightMargin: Theme.touchPadding
         anchors.verticalCenter: parent.verticalCenter
-        spacing: 16
+        spacing: 12
 
-        // Language Selector Pills
+        // Mode Badge
+        Rectangle {
+            height: 38
+            width: modeText.implicitWidth + 24
+            radius: Theme.radiusSmall
+            color: root.mode === "ADMIN" ? Theme.colorCriticalBg : (root.mode === "INSPECTOR" ? Theme.surfaceElevated : Theme.colorSuccessBg)
+            border.color: root.mode === "ADMIN" ? Theme.colorCritical : (root.mode === "INSPECTOR" ? Theme.colorAccent : Theme.colorSuccess)
+            border.width: 1
+            anchors.verticalCenter: parent.verticalCenter
+
+            Text {
+                id: modeText
+                anchors.centerIn: parent
+                text: root.mode === "ADMIN" ? "ADMIN" : (root.mode === "INSPECTOR" ? "INSPEKTOR" : "STUDENT")
+                color: root.mode === "ADMIN" ? Theme.colorError : (root.mode === "INSPECTOR" ? Theme.colorAccentHover : Theme.colorSuccess)
+                font.family: Theme.fontFamily
+                font.pixelSize: Theme.fontCaption
+                font.bold: true
+            }
+        }
+
+        // Live Clock
+        Text {
+            anchors.verticalCenter: parent.verticalCenter
+            text: root.currentTime
+            color: Theme.textSecondary
+            font.family: Theme.fontFamily
+            font.pixelSize: Theme.fontBodySmall
+            font.bold: true
+        }
+
+        // Language Selector with Flags
         Row {
             spacing: 6
             anchors.verticalCenter: parent.verticalCenter
 
             Repeater {
                 model: [
-                    { code: "uz-Latn", label: "O'ZB" },
-                    { code: "uz-Cyrl", label: "ЎЗБ" },
-                    { code: "ru",      label: "РУС" }
+                    { code: "uz-Latn", flag: "🇺🇿", label: "O‘zbek" },
+                    { code: "uz-Cyrl", flag: "🇺🇿", label: "Ўзбек" },
+                    { code: "ru",      flag: "🇷🇺", label: "Русский" }
                 ]
 
                 delegate: Rectangle {
                     id: langBtn
-                    width: 58
-                    height: 40
+                    width: langRow.implicitWidth + 16
+                    height: 42
                     radius: Theme.radiusSmall
                     property bool active: (typeof i18n !== "undefined" && i18n) ? i18n.currentLanguage === modelData.code : false
                     color: active ? Theme.colorAccent : Theme.surfaceElevated
                     border.color: active ? Theme.colorAccentHover : Theme.surfaceBorder
                     border.width: 1
 
-                    Text {
+                    Row {
+                        id: langRow
                         anchors.centerIn: parent
-                        text: modelData.label
-                        color: langBtn.active ? "#FFFFFF" : Theme.textSecondary
-                        font.family: Theme.fontFamily
-                        font.pixelSize: 15
-                        font.bold: true
+                        spacing: 4
+
+                        Text {
+                            text: modelData.flag
+                            font.pixelSize: 14
+                            anchors.verticalCenter: parent.verticalCenter
+                        }
+
+                        Text {
+                            text: modelData.label
+                            color: langBtn.active ? "#FFFFFF" : Theme.textSecondary
+                            font.family: Theme.fontFamily
+                            font.pixelSize: 13
+                            font.bold: true
+                            anchors.verticalCenter: parent.verticalCenter
+                        }
                     }
 
                     MouseArea {
@@ -119,12 +174,12 @@ Rectangle {
             }
         }
 
-        // Settings Button
+        // Settings / Admin Button
         BigButton {
             id: settingsBtn
             visible: root.showSettings
-            minWidth: 64
-            minHeight: 52
+            minWidth: 54
+            minHeight: 46
             variant: "secondary"
             iconSource: "../assets/icons/gear.svg"
             text: ""

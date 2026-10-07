@@ -24,6 +24,10 @@ class BackendBridge(QObject):
     settingsUnlockedChanged = Signal(bool)
     lockoutRemainingChanged = Signal(int)
     usbExportFinished = Signal(bool, str)
+    sessionsListReady = Signal(list)
+    systemDiagnosticsUpdated = Signal(dict)
+    reportExportFinished = Signal(bool, str)
+    hashVerificationFinished = Signal(str, bool, str)
 
     def __init__(self, parent: QObject | None = None):
         super().__init__(parent)
@@ -159,4 +163,28 @@ class BackendBridge(QObject):
     @abstractmethod
     def resetToHome(self) -> None:
         """Resets application to HOME state for the next candidate."""
+        pass
+
+    @Slot()
+    @abstractmethod
+    def requestSessions(self) -> None:
+        """Requests list of historical exam sessions for Inspector Mode."""
+        pass
+
+    @Slot()
+    @abstractmethod
+    def requestDiagnostics(self) -> None:
+        """Requests real-time hardware and sensor telemetry diagnostics."""
+        pass
+
+    @Slot(str)
+    @abstractmethod
+    def verifySessionHash(self, session_id: str) -> None:
+        """Verifies SHA-256 hash chain and digital signature for session."""
+        pass
+
+    @Slot(str)
+    @abstractmethod
+    def exportSessionPdf(self, session_id: str) -> None:
+        """Generates and exports official PDF report for session."""
         pass

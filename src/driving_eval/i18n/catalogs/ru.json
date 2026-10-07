@@ -1,134 +1,574 @@
 {
-  "app_title": { "text": "АВТОМАТИЗИРОВАННЫЙ ЭКЗАМЕН ПО ВОЖДЕНИЮ", "reviewed": true, "reviewer": "metodist_ru" },
-  "app_subtitle": { "text": "4-Камерная Автономная AI Система Оценки", "reviewed": true, "reviewer": "metodist_ru" },
-  "car_id_label": { "text": "Автомобиль:", "reviewed": true, "reviewer": "metodist_ru" },
-  "student_label": { "text": "Водитель:", "reviewed": true, "reviewer": "metodist_ru" },
-  "rules_ver_label": { "text": "Версия правил:", "reviewed": true, "reviewer": "metodist_ru" },
-
-  "btn_start_test": { "text": "НАЧАТЬ ТЕСТ", "reviewed": true, "reviewer": "metodist_ru" },
-  "btn_precheck": { "text": "ПРОВЕРКА СИСТЕМЫ (PRE-CHECK)", "reviewed": true, "reviewer": "metodist_ru" },
-  "btn_recheck": { "text": "ПОВТОРИТЬ ПРОВЕРКУ", "reviewed": true, "reviewer": "metodist_ru" },
-  "btn_proceed": { "text": "ПРОДОЛЖИТЬ", "reviewed": true, "reviewer": "metodist_ru" },
-  "btn_finish_test": { "text": "ЗАВЕРШИТЬ ТЕСТ", "reviewed": true, "reviewer": "metodist_ru" },
-  "btn_view_violations": { "text": "НАРУШЕНИЯ", "reviewed": true, "reviewer": "metodist_ru" },
-  "btn_home": { "text": "ГЛАВНЫЙ ЭКРАН", "reviewed": true, "reviewer": "metodist_ru" },
-  "btn_settings": { "text": "НАСТРОЙКИ", "reviewed": true, "reviewer": "metodist_ru" },
-  "btn_back": { "text": "НАЗАД", "reviewed": true, "reviewer": "metodist_ru" },
-  "btn_view_photo": { "text": "Фото", "reviewed": true, "reviewer": "metodist_ru" },
-  "btn_view_video": { "text": "Видео", "reviewed": true, "reviewer": "metodist_ru" },
-  "btn_export_usb": { "text": "ЭКСПОРТ НА USB", "reviewed": true, "reviewer": "metodist_ru" },
-  "btn_close": { "text": "Закрыть", "reviewed": true, "reviewer": "metodist_ru" },
-  "btn_unlock": { "text": "OK", "reviewed": true, "reviewer": "metodist_ru" },
-  "btn_clear": { "text": "C", "reviewed": true, "reviewer": "metodist_ru" },
-  "btn_cancel": { "text": "Отмена", "reviewed": true, "reviewer": "metodist_ru" },
-  "btn_lock": { "text": "ЗАБЛОКИРОВАТЬ", "reviewed": true, "reviewer": "metodist_ru" },
-  "btn_export_db": { "text": "ЭКСПОРТ БАЗЫ НА USB", "reviewed": true, "reviewer": "metodist_ru" },
-  "btn_exit": { "text": "ВЫХОД", "reviewed": true, "reviewer": "metodist_ru" },
-
-  "home_title": { "text": "ОЦЕНКА НАВЫКОВ ВОЖДЕНИЯ", "reviewed": true, "reviewer": "metodist_ru" },
-  "home_ready_msg": { "text": "Все системы исправны. Готово к началу экзамена.", "reviewed": true, "reviewer": "metodist_ru" },
-  "home_not_ready_msg": { "text": "⚠️ Система запущена. Сначала выполните проверку оборудования (Pre-check).", "reviewed": true, "reviewer": "metodist_ru" },
-
-  "precheck_title": { "text": "ПРОВЕРКА ОБОРУДОВАНИЯ И СИСТЕМЫ", "reviewed": true, "reviewer": "metodist_ru" },
-  "precheck_in_progress": { "text": "Выполняется диагностика...", "reviewed": true, "reviewer": "metodist_ru" },
-  "precheck_passed": { "text": "Все 12 обязательных компонентов успешно проверены.", "reviewed": true, "reviewer": "metodist_ru" },
-  "precheck_blocked_title": { "text": "TEST START BLOCKED", "reviewed": true, "reviewer": "metodist_ru" },
-  "precheck_blocked_desc": { "text": "Старт теста заблокирован из-за неисправности обязательного компонента!", "reviewed": true, "reviewer": "metodist_ru" },
-
-  "comp_cam_front": { "text": "Передняя камера (FRONT)", "reviewed": true, "reviewer": "metodist_ru" },
-  "comp_cam_rear": { "text": "Задняя камера (REAR)", "reviewed": true, "reviewer": "metodist_ru" },
-  "comp_cam_left": { "text": "Левая камера (LEFT)", "reviewed": true, "reviewer": "metodist_ru" },
-  "comp_cam_right": { "text": "Правая камера (RIGHT)", "reviewed": true, "reviewer": "metodist_ru" },
-  "comp_cam_drift": { "text": "Калибровка камер (Drift)", "reviewed": true, "reviewer": "metodist_ru" },
-  "comp_ai_engine": { "text": "Движок AI инференса", "reviewed": true, "reviewer": "metodist_ru" },
-  "comp_gps": { "text": "Модуль GPS / GNSS", "reviewed": true, "reviewer": "metodist_ru" },
-  "comp_imu": { "text": "Акселерометр / Гироскоп IMU", "reviewed": true, "reviewer": "metodist_ru" },
-  "comp_obd": { "text": "Телеметрия OBD-II (CAN)", "reviewed": true, "reviewer": "metodist_ru" },
-  "comp_storage": { "text": "Емкость NVMe SSD накопителя", "reviewed": true, "reviewer": "metodist_ru" },
-  "comp_database": { "text": "База данных SQLite WAL", "reviewed": true, "reviewer": "metodist_ru" },
-  "comp_audio": { "text": "Система голосовых оповещений", "reviewed": true, "reviewer": "metodist_ru" },
-
-  "status_checking": { "text": "Проверка...", "reviewed": true, "reviewer": "metodist_ru" },
-  "status_ready": { "text": "ГОТОВО", "reviewed": true, "reviewer": "metodist_ru" },
-  "status_failed": { "text": "НЕИСПРАВНО", "reviewed": true, "reviewer": "metodist_ru" },
-
-  "system_ready_title": { "text": "ГОТОВО К НАЧАЛУ ЭКЗАМЕНА", "reviewed": true, "reviewer": "metodist_ru" },
-  "system_ready_desc": { "text": "Все системы исправны. Подведите автомобиль к линии старта и начните движение.", "reviewed": true, "reviewer": "metodist_ru" },
-  "system_ready_warning": { "text": "⚠️ Внимание: штрафные баллы не начисляются до нажатия 'НАЧАТЬ ТЕСТ'.", "reviewed": true, "reviewer": "metodist_ru" },
-
-  "hud_test_active": { "text": "ТЕСТ В ПРОЦЕССЕ", "reviewed": true, "reviewer": "metodist_ru" },
-  "hud_speed_unit": { "text": "км/ч", "reviewed": true, "reviewer": "metodist_ru" },
-  "hud_speed_label": { "text": "СКОРОСТЬ", "reviewed": true, "reviewer": "metodist_ru" },
-  "hud_time_label": { "text": "ВРЕМЯ:", "reviewed": true, "reviewer": "metodist_ru" },
-  "hud_exercise_label": { "text": "ТЕКУЩЕЕ УПРАЖНЕНИЕ", "reviewed": true, "reviewer": "metodist_ru" },
-  "hud_penalty_label": { "text": "Штраф:", "reviewed": true, "reviewer": "metodist_ru" },
-  "hud_errors_label": { "text": "Ошибки:", "reviewed": true, "reviewer": "metodist_ru" },
-  "hud_finish_prompt": { "text": "Автомобиль остановлен. Можно завершить тест.", "reviewed": true, "reviewer": "metodist_ru" },
-  "hud_moving_prompt": { "text": "Выполняется упражнение. Обращайте внимание на линии разметки.", "reviewed": true, "reviewer": "metodist_ru" },
-
-  "popup_violation_title": { "text": "ЗАФИКСИРОВАНО НАРУШЕНИЕ", "reviewed": true, "reviewer": "metodist_ru" },
-  "popup_critical_title": { "text": "КРИТИЧЕСКОЕ НАРУШЕНИЕ!", "reviewed": true, "reviewer": "metodist_ru" },
-  "popup_suspect_badge": { "text": "ПОДОЗРЕНИЕ", "reviewed": true, "reviewer": "metodist_ru" },
-  "popup_queue_more": { "text": "В очереди еще: {0}", "reviewed": true, "reviewer": "metodist_ru" },
-
-  "result_title": { "text": "ИТОГОВЫЙ РЕЗУЛЬТАТ ЭКЗАМЕНА", "reviewed": true, "reviewer": "metodist_ru" },
-  "result_pass": { "text": "СДАНО (PASS)", "reviewed": true, "reviewer": "metodist_ru" },
-  "result_fail": { "text": "НЕ СДАНО (FAIL)", "reviewed": true, "reviewer": "metodist_ru" },
-  "result_pass_desc": { "text": "Все упражнения выполнены в соответствии с установленными требованиями.", "reviewed": true, "reviewer": "metodist_ru" },
-  "result_fail_desc": { "text": "Набранный балл ниже проходного порога.", "reviewed": true, "reviewer": "metodist_ru" },
-  "result_critical_desc": { "text": "Тест прекращен из-за критического нарушения.", "reviewed": true, "reviewer": "metodist_ru" },
-  "result_score_label": { "text": "Итоговый балл:", "reviewed": true, "reviewer": "metodist_ru" },
-  "result_start_score": { "text": "Начальный балл:", "reviewed": true, "reviewer": "metodist_ru" },
-  "result_penalty_deducted": { "text": "Снято штрафных баллов:", "reviewed": true, "reviewer": "metodist_ru" },
-  "result_errors_count": { "text": "Количество нарушений:", "reviewed": true, "reviewer": "metodist_ru" },
-  "result_critical_count": { "text": "Критические ошибки:", "reviewed": true, "reviewer": "metodist_ru" },
-  "result_duration": { "text": "Общее время:", "reviewed": true, "reviewer": "metodist_ru" },
-  "result_hash_label": { "text": "SHA-256 Хеш:", "reviewed": true, "reviewer": "metodist_ru" },
-
-  "violations_list_title": { "text": "ЗАФИКСИРОВАННЫЕ НАРУШЕНИЯ", "reviewed": true, "reviewer": "metodist_ru" },
-  "violations_list_subtitle": { "text": "Всего: {0} событий", "reviewed": true, "reviewer": "metodist_ru" },
-  "violations_confirmed_header": { "text": "ПОДТВЕРЖДЕННЫЕ ШТРАФЫ (ВЫЧТЕНЫ ИЗ БАЛЛОВ):", "reviewed": true, "reviewer": "metodist_ru" },
-  "violations_suspect_header": { "text": "ПОДОЗРИТЕЛЬНЫЕ СОБЫТИЯ (ШТРАФ НЕ СНЯТ, ДЛЯ ИНСПЕКТОРА):", "reviewed": true, "reviewer": "metodist_ru" },
-  "violations_empty_title": { "text": "Нарушений не зафиксировано!", "reviewed": true, "reviewer": "metodist_ru" },
-  "violations_empty_desc": { "text": "Все требования выполнены безупречно.", "reviewed": true, "reviewer": "metodist_ru" },
-
-  "evidence_title": { "text": "ПРОСМОТР ДОКАЗАТЕЛЬСТВ", "reviewed": true, "reviewer": "metodist_ru" },
-  "evidence_subtitle": { "text": "ID события: {0}", "reviewed": true, "reviewer": "metodist_ru" },
-  "evidence_tab_before": { "text": "До", "reviewed": true, "reviewer": "metodist_ru" },
-  "evidence_tab_event": { "text": "Событие", "reviewed": true, "reviewer": "metodist_ru" },
-  "evidence_tab_after": { "text": "После", "reviewed": true, "reviewer": "metodist_ru" },
-  "evidence_tab_video": { "text": "Видео", "reviewed": true, "reviewer": "metodist_ru" },
-  "evidence_meta_title": { "text": "МЕТАДАННЫЕ СОБЫТИЯ", "reviewed": true, "reviewer": "metodist_ru" },
-  "evidence_not_found": { "text": "Файл доказательства не найден на диске.", "reviewed": true, "reviewer": "metodist_ru" },
-  "evidence_ring_desc": { "text": "Файл надежно сохранен на диске (кольцевой буфер NVMe)", "reviewed": true, "reviewer": "metodist_ru" },
-
-  "settings_title": { "text": "СИСТЕМНЫЕ НАСТРОЙКИ", "reviewed": true, "reviewer": "metodist_ru" },
-  "settings_subtitle_unlocked": { "text": "Режим администратора активен", "reviewed": true, "reviewer": "metodist_ru" },
-  "settings_subtitle_locked": { "text": "Защищено PIN-кодом", "reviewed": true, "reviewer": "metodist_ru" },
-  "settings_pin_prompt": { "text": "ВВЕДИТЕ PIN-КОД АДМИНИСТРАТОРА", "reviewed": true, "reviewer": "metodist_ru" },
-  "settings_pin_error": { "text": "Неверный PIN-код!", "reviewed": true, "reviewer": "metodist_ru" },
-  "settings_lockout_msg": { "text": "ЗАБЛОКИРОВАНО ({0} сек)", "reviewed": true, "reviewer": "metodist_ru" },
-  "settings_device_info": { "text": "ПАРАМЕТРЫ ОБОРУДОВАНИЯ И СИСТЕМЫ", "reviewed": true, "reviewer": "metodist_ru" },
-  "settings_logs_title": { "text": "СИСТЕМНЫЙ ЖУРНАЛ АУДИТА (system_logs)", "reviewed": true, "reviewer": "metodist_ru" },
-
-  "disconnect_overlay_title": { "text": "ВОССТАНОВЛЕНИЕ СВЯЗИ...", "reviewed": true, "reviewer": "metodist_ru" },
-  "disconnect_overlay_desc": { "text": "Связь со службой backend потеряна. Ожидание переподключения. Счет и данные теста сохраняются.", "reviewed": true, "reviewer": "metodist_ru" },
-
-  "activation_title": { "text": "АКТИВАЦИЯ ПРОДУКТА", "reviewed": true, "reviewer": "metodist_ru" },
-  "activation_prompt": { "text": "Введите лицензионный ключ для использования системы.", "reviewed": true, "reviewer": "metodist_ru" },
-  "activation_machine_id": { "text": "ID данного компьютера (Machine ID):", "reviewed": true, "reviewer": "metodist_ru" },
-  "activation_key_label": { "text": "Лицензионный ключ:", "reviewed": true, "reviewer": "metodist_ru" },
-  "activation_btn_paste": { "text": "Вставить из буфера", "reviewed": true, "reviewer": "metodist_ru" },
-  "activation_btn_activate": { "text": "АКТИВИРОВАТЬ", "reviewed": true, "reviewer": "metodist_ru" },
-  "activation_success": { "text": "Лицензия успешно подтверждена!", "reviewed": true, "reviewer": "metodist_ru" },
-  "activation_error_invalid": { "text": "Лицензионный ключ недействителен или поврежден!", "reviewed": true, "reviewer": "metodist_ru" },
-  "activation_error_expired": { "text": "Срок действия лицензии истек!", "reviewed": true, "reviewer": "metodist_ru" },
-  "activation_error_machine": { "text": "Лицензия привязана к другому компьютеру!", "reviewed": true, "reviewer": "metodist_ru" },
-  "activation_error_clock": { "text": "Обнаружен перевод системных часов назад!", "reviewed": true, "reviewer": "metodist_ru" },
-
-  "eula_title": { "text": "ПОЛЬЗОВАТЕЛЬСКОЕ СОГЛАШЕНИЕ И КОНФИДЕНЦИАЛЬНОСТЬ (EULA)", "reviewed": true, "reviewer": "metodist_ru" },
-  "eula_agree_btn": { "text": "ПРИНИМАЮ УСЛОВИЯ", "reviewed": true, "reviewer": "metodist_ru" },
-
+  "app_title": {
+    "text": "АВТОМАТИЗИРОВАННЫЙ ЭКЗАМЕН ПО ВОЖДЕНИЮ",
+    "reviewed": true,
+    "reviewer": "metodist_ru"
+  },
+  "app_subtitle": {
+    "text": "4-Камерная Автономная AI Система Оценки",
+    "reviewed": true,
+    "reviewer": "metodist_ru"
+  },
+  "car_id_label": {
+    "text": "Автомобиль:",
+    "reviewed": true,
+    "reviewer": "metodist_ru"
+  },
+  "student_label": {
+    "text": "Водитель:",
+    "reviewed": true,
+    "reviewer": "metodist_ru"
+  },
+  "rules_ver_label": {
+    "text": "Версия правил:",
+    "reviewed": true,
+    "reviewer": "metodist_ru"
+  },
+  "btn_start_test": {
+    "text": "НАЧАТЬ ТЕСТ",
+    "reviewed": true,
+    "reviewer": "metodist_ru"
+  },
+  "btn_precheck": {
+    "text": "ПРОВЕРКА СИСТЕМЫ (PRE-CHECK)",
+    "reviewed": true,
+    "reviewer": "metodist_ru"
+  },
+  "btn_recheck": {
+    "text": "ПОВТОРИТЬ ПРОВЕРКУ",
+    "reviewed": true,
+    "reviewer": "metodist_ru"
+  },
+  "btn_proceed": {
+    "text": "ПРОДОЛЖИТЬ",
+    "reviewed": true,
+    "reviewer": "metodist_ru"
+  },
+  "btn_finish_test": {
+    "text": "ЗАВЕРШИТЬ ТЕСТ",
+    "reviewed": true,
+    "reviewer": "metodist_ru"
+  },
+  "btn_view_violations": {
+    "text": "НАРУШЕНИЯ",
+    "reviewed": true,
+    "reviewer": "metodist_ru"
+  },
+  "btn_home": {
+    "text": "ГЛАВНЫЙ ЭКРАН",
+    "reviewed": true,
+    "reviewer": "metodist_ru"
+  },
+  "btn_settings": {
+    "text": "НАСТРОЙКИ",
+    "reviewed": true,
+    "reviewer": "metodist_ru"
+  },
+  "btn_back": {
+    "text": "НАЗАД",
+    "reviewed": true,
+    "reviewer": "metodist_ru"
+  },
+  "btn_view_photo": {
+    "text": "Фото",
+    "reviewed": true,
+    "reviewer": "metodist_ru"
+  },
+  "btn_view_video": {
+    "text": "Видео",
+    "reviewed": true,
+    "reviewer": "metodist_ru"
+  },
+  "btn_export_usb": {
+    "text": "ЭКСПОРТ НА USB",
+    "reviewed": true,
+    "reviewer": "metodist_ru"
+  },
+  "btn_close": {
+    "text": "Закрыть",
+    "reviewed": true,
+    "reviewer": "metodist_ru"
+  },
+  "btn_unlock": {
+    "text": "OK",
+    "reviewed": true,
+    "reviewer": "metodist_ru"
+  },
+  "btn_clear": {
+    "text": "C",
+    "reviewed": true,
+    "reviewer": "metodist_ru"
+  },
+  "btn_cancel": {
+    "text": "Отмена",
+    "reviewed": true,
+    "reviewer": "metodist_ru"
+  },
+  "btn_lock": {
+    "text": "ЗАБЛОКИРОВАТЬ",
+    "reviewed": true,
+    "reviewer": "metodist_ru"
+  },
+  "btn_export_db": {
+    "text": "ЭКСПОРТ БАЗЫ НА USB",
+    "reviewed": true,
+    "reviewer": "metodist_ru"
+  },
+  "btn_exit": {
+    "text": "ВЫХОД",
+    "reviewed": true,
+    "reviewer": "metodist_ru"
+  },
+  "home_title": {
+    "text": "ОЦЕНКА НАВЫКОВ ВОЖДЕНИЯ",
+    "reviewed": true,
+    "reviewer": "metodist_ru"
+  },
+  "home_ready_msg": {
+    "text": "Все системы исправны. Готово к началу экзамена.",
+    "reviewed": true,
+    "reviewer": "metodist_ru"
+  },
+  "home_not_ready_msg": {
+    "text": "⚠️ Система запущена. Сначала выполните проверку оборудования (Pre-check).",
+    "reviewed": true,
+    "reviewer": "metodist_ru"
+  },
+  "precheck_title": {
+    "text": "ПРОВЕРКА ОБОРУДОВАНИЯ И СИСТЕМЫ",
+    "reviewed": true,
+    "reviewer": "metodist_ru"
+  },
+  "precheck_in_progress": {
+    "text": "Выполняется диагностика...",
+    "reviewed": true,
+    "reviewer": "metodist_ru"
+  },
+  "precheck_passed": {
+    "text": "Все 12 обязательных компонентов успешно проверены.",
+    "reviewed": true,
+    "reviewer": "metodist_ru"
+  },
+  "precheck_blocked_title": {
+    "text": "TEST START BLOCKED",
+    "reviewed": true,
+    "reviewer": "metodist_ru"
+  },
+  "precheck_blocked_desc": {
+    "text": "Старт теста заблокирован из-за неисправности обязательного компонента!",
+    "reviewed": true,
+    "reviewer": "metodist_ru"
+  },
+  "comp_cam_front": {
+    "text": "Передняя камера (FRONT)",
+    "reviewed": true,
+    "reviewer": "metodist_ru"
+  },
+  "comp_cam_rear": {
+    "text": "Задняя камера (REAR)",
+    "reviewed": true,
+    "reviewer": "metodist_ru"
+  },
+  "comp_cam_left": {
+    "text": "Левая камера (LEFT)",
+    "reviewed": true,
+    "reviewer": "metodist_ru"
+  },
+  "comp_cam_right": {
+    "text": "Правая камера (RIGHT)",
+    "reviewed": true,
+    "reviewer": "metodist_ru"
+  },
+  "comp_cam_drift": {
+    "text": "Калибровка камер (Drift)",
+    "reviewed": true,
+    "reviewer": "metodist_ru"
+  },
+  "comp_ai_engine": {
+    "text": "Движок AI инференса",
+    "reviewed": true,
+    "reviewer": "metodist_ru"
+  },
+  "comp_gps": {
+    "text": "Модуль GPS / GNSS",
+    "reviewed": true,
+    "reviewer": "metodist_ru"
+  },
+  "comp_imu": {
+    "text": "Акселерометр / Гироскоп IMU",
+    "reviewed": true,
+    "reviewer": "metodist_ru"
+  },
+  "comp_obd": {
+    "text": "Телеметрия OBD-II (CAN)",
+    "reviewed": true,
+    "reviewer": "metodist_ru"
+  },
+  "comp_storage": {
+    "text": "Емкость NVMe SSD накопителя",
+    "reviewed": true,
+    "reviewer": "metodist_ru"
+  },
+  "comp_database": {
+    "text": "База данных SQLite WAL",
+    "reviewed": true,
+    "reviewer": "metodist_ru"
+  },
+  "comp_audio": {
+    "text": "Система голосовых оповещений",
+    "reviewed": true,
+    "reviewer": "metodist_ru"
+  },
+  "status_checking": {
+    "text": "Проверка...",
+    "reviewed": true,
+    "reviewer": "metodist_ru"
+  },
+  "status_ready": {
+    "text": "ГОТОВО",
+    "reviewed": true,
+    "reviewer": "metodist_ru"
+  },
+  "status_failed": {
+    "text": "НЕИСПРАВНО",
+    "reviewed": true,
+    "reviewer": "metodist_ru"
+  },
+  "system_ready_title": {
+    "text": "ГОТОВО К НАЧАЛУ ЭКЗАМЕНА",
+    "reviewed": true,
+    "reviewer": "metodist_ru"
+  },
+  "system_ready_desc": {
+    "text": "Все системы исправны. Подведите автомобиль к линии старта и начните движение.",
+    "reviewed": true,
+    "reviewer": "metodist_ru"
+  },
+  "system_ready_warning": {
+    "text": "⚠️ Внимание: штрафные баллы не начисляются до нажатия 'НАЧАТЬ ТЕСТ'.",
+    "reviewed": true,
+    "reviewer": "metodist_ru"
+  },
+  "hud_test_active": {
+    "text": "ТЕСТ В ПРОЦЕССЕ",
+    "reviewed": true,
+    "reviewer": "metodist_ru"
+  },
+  "hud_speed_unit": {
+    "text": "км/ч",
+    "reviewed": true,
+    "reviewer": "metodist_ru"
+  },
+  "hud_speed_label": {
+    "text": "СКОРОСТЬ",
+    "reviewed": true,
+    "reviewer": "metodist_ru"
+  },
+  "hud_time_label": {
+    "text": "ВРЕМЯ:",
+    "reviewed": true,
+    "reviewer": "metodist_ru"
+  },
+  "hud_exercise_label": {
+    "text": "ТЕКУЩЕЕ УПРАЖНЕНИЕ",
+    "reviewed": true,
+    "reviewer": "metodist_ru"
+  },
+  "hud_penalty_label": {
+    "text": "Штраф:",
+    "reviewed": true,
+    "reviewer": "metodist_ru"
+  },
+  "hud_errors_label": {
+    "text": "Ошибки:",
+    "reviewed": true,
+    "reviewer": "metodist_ru"
+  },
+  "hud_finish_prompt": {
+    "text": "Автомобиль остановлен. Можно завершить тест.",
+    "reviewed": true,
+    "reviewer": "metodist_ru"
+  },
+  "hud_moving_prompt": {
+    "text": "Выполняется упражнение. Обращайте внимание на линии разметки.",
+    "reviewed": true,
+    "reviewer": "metodist_ru"
+  },
+  "popup_violation_title": {
+    "text": "ЗАФИКСИРОВАНО НАРУШЕНИЕ",
+    "reviewed": true,
+    "reviewer": "metodist_ru"
+  },
+  "popup_critical_title": {
+    "text": "КРИТИЧЕСКОЕ НАРУШЕНИЕ!",
+    "reviewed": true,
+    "reviewer": "metodist_ru"
+  },
+  "popup_suspect_badge": {
+    "text": "ПОДОЗРЕНИЕ",
+    "reviewed": true,
+    "reviewer": "metodist_ru"
+  },
+  "popup_queue_more": {
+    "text": "В очереди еще: {0}",
+    "reviewed": true,
+    "reviewer": "metodist_ru"
+  },
+  "result_title": {
+    "text": "ИТОГОВЫЙ РЕЗУЛЬТАТ ЭКЗАМЕНА",
+    "reviewed": true,
+    "reviewer": "metodist_ru"
+  },
+  "result_pass": {
+    "text": "СДАНО (PASS)",
+    "reviewed": true,
+    "reviewer": "metodist_ru"
+  },
+  "result_fail": {
+    "text": "НЕ СДАНО (FAIL)",
+    "reviewed": true,
+    "reviewer": "metodist_ru"
+  },
+  "result_pass_desc": {
+    "text": "Все упражнения выполнены в соответствии с установленными требованиями.",
+    "reviewed": true,
+    "reviewer": "metodist_ru"
+  },
+  "result_fail_desc": {
+    "text": "Набранный балл ниже проходного порога.",
+    "reviewed": true,
+    "reviewer": "metodist_ru"
+  },
+  "result_critical_desc": {
+    "text": "Тест прекращен из-за критического нарушения.",
+    "reviewed": true,
+    "reviewer": "metodist_ru"
+  },
+  "result_score_label": {
+    "text": "Итоговый балл:",
+    "reviewed": true,
+    "reviewer": "metodist_ru"
+  },
+  "result_start_score": {
+    "text": "Начальный балл:",
+    "reviewed": true,
+    "reviewer": "metodist_ru"
+  },
+  "result_penalty_deducted": {
+    "text": "Снято штрафных баллов:",
+    "reviewed": true,
+    "reviewer": "metodist_ru"
+  },
+  "result_errors_count": {
+    "text": "Количество нарушений:",
+    "reviewed": true,
+    "reviewer": "metodist_ru"
+  },
+  "result_critical_count": {
+    "text": "Критические ошибки:",
+    "reviewed": true,
+    "reviewer": "metodist_ru"
+  },
+  "result_duration": {
+    "text": "Общее время:",
+    "reviewed": true,
+    "reviewer": "metodist_ru"
+  },
+  "result_hash_label": {
+    "text": "SHA-256 Хеш:",
+    "reviewed": true,
+    "reviewer": "metodist_ru"
+  },
+  "violations_list_title": {
+    "text": "ЗАФИКСИРОВАННЫЕ НАРУШЕНИЯ",
+    "reviewed": true,
+    "reviewer": "metodist_ru"
+  },
+  "violations_list_subtitle": {
+    "text": "Всего: {0} событий",
+    "reviewed": true,
+    "reviewer": "metodist_ru"
+  },
+  "violations_confirmed_header": {
+    "text": "ПОДТВЕРЖДЕННЫЕ ШТРАФЫ (ВЫЧТЕНЫ ИЗ БАЛЛОВ):",
+    "reviewed": true,
+    "reviewer": "metodist_ru"
+  },
+  "violations_suspect_header": {
+    "text": "ПОДОЗРИТЕЛЬНЫЕ СОБЫТИЯ (ШТРАФ НЕ СНЯТ, ДЛЯ ИНСПЕКТОРА):",
+    "reviewed": true,
+    "reviewer": "metodist_ru"
+  },
+  "violations_empty_title": {
+    "text": "Нарушений не зафиксировано!",
+    "reviewed": true,
+    "reviewer": "metodist_ru"
+  },
+  "violations_empty_desc": {
+    "text": "Все требования выполнены безупречно.",
+    "reviewed": true,
+    "reviewer": "metodist_ru"
+  },
+  "evidence_title": {
+    "text": "ПРОСМОТР ДОКАЗАТЕЛЬСТВ",
+    "reviewed": true,
+    "reviewer": "metodist_ru"
+  },
+  "evidence_subtitle": {
+    "text": "ID события: {0}",
+    "reviewed": true,
+    "reviewer": "metodist_ru"
+  },
+  "evidence_tab_before": {
+    "text": "До",
+    "reviewed": true,
+    "reviewer": "metodist_ru"
+  },
+  "evidence_tab_event": {
+    "text": "Событие",
+    "reviewed": true,
+    "reviewer": "metodist_ru"
+  },
+  "evidence_tab_after": {
+    "text": "После",
+    "reviewed": true,
+    "reviewer": "metodist_ru"
+  },
+  "evidence_tab_video": {
+    "text": "Видео",
+    "reviewed": true,
+    "reviewer": "metodist_ru"
+  },
+  "evidence_meta_title": {
+    "text": "МЕТАДАННЫЕ СОБЫТИЯ",
+    "reviewed": true,
+    "reviewer": "metodist_ru"
+  },
+  "evidence_not_found": {
+    "text": "Файл доказательства не найден на диске.",
+    "reviewed": true,
+    "reviewer": "metodist_ru"
+  },
+  "evidence_ring_desc": {
+    "text": "Файл надежно сохранен на диске (кольцевой буфер NVMe)",
+    "reviewed": true,
+    "reviewer": "metodist_ru"
+  },
+  "settings_title": {
+    "text": "СИСТЕМНЫЕ НАСТРОЙКИ",
+    "reviewed": true,
+    "reviewer": "metodist_ru"
+  },
+  "settings_subtitle_unlocked": {
+    "text": "Режим администратора активен",
+    "reviewed": true,
+    "reviewer": "metodist_ru"
+  },
+  "settings_subtitle_locked": {
+    "text": "Защищено PIN-кодом",
+    "reviewed": true,
+    "reviewer": "metodist_ru"
+  },
+  "settings_pin_prompt": {
+    "text": "ВВЕДИТЕ PIN-КОД АДМИНИСТРАТОРА",
+    "reviewed": true,
+    "reviewer": "metodist_ru"
+  },
+  "settings_pin_error": {
+    "text": "Неверный PIN-код!",
+    "reviewed": true,
+    "reviewer": "metodist_ru"
+  },
+  "settings_lockout_msg": {
+    "text": "ЗАБЛОКИРОВАНО ({0} сек)",
+    "reviewed": true,
+    "reviewer": "metodist_ru"
+  },
+  "settings_device_info": {
+    "text": "ПАРАМЕТРЫ ОБОРУДОВАНИЯ И СИСТЕМЫ",
+    "reviewed": true,
+    "reviewer": "metodist_ru"
+  },
+  "settings_logs_title": {
+    "text": "СИСТЕМНЫЙ ЖУРНАЛ АУДИТА (system_logs)",
+    "reviewed": true,
+    "reviewer": "metodist_ru"
+  },
+  "disconnect_overlay_title": {
+    "text": "ВОССТАНОВЛЕНИЕ СВЯЗИ...",
+    "reviewed": true,
+    "reviewer": "metodist_ru"
+  },
+  "disconnect_overlay_desc": {
+    "text": "Связь со службой backend потеряна. Ожидание переподключения. Счет и данные теста сохраняются.",
+    "reviewed": true,
+    "reviewer": "metodist_ru"
+  },
+  "activation_title": {
+    "text": "АКТИВАЦИЯ ПРОДУКТА",
+    "reviewed": true,
+    "reviewer": "metodist_ru"
+  },
+  "activation_prompt": {
+    "text": "Введите лицензионный ключ для использования системы.",
+    "reviewed": true,
+    "reviewer": "metodist_ru"
+  },
+  "activation_machine_id": {
+    "text": "ID данного компьютера (Machine ID):",
+    "reviewed": true,
+    "reviewer": "metodist_ru"
+  },
+  "activation_key_label": {
+    "text": "Лицензионный ключ:",
+    "reviewed": true,
+    "reviewer": "metodist_ru"
+  },
+  "activation_btn_paste": {
+    "text": "Вставить из буфера",
+    "reviewed": true,
+    "reviewer": "metodist_ru"
+  },
+  "activation_btn_activate": {
+    "text": "АКТИВИРОВАТЬ",
+    "reviewed": true,
+    "reviewer": "metodist_ru"
+  },
+  "activation_success": {
+    "text": "Лицензия успешно подтверждена!",
+    "reviewed": true,
+    "reviewer": "metodist_ru"
+  },
+  "activation_error_invalid": {
+    "text": "Лицензионный ключ недействителен или поврежден!",
+    "reviewed": true,
+    "reviewer": "metodist_ru"
+  },
+  "activation_error_expired": {
+    "text": "Срок действия лицензии истек!",
+    "reviewed": true,
+    "reviewer": "metodist_ru"
+  },
+  "activation_error_machine": {
+    "text": "Лицензия привязана к другому компьютеру!",
+    "reviewed": true,
+    "reviewer": "metodist_ru"
+  },
+  "activation_error_clock": {
+    "text": "Обнаружен перевод системных часов назад!",
+    "reviewed": true,
+    "reviewer": "metodist_ru"
+  },
+  "eula_title": {
+    "text": "ПОЛЬЗОВАТЕЛЬСКОЕ СОГЛАШЕНИЕ И КОНФИДЕНЦИАЛЬНОСТЬ (EULA)",
+    "reviewed": true,
+    "reviewer": "metodist_ru"
+  },
+  "eula_agree_btn": {
+    "text": "ПРИНИМАЮ УСЛОВИЯ",
+    "reviewed": true,
+    "reviewer": "metodist_ru"
+  },
   "penalty_points_plural": {
     "one": "{n} балл",
     "few": "{n} балла",
@@ -150,6 +590,881 @@
     "few": "{n} в очереди",
     "many": "{n} в очереди",
     "other": "{n} в очереди",
+    "reviewed": true,
+    "reviewer": "metodist_ru"
+  },
+  "common.ok": {
+    "text": "ОК",
+    "reviewed": true,
+    "reviewer": "metodist_ru"
+  },
+  "common.cancel": {
+    "text": "Отмена",
+    "reviewed": true,
+    "reviewer": "metodist_ru"
+  },
+  "common.back": {
+    "text": "Назад",
+    "reviewed": true,
+    "reviewer": "metodist_ru"
+  },
+  "common.next": {
+    "text": "Далее",
+    "reviewed": true,
+    "reviewer": "metodist_ru"
+  },
+  "common.save": {
+    "text": "Сохранить",
+    "reviewed": true,
+    "reviewer": "metodist_ru"
+  },
+  "common.close": {
+    "text": "Закрыть",
+    "reviewed": true,
+    "reviewer": "metodist_ru"
+  },
+  "common.retry": {
+    "text": "Повторить",
+    "reviewed": true,
+    "reviewer": "metodist_ru"
+  },
+  "common.refresh": {
+    "text": "Обновить",
+    "reviewed": true,
+    "reviewer": "metodist_ru"
+  },
+  "common.export": {
+    "text": "Экспорт",
+    "reviewed": true,
+    "reviewer": "metodist_ru"
+  },
+  "common.search": {
+    "text": "Поиск...",
+    "reviewed": true,
+    "reviewer": "metodist_ru"
+  },
+  "common.filter": {
+    "text": "Фильтр",
+    "reviewed": true,
+    "reviewer": "metodist_ru"
+  },
+  "common.status": {
+    "text": "Статус",
+    "reviewed": true,
+    "reviewer": "metodist_ru"
+  },
+  "common.loading": {
+    "text": "Загрузка...",
+    "reviewed": true,
+    "reviewer": "metodist_ru"
+  },
+  "common.details": {
+    "text": "Подробнее",
+    "reviewed": true,
+    "reviewer": "metodist_ru"
+  },
+  "common.confirm": {
+    "text": "Подтвердить",
+    "reviewed": true,
+    "reviewer": "metodist_ru"
+  },
+  "common.all": {
+    "text": "Все",
+    "reviewed": true,
+    "reviewer": "metodist_ru"
+  },
+  "nav.home": {
+    "text": "Главная",
+    "reviewed": true,
+    "reviewer": "metodist_ru"
+  },
+  "nav.student_mode": {
+    "text": "Кандидат / Экзамен",
+    "reviewed": true,
+    "reviewer": "metodist_ru"
+  },
+  "nav.inspector_mode": {
+    "text": "Инспектор / Результаты",
+    "reviewed": true,
+    "reviewer": "metodist_ru"
+  },
+  "nav.admin_mode": {
+    "text": "Администратор / Диагностика",
+    "reviewed": true,
+    "reviewer": "metodist_ru"
+  },
+  "nav.settings": {
+    "text": "Настройки",
+    "reviewed": true,
+    "reviewer": "metodist_ru"
+  },
+  "nav.diagnostics": {
+    "text": "Аппаратная диагностика",
+    "reviewed": true,
+    "reviewer": "metodist_ru"
+  },
+  "nav.wizard": {
+    "text": "Мастер первоначальной настройки",
+    "reviewed": true,
+    "reviewer": "metodist_ru"
+  },
+  "exam.start": {
+    "text": "Начать экзамен",
+    "reviewed": true,
+    "reviewer": "metodist_ru"
+  },
+  "exam.pause": {
+    "text": "Приостановить",
+    "reviewed": true,
+    "reviewer": "metodist_ru"
+  },
+  "exam.finish": {
+    "text": "Завершить экзамен",
+    "reviewed": true,
+    "reviewer": "metodist_ru"
+  },
+  "exam.result": {
+    "text": "Итоговый результат",
+    "reviewed": true,
+    "reviewer": "metodist_ru"
+  },
+  "exam.active": {
+    "text": "Экзамен в процессе",
+    "reviewed": true,
+    "reviewer": "metodist_ru"
+  },
+  "exam.new_exam": {
+    "text": "НОВЫЙ ЭКЗАМЕН",
+    "reviewed": true,
+    "reviewer": "metodist_ru"
+  },
+  "exam.ready_title": {
+    "text": "ЭКЗАМЕН ГОТОВ",
+    "reviewed": true,
+    "reviewer": "metodist_ru"
+  },
+  "exam.ready_desc": {
+    "text": "Все системы исправны. Автомобиль готов на линии старта.",
+    "reviewed": true,
+    "reviewer": "metodist_ru"
+  },
+  "exam.seatbelt_prompt": {
+    "text": "Пристегните ремень безопасности.",
+    "reviewed": true,
+    "reviewer": "metodist_ru"
+  },
+  "exam.ignition_prompt": {
+    "text": "Заведите двигатель и начните движение.",
+    "reviewed": true,
+    "reviewer": "metodist_ru"
+  },
+  "exam.vehicle_stopped_prompt": {
+    "text": "Автомобиль остановлен. Вы можете завершить экзамен.",
+    "reviewed": true,
+    "reviewer": "metodist_ru"
+  },
+  "exam.moving_prompt": {
+    "text": "Упражнение выполняется. Следите за разметкой.",
+    "reviewed": true,
+    "reviewer": "metodist_ru"
+  },
+  "exam.timer": {
+    "text": "Время:",
+    "reviewed": true,
+    "reviewer": "metodist_ru"
+  },
+  "exam.score": {
+    "text": "Текущий балл:",
+    "reviewed": true,
+    "reviewer": "metodist_ru"
+  },
+  "exam.speed": {
+    "text": "Скорость:",
+    "reviewed": true,
+    "reviewer": "metodist_ru"
+  },
+  "exam.exercise": {
+    "text": "Текущее упражнение:",
+    "reviewed": true,
+    "reviewer": "metodist_ru"
+  },
+  "exam.progress": {
+    "text": "Последовательность упражнений",
+    "reviewed": true,
+    "reviewer": "metodist_ru"
+  },
+  "exam.passed_badge": {
+    "text": "УСПЕШНО СДАЛ",
+    "reviewed": true,
+    "reviewer": "metodist_ru"
+  },
+  "exam.failed_badge": {
+    "text": "НЕ СДАЛ",
+    "reviewed": true,
+    "reviewer": "metodist_ru"
+  },
+  "camera.front": {
+    "text": "Передняя камера (FRONT)",
+    "reviewed": true,
+    "reviewer": "metodist_ru"
+  },
+  "camera.rear": {
+    "text": "Задняя камера (REAR)",
+    "reviewed": true,
+    "reviewer": "metodist_ru"
+  },
+  "camera.left": {
+    "text": "Левая камера (LEFT)",
+    "reviewed": true,
+    "reviewer": "metodist_ru"
+  },
+  "camera.right": {
+    "text": "Правая камера (RIGHT)",
+    "reviewed": true,
+    "reviewer": "metodist_ru"
+  },
+  "camera.connected": {
+    "text": "Подключено",
+    "reviewed": true,
+    "reviewer": "metodist_ru"
+  },
+  "camera.disconnected": {
+    "text": "Не подключено",
+    "reviewed": true,
+    "reviewer": "metodist_ru"
+  },
+  "camera.fps": {
+    "text": "Частота кадров (FPS)",
+    "reviewed": true,
+    "reviewer": "metodist_ru"
+  },
+  "camera.latency": {
+    "text": "Задержка (мс)",
+    "reviewed": true,
+    "reviewer": "metodist_ru"
+  },
+  "camera.quality": {
+    "text": "Качество детекции",
+    "reviewed": true,
+    "reviewer": "metodist_ru"
+  },
+  "camera.calibration": {
+    "text": "Качество калибровки",
+    "reviewed": true,
+    "reviewer": "metodist_ru"
+  },
+  "camera.preview": {
+    "text": "Предпросмотр камеры",
+    "reviewed": true,
+    "reviewer": "metodist_ru"
+  },
+  "camera.setup_title": {
+    "text": "Настройка и калибровка камер",
+    "reviewed": true,
+    "reviewer": "metodist_ru"
+  },
+  "system.ready": {
+    "text": "СИСТЕМА ГОТОВА",
+    "reviewed": true,
+    "reviewer": "metodist_ru"
+  },
+  "system.warning": {
+    "text": "ПРЕДУПРЕЖДЕНИЕ",
+    "reviewed": true,
+    "reviewer": "metodist_ru"
+  },
+  "system.error": {
+    "text": "НЕИСПРАВНОСТЬ",
+    "reviewed": true,
+    "reviewer": "metodist_ru"
+  },
+  "system.checking": {
+    "text": "Выполняется диагностика...",
+    "reviewed": true,
+    "reviewer": "metodist_ru"
+  },
+  "system.blocked": {
+    "text": "СТАРТ ТЕСТА ЗАБЛОКИРОВАН",
+    "reviewed": true,
+    "reviewer": "metodist_ru"
+  },
+  "system.offline": {
+    "text": "100% Автономный Офлайн Режим",
+    "reviewed": true,
+    "reviewer": "metodist_ru"
+  },
+  "system.standalone": {
+    "text": "Автономная Система",
+    "reviewed": true,
+    "reviewer": "metodist_ru"
+  },
+  "system.storage": {
+    "text": "SSD Накопитель",
+    "reviewed": true,
+    "reviewer": "metodist_ru"
+  },
+  "system.database": {
+    "text": "База данных SQLite WAL",
+    "reviewed": true,
+    "reviewer": "metodist_ru"
+  },
+  "system.audio": {
+    "text": "Голосовые оповещения",
+    "reviewed": true,
+    "reviewer": "metodist_ru"
+  },
+  "system.cpu": {
+    "text": "Процессор (CPU)",
+    "reviewed": true,
+    "reviewer": "metodist_ru"
+  },
+  "system.ram": {
+    "text": "Оперативная память (RAM)",
+    "reviewed": true,
+    "reviewer": "metodist_ru"
+  },
+  "system.disk": {
+    "text": "Свободно на диске",
+    "reviewed": true,
+    "reviewer": "metodist_ru"
+  },
+  "system.temperature": {
+    "text": "Температура",
+    "reviewed": true,
+    "reviewer": "metodist_ru"
+  },
+  "system.precheck_title": {
+    "text": "ПРЕДРЕЙСОВАЯ ПРОВЕРКА ОБОРУДОВАНИЯ",
+    "reviewed": true,
+    "reviewer": "metodist_ru"
+  },
+  "system.all_pass": {
+    "text": "Все 12 обязательных компонентов готовы к работе.",
+    "reviewed": true,
+    "reviewer": "metodist_ru"
+  },
+  "system.comp_failed": {
+    "text": "Старт теста заблокирован из-за неисправности обязательного компонента!",
+    "reviewed": true,
+    "reviewer": "metodist_ru"
+  },
+  "violation.title": {
+    "text": "ФИКСАЦИЯ НАРУШЕНИЯ",
+    "reviewed": true,
+    "reviewer": "metodist_ru"
+  },
+  "violation.critical_title": {
+    "text": "КРИТИЧЕСКОЕ НАРУШЕНИЕ!",
+    "reviewed": true,
+    "reviewer": "metodist_ru"
+  },
+  "violation.suspect_title": {
+    "text": "ОТПРАВЛЕНО НА ПРОВЕРКУ (ПОДОЗРИТЕЛЬНО)",
+    "reviewed": true,
+    "reviewer": "metodist_ru"
+  },
+  "violation.suspect_desc": {
+    "text": "Точность детекции недостаточна. Автоматический штраф не начислен. Рассматривается инспектором.",
+    "reviewed": true,
+    "reviewer": "metodist_ru"
+  },
+  "violation.critical_halt_msg": {
+    "text": "Немедленно остановите автомобиль. Нарушение и доказательства зафиксированы.",
+    "reviewed": true,
+    "reviewer": "metodist_ru"
+  },
+  "violation.penalty_label": {
+    "text": "Штрафные баллы:",
+    "reviewed": true,
+    "reviewer": "metodist_ru"
+  },
+  "violation.confidence_label": {
+    "text": "Уровень уверенности:",
+    "reviewed": true,
+    "reviewer": "metodist_ru"
+  },
+  "violation.recorded_label": {
+    "text": "Доказательство сохранено",
+    "reviewed": true,
+    "reviewer": "metodist_ru"
+  },
+  "violation.stop_line": {
+    "text": "Нарушение стоп-линии",
+    "reviewed": true,
+    "reviewer": "metodist_ru"
+  },
+  "violation.cone": {
+    "text": "Касание конуса",
+    "reviewed": true,
+    "reviewer": "metodist_ru"
+  },
+  "violation.speed": {
+    "text": "Превышение скорости",
+    "reviewed": true,
+    "reviewer": "metodist_ru"
+  },
+  "violation.seatbelt": {
+    "text": "Не пристегнут ремень безопасности",
+    "reviewed": true,
+    "reviewer": "metodist_ru"
+  },
+  "violation.handbrake": {
+    "text": "Не отпущен стояночный тормоз",
+    "reviewed": true,
+    "reviewer": "metodist_ru"
+  },
+  "violation.start_signal": {
+    "text": "Не включен сигнал поворота при старте",
+    "reviewed": true,
+    "reviewer": "metodist_ru"
+  },
+  "violation.rollback": {
+    "text": "Откат на эстакаде превысил 20 см",
+    "reviewed": true,
+    "reviewer": "metodist_ru"
+  },
+  "violation.parking_line": {
+    "text": "Наезд на линию парковки",
+    "reviewed": true,
+    "reviewer": "metodist_ru"
+  },
+  "inspector.title": {
+    "text": "РЕЖИМ ИНСПЕКТОРА",
+    "reviewed": true,
+    "reviewer": "metodist_ru"
+  },
+  "inspector.subtitle": {
+    "text": "Экзаменационные сессии, доказательства и официальные отчеты",
+    "reviewed": true,
+    "reviewer": "metodist_ru"
+  },
+  "inspector.sessions_title": {
+    "text": "Список проведенных экзаменов",
+    "reviewed": true,
+    "reviewer": "metodist_ru"
+  },
+  "inspector.filter_all": {
+    "text": "Все",
+    "reviewed": true,
+    "reviewer": "metodist_ru"
+  },
+  "inspector.filter_pass": {
+    "text": "Сдано",
+    "reviewed": true,
+    "reviewer": "metodist_ru"
+  },
+  "inspector.filter_fail": {
+    "text": "Не сдано",
+    "reviewed": true,
+    "reviewer": "metodist_ru"
+  },
+  "inspector.filter_suspect": {
+    "text": "Подозрительные (Suspect)",
+    "reviewed": true,
+    "reviewer": "metodist_ru"
+  },
+  "inspector.col_session": {
+    "text": "ID Сессии",
+    "reviewed": true,
+    "reviewer": "metodist_ru"
+  },
+  "inspector.col_candidate": {
+    "text": "Паспорт кандидата",
+    "reviewed": true,
+    "reviewer": "metodist_ru"
+  },
+  "inspector.col_date": {
+    "text": "Дата и время",
+    "reviewed": true,
+    "reviewer": "metodist_ru"
+  },
+  "inspector.col_score": {
+    "text": "Баллы",
+    "reviewed": true,
+    "reviewer": "metodist_ru"
+  },
+  "inspector.col_status": {
+    "text": "Вердикт",
+    "reviewed": true,
+    "reviewer": "metodist_ru"
+  },
+  "inspector.col_actions": {
+    "text": "Действия",
+    "reviewed": true,
+    "reviewer": "metodist_ru"
+  },
+  "inspector.btn_view_violations": {
+    "text": "Нарушения",
+    "reviewed": true,
+    "reviewer": "metodist_ru"
+  },
+  "inspector.btn_view_evidence": {
+    "text": "Видеозапись",
+    "reviewed": true,
+    "reviewer": "metodist_ru"
+  },
+  "inspector.btn_view_replay": {
+    "text": "Просмотр Replay",
+    "reviewed": true,
+    "reviewer": "metodist_ru"
+  },
+  "inspector.btn_pdf_report": {
+    "text": "PDF Протокол",
+    "reviewed": true,
+    "reviewer": "metodist_ru"
+  },
+  "inspector.btn_csv_export": {
+    "text": "CSV Экспорт",
+    "reviewed": true,
+    "reviewer": "metodist_ru"
+  },
+  "inspector.btn_verify_hash": {
+    "text": "Проверка хеша",
+    "reviewed": true,
+    "reviewer": "metodist_ru"
+  },
+  "inspector.hash_verified": {
+    "text": "Цепочка SHA-256 и подпись Ed25519 подтверждены (100% подлинно)",
+    "reviewed": true,
+    "reviewer": "metodist_ru"
+  },
+  "inspector.hash_tampered": {
+    "text": "Внимание: Целостность цепочки хешей нарушена или изменена!",
+    "reviewed": true,
+    "reviewer": "metodist_ru"
+  },
+  "inspector.suspect_review": {
+    "text": "Экспертиза спорных нарушений",
+    "reviewed": true,
+    "reviewer": "metodist_ru"
+  },
+  "inspector.audit_log": {
+    "text": "Журнал аудита безопасности",
+    "reviewed": true,
+    "reviewer": "metodist_ru"
+  },
+  "admin.title": {
+    "text": "РЕЖИМ АДМИНИСТРАТОРА И ДИАГНОСТИКИ",
+    "reviewed": true,
+    "reviewer": "metodist_ru"
+  },
+  "admin.pin_title": {
+    "text": "ВВЕДИТЕ PIN-КОД АДМИНИСТРАТОРА",
+    "reviewed": true,
+    "reviewer": "metodist_ru"
+  },
+  "admin.tab_diagnostics": {
+    "text": "Диагностика",
+    "reviewed": true,
+    "reviewer": "metodist_ru"
+  },
+  "admin.tab_cameras": {
+    "text": "Камеры",
+    "reviewed": true,
+    "reviewer": "metodist_ru"
+  },
+  "admin.tab_polygon": {
+    "text": "Автодром",
+    "reviewed": true,
+    "reviewer": "metodist_ru"
+  },
+  "admin.tab_rules": {
+    "text": "Правила",
+    "reviewed": true,
+    "reviewer": "metodist_ru"
+  },
+  "admin.tab_license": {
+    "text": "Лицензия",
+    "reviewed": true,
+    "reviewer": "metodist_ru"
+  },
+  "admin.tab_logs": {
+    "text": "Журналы",
+    "reviewed": true,
+    "reviewer": "metodist_ru"
+  },
+  "admin.tab_wizard": {
+    "text": "Мастер настройки",
+    "reviewed": true,
+    "reviewer": "metodist_ru"
+  },
+  "admin.btn_lock": {
+    "text": "ЗАБЛОКИРОВАТЬ",
+    "reviewed": true,
+    "reviewer": "metodist_ru"
+  },
+  "admin.btn_export_usb": {
+    "text": "ЭКСПОРТ НА USB",
+    "reviewed": true,
+    "reviewer": "metodist_ru"
+  },
+  "admin.btn_calibrate": {
+    "text": "Перекалибровка",
+    "reviewed": true,
+    "reviewer": "metodist_ru"
+  },
+  "admin.btn_save": {
+    "text": "Сохранить",
+    "reviewed": true,
+    "reviewer": "metodist_ru"
+  },
+  "admin.btn_exit": {
+    "text": "Выход",
+    "reviewed": true,
+    "reviewer": "metodist_ru"
+  },
+  "maintenance.metrics_title": {
+    "text": "Параметры системы реального времени",
+    "reviewed": true,
+    "reviewer": "metodist_ru"
+  },
+  "maintenance.can_bus_status": {
+    "text": "Связь CAN шины OBD-II",
+    "reviewed": true,
+    "reviewer": "metodist_ru"
+  },
+  "maintenance.gnss_fix_status": {
+    "text": "Сигнал GPS/GNSS и спутники",
+    "reviewed": true,
+    "reviewer": "metodist_ru"
+  },
+  "maintenance.imu_status": {
+    "text": "Гироскоп и акселерометр IMU",
+    "reviewed": true,
+    "reviewer": "metodist_ru"
+  },
+  "maintenance.ai_fps_latency": {
+    "text": "AI инференс FPS и задержка",
+    "reviewed": true,
+    "reviewer": "metodist_ru"
+  },
+  "maintenance.storage_status": {
+    "text": "NVMe накопитель и БД WAL",
+    "reviewed": true,
+    "reviewer": "metodist_ru"
+  },
+  "wizard.title": {
+    "text": "МАСТЕР НАЧАЛЬНОЙ НАСТРОЙКИ",
+    "reviewed": true,
+    "reviewer": "metodist_ru"
+  },
+  "wizard.step_1": {
+    "text": "1. Язык и EULA",
+    "reviewed": true,
+    "reviewer": "metodist_ru"
+  },
+  "wizard.step_2": {
+    "text": "2. Оборудование",
+    "reviewed": true,
+    "reviewer": "metodist_ru"
+  },
+  "wizard.step_3": {
+    "text": "3. Камеры",
+    "reviewed": true,
+    "reviewer": "metodist_ru"
+  },
+  "wizard.step_4": {
+    "text": "4. Калибровка",
+    "reviewed": true,
+    "reviewer": "metodist_ru"
+  },
+  "wizard.step_5": {
+    "text": "5. Автодром",
+    "reviewed": true,
+    "reviewer": "metodist_ru"
+  },
+  "wizard.step_6": {
+    "text": "6. Аудио и TTS",
+    "reviewed": true,
+    "reviewer": "metodist_ru"
+  },
+  "wizard.step_7": {
+    "text": "7. Финальная проверка",
+    "reviewed": true,
+    "reviewer": "metodist_ru"
+  },
+  "errors.technical_issue": {
+    "text": "Произошла техническая ошибка. Продолжение экзамена невозможно.",
+    "reviewed": true,
+    "reviewer": "metodist_ru"
+  },
+  "errors.contact_operator": {
+    "text": "Обратитесь к оператору автодрома.",
+    "reviewed": true,
+    "reviewer": "metodist_ru"
+  },
+  "errors.error_id_prefix": {
+    "text": "Код ошибки: {0}",
+    "reviewed": true,
+    "reviewer": "metodist_ru"
+  },
+  "errors.camera_lost": {
+    "text": "Потеряна связь с камерой ({0})",
+    "reviewed": true,
+    "reviewer": "metodist_ru"
+  },
+  "errors.sensor_lost": {
+    "text": "Потерян сигнал датчика ({0})",
+    "reviewed": true,
+    "reviewer": "metodist_ru"
+  },
+  "empty.no_violations": {
+    "text": "В этой сессии нарушений не зафиксировано.",
+    "reviewed": true,
+    "reviewer": "metodist_ru"
+  },
+  "empty.no_evidence": {
+    "text": "Доказательства отсутствуют.",
+    "reviewed": true,
+    "reviewer": "metodist_ru"
+  },
+  "empty.no_sessions": {
+    "text": "Экзаменационные сессии пока отсутствуют.",
+    "reviewed": true,
+    "reviewer": "metodist_ru"
+  },
+  "admin.hardware_title": {
+    "text": "Телеметрия аппаратных средств и датчиков",
+    "reviewed": true,
+    "reviewer": "metodist_ru"
+  },
+  "admin.camera_grid_title": {
+    "text": "Прямой эфир с 4 камер и анализ кадров",
+    "reviewed": true,
+    "reviewer": "metodist_ru"
+  },
+  "admin.bev_title": {
+    "text": "BEV (Вид сверху) проекция и качество калибровки",
+    "reviewed": true,
+    "reviewer": "metodist_ru"
+  },
+  "admin.polygon_title": {
+    "text": "Конфигурация автодрома и зоны 8 упражнений",
+    "reviewed": true,
+    "reviewer": "metodist_ru"
+  },
+  "admin.rules_title": {
+    "text": "Паспорт правил экзамена (rules.yaml)",
+    "reviewed": true,
+    "reviewer": "metodist_ru"
+  },
+  "admin.license_title": {
+    "text": "Лицензия, аппаратная подпись и безопасность",
+    "reviewed": true,
+    "reviewer": "metodist_ru"
+  },
+  "admin.logs_title": {
+    "text": "Системный журнал аудита и история событий",
+    "reviewed": true,
+    "reviewer": "metodist_ru"
+  },
+  "admin.wizard_title": {
+    "text": "Мастер начальной настройки оборудования",
+    "reviewed": true,
+    "reviewer": "metodist_ru"
+  },
+  "admin.btn_refresh_diag": {
+    "text": "Обновить диагностику",
+    "reviewed": true,
+    "reviewer": "metodist_ru"
+  },
+  "admin.btn_run_wizard": {
+    "text": "Запустить мастер настройки",
+    "reviewed": true,
+    "reviewer": "metodist_ru"
+  },
+  "admin.btn_auto_calibrate": {
+    "text": "Автоматическая перекалибровка",
+    "reviewed": true,
+    "reviewer": "metodist_ru"
+  },
+  "admin.filter_all": {
+    "text": "Все",
+    "reviewed": true,
+    "reviewer": "metodist_ru"
+  },
+  "admin.filter_errors": {
+    "text": "Ошибки",
+    "reviewed": true,
+    "reviewer": "metodist_ru"
+  },
+  "admin.filter_audit": {
+    "text": "Аудит",
+    "reviewed": true,
+    "reviewer": "metodist_ru"
+  },
+  "admin.calib_ok": {
+    "text": "Калибровка в норме",
+    "reviewed": true,
+    "reviewer": "metodist_ru"
+  },
+  "admin.calib_drift": {
+    "text": "Смещение (Drift)",
+    "reviewed": true,
+    "reviewer": "metodist_ru"
+  },
+  "admin.active": {
+    "text": "Активно",
+    "reviewed": true,
+    "reviewer": "metodist_ru"
+  },
+  "admin.maintenance": {
+    "text": "На ремонте",
+    "reviewed": true,
+    "reviewer": "metodist_ru"
+  },
+  "wizard.step1": {
+    "text": "1. Язык и EULA",
+    "reviewed": true,
+    "reviewer": "metodist_ru"
+  },
+  "wizard.step2": {
+    "text": "2. Оборудование и USB",
+    "reviewed": true,
+    "reviewer": "metodist_ru"
+  },
+  "wizard.step3": {
+    "text": "3. Потоки 4 камер",
+    "reviewed": true,
+    "reviewer": "metodist_ru"
+  },
+  "wizard.step4": {
+    "text": "4. Калибровка и BEV",
+    "reviewed": true,
+    "reviewer": "metodist_ru"
+  },
+  "wizard.step5": {
+    "text": "5. Зоны полигона",
+    "reviewed": true,
+    "reviewer": "metodist_ru"
+  },
+  "wizard.step6": {
+    "text": "6. Тест аудиодинамиков",
+    "reviewed": true,
+    "reviewer": "metodist_ru"
+  },
+  "wizard.step7": {
+    "text": "7. Лицензия и Завершение",
+    "reviewed": true,
+    "reviewer": "metodist_ru"
+  },
+  "wizard.eula_agree": {
+    "text": "Полностью согласен с пользовательским соглашением",
+    "reviewed": true,
+    "reviewer": "metodist_ru"
+  },
+  "wizard.btn_rescan": {
+    "text": "Повторное сканирование",
+    "reviewed": true,
+    "reviewer": "metodist_ru"
+  },
+  "wizard.btn_test_audio": {
+    "text": "Проверить звук",
+    "reviewed": true,
+    "reviewer": "metodist_ru"
+  },
+  "wizard.btn_complete": {
+    "text": "Завершить настройку",
     "reviewed": true,
     "reviewer": "metodist_ru"
   }

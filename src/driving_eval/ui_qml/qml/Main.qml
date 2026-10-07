@@ -67,8 +67,26 @@ Window {
                 backendBridge.startPrecheck()
                 stackView.push(precheckScreenComponent)
             }
+            onInspectorClicked: {
+                stackView.push(inspectorScreenComponent)
+            }
             onSettingsClicked: {
                 stackView.push(settingsScreenComponent)
+            }
+        }
+    }
+
+    Component {
+        id: inspectorScreenComponent
+        InspectorScreen {
+            onViewViolationsClicked: function(sessionId) {
+                stackView.push(violationsListScreenComponent)
+            }
+            onViewEvidenceClicked: function(eventId) {
+                stackView.push(evidenceScreenComponent, { eventId: eventId })
+            }
+            onBackClicked: {
+                stackView.pop()
             }
         }
     }
@@ -147,6 +165,9 @@ Window {
         SettingsScreen {
             onBackClicked: {
                 stackView.pop()
+            }
+            onOpenWizardRequested: {
+                stackView.push(setupWizardScreenComponent)
             }
         }
     }

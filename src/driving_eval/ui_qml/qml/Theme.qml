@@ -53,9 +53,54 @@ QtObject {
     readonly property int radiusMedium: 12
     readonly property int radiusLarge: 20
 
-    // --- Animation Timings (<= 250ms, no distracting motion during test) ---
-    readonly property int animDurationFast: 150
-    readonly property int animDurationStandard: 250
-    readonly property int popupDurationMs: 3500
-    readonly property int debounceDelayMs: 350
+    // --- Semantic Color Tokens ---
+    readonly property color background: backgroundDark
+    readonly property color surface: surfaceDark
+    readonly property color border: surfaceBorder
+    readonly property color divider: "#1E293B"
+
+    readonly property color primary: colorAccent
+    readonly property color secondary: "#475569"
+    readonly property color success: colorSuccess
+    readonly property color warning: colorWarning
+    readonly property color danger: colorError
+    readonly property color critical: colorCritical
+    readonly property color info: "#0284C7"
+
+    // --- Typography Hierarchy ---
+    readonly property int fontH1: fontTitleLarge
+    readonly property int fontH2: fontTitle
+    readonly property int fontH3: fontHeadline
+    readonly property int fontBodySmall: 18
+    readonly property int fontCaption: 14
+    readonly property int fontButton: 20
+    readonly property int fontStatus: 16
+
+    // Touch Target
+    readonly property int minTouchTarget: 48
+
+    // --- Reactive Translation Helpers ---
+    function tr(key) {
+        if (typeof i18n !== "undefined" && i18n) {
+            var _l = i18n.currentLanguage
+            return i18n.t(key)
+        }
+        return key
+    }
+
+    function trf(key, arg) {
+        if (typeof i18n !== "undefined" && i18n) {
+            var _l = i18n.currentLanguage
+            return i18n.tf(key, arg)
+        }
+        return key
+    }
+
+    function trPlural(key, count) {
+        if (typeof i18n !== "undefined" && i18n) {
+            var _l = i18n.currentLanguage
+            return i18n.t_plural(key, count)
+        }
+        return count + " " + key
+    }
 }

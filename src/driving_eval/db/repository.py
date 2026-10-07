@@ -170,6 +170,21 @@ class DatabaseRepository:
             cursor = conn.execute("SELECT * FROM test_sessions WHERE status = 'IN_PROGRESS'")
             return [dict(r) for r in cursor.fetchall()]
 
+    def get_all_sessions(self, limit: int = 50) -> list[dict[str, Any]]:
+        with self.get_connection() as conn:
+            cursor = conn.execute(
+                """
+                SELECT s.*, st.passport_id, st.first_name, st.last_name, v.plate_number, v.model
+                FROM test_sessions s
+                LEFT JOIN students st ON s.student_id = st.id
+                LEFT JOIN vehicles v ON s.vehicle_id = v.id
+                ORDER BY s.created_at DESC
+                LIMIT ?
+                """,
+                (limit,),
+            )
+            return [dict(r) for r in cursor.fetchall()]
+
     def close_interrupted_session(self, session_id: str, reason: str = "POWER_LOSS_DETECTED") -> None:
         now_iso = datetime.now(UTC).isoformat()
         with self.get_connection() as conn:

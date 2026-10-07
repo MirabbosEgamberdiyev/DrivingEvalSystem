@@ -18,5 +18,7 @@ data/db/*.db-shm
 data/db/*.db-wal
 data/evidence/*
 data/logs/*
+data/config/*
+data/reports/*
 !data/evidence/.gitkeep
 !data/logs/.gitkeep

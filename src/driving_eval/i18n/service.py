@@ -44,6 +44,7 @@ class I18nService(QObject):
         default_lang: str = DEFAULT_LANGUAGE,
         catalogs_dir: Path | str | None = None,
         strict_mode: bool = False,
+        load_saved_locale: bool = False,
     ) -> None:
         super().__init__()
         normalized_lang = LANGUAGE_ALIASES.get(default_lang, default_lang)
@@ -51,6 +52,17 @@ class I18nService(QObject):
             raise ValueError(
                 f"Unsupported language: '{default_lang}'. Supported: {SUPPORTED_LANGUAGES}"
             )
+
+        self._locale_file = Path("data/config/locale.json")
+        if load_saved_locale and self._locale_file.exists():
+            try:
+                with open(self._locale_file, encoding="utf-8") as f:
+                    saved = json.load(f)
+                    saved_lang = saved.get("language")
+                    if saved_lang and saved_lang in SUPPORTED_LANGUAGES:
+                        normalized_lang = saved_lang
+            except Exception:
+                pass
 
         self._current_lang = normalized_lang
         self._strict_mode = strict_mode
@@ -74,6 +86,15 @@ class I18nService(QObject):
         """Returns the currently active BCP-47 language code in Python."""
         return self._current_lang
 
+    @Slot(result=list)
+    def get_supported_languages(self) -> list[dict[str, str]]:
+        """Returns list of supported language options for UI selectors."""
+        return [
+            {"code": "uz-Latn", "name": "O‘zbekcha", "flag": "🇺🇿"},
+            {"code": "uz-Cyrl", "name": "Ўзбекча", "flag": "🇺🇿"},
+            {"code": "ru", "name": "Русский", "flag": "🇷🇺"},
+        ]
+
     def _load_all_catalogs(self) -> None:
         """Loads all supported language catalogs into memory."""
         for lang in SUPPORTED_LANGUAGES:
@@ -89,7 +110,7 @@ class I18nService(QObject):
 
     @Slot(str, result=bool)
     def set_language(self, lang_code: str) -> bool:
-        """Switches the active language and emits languageChanged."""
+        """Switches the active language, persists to disk, and emits languageChanged."""
         target_lang = LANGUAGE_ALIASES.get(lang_code, lang_code)
         if target_lang not in SUPPORTED_LANGUAGES:
             logger.error("Attempted to set unsupported language: %s", lang_code)
@@ -99,6 +120,12 @@ class I18nService(QObject):
             self._current_lang = target_lang
             self.languageChanged.emit(target_lang)
             logger.info("Language switched to %s", target_lang)
+            try:
+                self._locale_file.parent.mkdir(parents=True, exist_ok=True)
+                with open(self._locale_file, "w", encoding="utf-8") as f:
+                    json.dump({"language": target_lang}, f)
+            except Exception as e:
+                logger.warning("Could not persist locale to %s: %s", self._locale_file, e)
         return True
 
     def _resolve_key(self, key: str, lang: str | None = None) -> Any:

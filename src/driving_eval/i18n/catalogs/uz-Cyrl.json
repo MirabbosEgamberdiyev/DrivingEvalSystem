@@ -1,134 +1,574 @@
 {
-  "app_title": { "text": "АВТОМАТЛАШТИРИЛГАН ҲАЙДАШ ИМТИҲОНИ", "reviewed": true, "reviewer": "metodist_uz" },
-  "app_subtitle": { "text": "4-Камерали Offline AI Баҳолаш Тизими", "reviewed": true, "reviewer": "metodist_uz" },
-  "car_id_label": { "text": "Автомобиль:", "reviewed": true, "reviewer": "metodist_uz" },
-  "student_label": { "text": "Ҳайдовчи:", "reviewed": true, "reviewer": "metodist_uz" },
-  "rules_ver_label": { "text": "Қоидалар версияси:", "reviewed": true, "reviewer": "metodist_uz" },
-
-  "btn_start_test": { "text": "ТЕСТНИ БОШЛАШ", "reviewed": true, "reviewer": "metodist_uz" },
-  "btn_precheck": { "text": "ТИЗИМНИ ТЕКШИРИШ (PRE-CHECK)", "reviewed": true, "reviewer": "metodist_uz" },
-  "btn_recheck": { "text": "ҚАЙТА ТЕКШИРИШ", "reviewed": true, "reviewer": "metodist_uz" },
-  "btn_proceed": { "text": "ДАВОМ ЭТИШ", "reviewed": true, "reviewer": "metodist_uz" },
-  "btn_finish_test": { "text": "ТЕСТНИ ЯКУНЛАШ", "reviewed": true, "reviewer": "metodist_uz" },
-  "btn_view_violations": { "text": "ҚОИДАБУЗАРЛИКЛАР", "reviewed": true, "reviewer": "metodist_uz" },
-  "btn_home": { "text": "АСОСИЙ ЭКРАН", "reviewed": true, "reviewer": "metodist_uz" },
-  "btn_settings": { "text": "СОЗЛАМАЛАР", "reviewed": true, "reviewer": "metodist_uz" },
-  "btn_back": { "text": "ОРҚАГА", "reviewed": true, "reviewer": "metodist_uz" },
-  "btn_view_photo": { "text": "Далил", "reviewed": true, "reviewer": "metodist_uz" },
-  "btn_view_video": { "text": "Видео", "reviewed": true, "reviewer": "metodist_uz" },
-  "btn_export_usb": { "text": "USB ГА ЭКСПОРТ", "reviewed": true, "reviewer": "metodist_uz" },
-  "btn_close": { "text": "Ёпиш", "reviewed": true, "reviewer": "metodist_uz" },
-  "btn_unlock": { "text": "OK", "reviewed": true, "reviewer": "metodist_uz" },
-  "btn_clear": { "text": "C", "reviewed": true, "reviewer": "metodist_uz" },
-  "btn_cancel": { "text": "Бекор қилиш", "reviewed": true, "reviewer": "metodist_uz" },
-  "btn_lock": { "text": "ҚУЛФЛАШ", "reviewed": true, "reviewer": "metodist_uz" },
-  "btn_export_db": { "text": "БАЗАНИ USB ГА ЭКСПОРТ", "reviewed": true, "reviewer": "metodist_uz" },
-  "btn_exit": { "text": "ЧИҚИШ", "reviewed": true, "reviewer": "metodist_uz" },
-
-  "home_title": { "text": "ҲАЙДАШ МАЛАКАСИНИ БАҲОЛАШ", "reviewed": true, "reviewer": "metodist_uz" },
-  "home_ready_msg": { "text": "Барча тизимлар соз ҳолатда. Имтиҳонни бошлашга тайёр.", "reviewed": true, "reviewer": "metodist_uz" },
-  "home_not_ready_msg": { "text": "⚠️ Тизим ишга туширилди. Аввал ускуналар текширувини (Pre-check) ўтказинг.", "reviewed": true, "reviewer": "metodist_uz" },
-
-  "precheck_title": { "text": "УСКУНАЛАР ВА ТИЗИМ PRE-CHECK", "reviewed": true, "reviewer": "metodist_uz" },
-  "precheck_in_progress": { "text": "Диагностика ўтказилмоқда...", "reviewed": true, "reviewer": "metodist_uz" },
-  "precheck_passed": { "text": "Барча 12 та мажбурий компонент муваффақиятли текширилди.", "reviewed": true, "reviewer": "metodist_uz" },
-  "precheck_blocked_title": { "text": "TEST START BLOCKED", "reviewed": true, "reviewer": "metodist_uz" },
-  "precheck_blocked_desc": { "text": "Мажбурий компонент носозлиги сабабли тест бошланиши блокланди!", "reviewed": true, "reviewer": "metodist_uz" },
-
-  "comp_cam_front": { "text": "Олд Камера (FRONT)", "reviewed": true, "reviewer": "metodist_uz" },
-  "comp_cam_rear": { "text": "Орқа Камера (REAR)", "reviewed": true, "reviewer": "metodist_uz" },
-  "comp_cam_left": { "text": "Чап Камера (LEFT)", "reviewed": true, "reviewer": "metodist_uz" },
-  "comp_cam_right": { "text": "Ўнг Камера (RIGHT)", "reviewed": true, "reviewer": "metodist_uz" },
-  "comp_cam_drift": { "text": "Камералар Калибровкаси (Drift)", "reviewed": true, "reviewer": "metodist_uz" },
-  "comp_ai_engine": { "text": "AI Inference Двигатели", "reviewed": true, "reviewer": "metodist_uz" },
-  "comp_gps": { "text": "GPS / GNSS Модули", "reviewed": true, "reviewer": "metodist_uz" },
-  "comp_imu": { "text": "IMU Акселерометр / Гироскоп", "reviewed": true, "reviewer": "metodist_uz" },
-  "comp_obd": { "text": "OBD-II Телеметрия (CAN)", "reviewed": true, "reviewer": "metodist_uz" },
-  "comp_storage": { "text": "NVMe SSD Хотира Сиғими", "reviewed": true, "reviewer": "metodist_uz" },
-  "comp_database": { "text": "SQLite WAL Маълумотлар Базаси", "reviewed": true, "reviewer": "metodist_uz" },
-  "comp_audio": { "text": "Овозли Огоҳлантириш Тизими", "reviewed": true, "reviewer": "metodist_uz" },
-
-  "status_checking": { "text": "Текширилмоқда...", "reviewed": true, "reviewer": "metodist_uz" },
-  "status_ready": { "text": "ТАЙЁР", "reviewed": true, "reviewer": "metodist_uz" },
-  "status_failed": { "text": "НОСОЗ", "reviewed": true, "reviewer": "metodist_uz" },
-
-  "system_ready_title": { "text": "ИМТИҲОННИ БОШЛАШГА ТАЙЁР", "reviewed": true, "reviewer": "metodist_uz" },
-  "system_ready_desc": { "text": "Барча тизимлар соз ҳолатда. Автомобилни старт чизиғига олиб келиб ҳаракатни бошлашингиз мумкин.", "reviewed": true, "reviewer": "metodist_uz" },
-  "system_ready_warning": { "text": "⚠️ Диққат: 'ТЕСТНИ БОШЛАШ' босилмагунча жарима ҳисобланмайди.", "reviewed": true, "reviewer": "metodist_uz" },
-
-  "hud_test_active": { "text": "ТЕСТ ЖАРАЁНДА", "reviewed": true, "reviewer": "metodist_uz" },
-  "hud_speed_unit": { "text": "км/соат", "reviewed": true, "reviewer": "metodist_uz" },
-  "hud_speed_label": { "text": "ТЕЗЛИК", "reviewed": true, "reviewer": "metodist_uz" },
-  "hud_time_label": { "text": "ВАҚТ:", "reviewed": true, "reviewer": "metodist_uz" },
-  "hud_exercise_label": { "text": "ЖОРИЙ МАШҚ", "reviewed": true, "reviewer": "metodist_uz" },
-  "hud_penalty_label": { "text": "Жарима:", "reviewed": true, "reviewer": "metodist_uz" },
-  "hud_errors_label": { "text": "Хатолар:", "reviewed": true, "reviewer": "metodist_uz" },
-  "hud_finish_prompt": { "text": "Автомобиль тўхтади. Тестни якунлашингиз мумкин.", "reviewed": true, "reviewer": "metodist_uz" },
-  "hud_moving_prompt": { "text": "Машқ бажарилмоқда. Белгиланган чизиқларга эътибор беринг.", "reviewed": true, "reviewer": "metodist_uz" },
-
-  "popup_violation_title": { "text": "ҚОИДАБУЗАРЛИК ҚАЙД ЭТИЛДИ", "reviewed": true, "reviewer": "metodist_uz" },
-  "popup_critical_title": { "text": "КРИТИК ҚОИДАБУЗАРЛИК!", "reviewed": true, "reviewer": "metodist_uz" },
-  "popup_suspect_badge": { "text": "ШУБҲАЛИ", "reviewed": true, "reviewer": "metodist_uz" },
-  "popup_queue_more": { "text": "Навбатда яна: {0} та", "reviewed": true, "reviewer": "metodist_uz" },
-
-  "result_title": { "text": "ИМТИҲОН ЯКУНИЙ НАТИЖАСИ", "reviewed": true, "reviewer": "metodist_uz" },
-  "result_pass": { "text": "МУВАФФАҚИЯТЛИ ЎТДИ (PASS)", "reviewed": true, "reviewer": "metodist_uz" },
-  "result_fail": { "text": "ЙИҚИЛДИ (FAIL)", "reviewed": true, "reviewer": "metodist_uz" },
-  "result_pass_desc": { "text": "Барча машқлар белгиланган талабларга мувофиқ бажарилди.", "reviewed": true, "reviewer": "metodist_uz" },
-  "result_fail_desc": { "text": "Тўпланган балл ўтиш чегарасидан паст.", "reviewed": true, "reviewer": "metodist_uz" },
-  "result_critical_desc": { "text": "Критик қоидабузарлик сабабли тест бекор қилинди.", "reviewed": true, "reviewer": "metodist_uz" },
-  "result_score_label": { "text": "Якуний балл:", "reviewed": true, "reviewer": "metodist_uz" },
-  "result_start_score": { "text": "Бошланғич балл:", "reviewed": true, "reviewer": "metodist_uz" },
-  "result_penalty_deducted": { "text": "Айрилган жарима:", "reviewed": true, "reviewer": "metodist_uz" },
-  "result_errors_count": { "text": "Қоидабузарликлар сони:", "reviewed": true, "reviewer": "metodist_uz" },
-  "result_critical_count": { "text": "Критик хатолар:", "reviewed": true, "reviewer": "metodist_uz" },
-  "result_duration": { "text": "Умумий вақт:", "reviewed": true, "reviewer": "metodist_uz" },
-  "result_hash_label": { "text": "SHA-256 Хеш:", "reviewed": true, "reviewer": "metodist_uz" },
-
-  "violations_list_title": { "text": "ҚАЙД ЭТИЛГАН ҚОИДАБУЗАРЛИКЛАР", "reviewed": true, "reviewer": "metodist_uz" },
-  "violations_list_subtitle": { "text": "Жами: {0} та ҳодиса", "reviewed": true, "reviewer": "metodist_uz" },
-  "violations_confirmed_header": { "text": "ТАСДИҚЛАНГАН ЖАРИМАЛАР (БАЛЛДАН АЙРИЛГАН):", "reviewed": true, "reviewer": "metodist_uz" },
-  "violations_suspect_header": { "text": "ШУБҲАЛИ (SUSPECT) ҲОДИСАЛАР (ЖАРИМА ОЛИНМАГАН, ИНСПЕКТОР КЎРИШИ УЧУН):", "reviewed": true, "reviewer": "metodist_uz" },
-  "violations_empty_title": { "text": "Ҳеч қандай қоидабузарлик қайд этилмади!", "reviewed": true, "reviewer": "metodist_uz" },
-  "violations_empty_desc": { "text": "Барча талаблар намунали даражада бажарилди.", "reviewed": true, "reviewer": "metodist_uz" },
-
-  "evidence_title": { "text": "ДАЛИЛЛАРНИ КЎРИШ", "reviewed": true, "reviewer": "metodist_uz" },
-  "evidence_subtitle": { "text": "Ҳодиса ID: {0}", "reviewed": true, "reviewer": "metodist_uz" },
-  "evidence_tab_before": { "text": "Олдин", "reviewed": true, "reviewer": "metodist_uz" },
-  "evidence_tab_event": { "text": "Ҳодиса", "reviewed": true, "reviewer": "metodist_uz" },
-  "evidence_tab_after": { "text": "Кейин", "reviewed": true, "reviewer": "metodist_uz" },
-  "evidence_tab_video": { "text": "Видео", "reviewed": true, "reviewer": "metodist_uz" },
-  "evidence_meta_title": { "text": "ҲОДИСА МЕТАМАЪЛУМОТИ", "reviewed": true, "reviewer": "metodist_uz" },
-  "evidence_not_found": { "text": "Далил файли дискда топилмади.", "reviewed": true, "reviewer": "metodist_uz" },
-  "evidence_ring_desc": { "text": "Файл дискда хавфсиз сақланган (NVMe Ring Buffer)", "reviewed": true, "reviewer": "metodist_uz" },
-
-  "settings_title": { "text": "ТИЗИМ СОЗЛАМАЛАРИ", "reviewed": true, "reviewer": "metodist_uz" },
-  "settings_subtitle_unlocked": { "text": "Администратор режими фаол", "reviewed": true, "reviewer": "metodist_uz" },
-  "settings_subtitle_locked": { "text": "PIN билан ҳимояланган", "reviewed": true, "reviewer": "metodist_uz" },
-  "settings_pin_prompt": { "text": "АДМИН PIN КОДИНИ КИРИТИНГ", "reviewed": true, "reviewer": "metodist_uz" },
-  "settings_pin_error": { "text": "PIN код нотўғри!", "reviewed": true, "reviewer": "metodist_uz" },
-  "settings_lockout_msg": { "text": "БЛОКЛАНДИ ({0} сония)", "reviewed": true, "reviewer": "metodist_uz" },
-  "settings_device_info": { "text": "УСКУНАЛАР ВА ТИЗИМ ПАРАМЕТРЛАРИ", "reviewed": true, "reviewer": "metodist_uz" },
-  "settings_logs_title": { "text": "ТИЗИМ АУДИТ ЖУРНАЛИ (system_logs)", "reviewed": true, "reviewer": "metodist_uz" },
-
-  "disconnect_overlay_title": { "text": "АЛОҚА ТИКЛАНМОҚДА...", "reviewed": true, "reviewer": "metodist_uz" },
-  "disconnect_overlay_desc": { "text": "Backend хизмати билан алоқа йўқолди. Қайта уланиш кутилмоқда. Тест ҳисоби ва маълумотлар сақланмоқда.", "reviewed": true, "reviewer": "metodist_uz" },
-
-  "activation_title": { "text": "МАҲСУЛОТНИ АКТИВАЦИЯ ҚИЛИШ", "reviewed": true, "reviewer": "metodist_uz" },
-  "activation_prompt": { "text": "Тизимдан фойдаланиш учун лицензия кодини киритинг.", "reviewed": true, "reviewer": "metodist_uz" },
-  "activation_machine_id": { "text": "Ушбу компьютер ID (Machine ID):", "reviewed": true, "reviewer": "metodist_uz" },
-  "activation_key_label": { "text": "Лицензия коди:", "reviewed": true, "reviewer": "metodist_uz" },
-  "activation_btn_paste": { "text": "Хотирадан қўйиш", "reviewed": true, "reviewer": "metodist_uz" },
-  "activation_btn_activate": { "text": "АКТИВАЦИЯ ҚИЛИШ", "reviewed": true, "reviewer": "metodist_uz" },
-  "activation_success": { "text": "Лицензия муваффақиятли тасдиқланди!", "reviewed": true, "reviewer": "metodist_uz" },
-  "activation_error_invalid": { "text": "Лицензия коди нотўғри ёки бузилган!", "reviewed": true, "reviewer": "metodist_uz" },
-  "activation_error_expired": { "text": "Лицензия амал қилиш муддати тугаган!", "reviewed": true, "reviewer": "metodist_uz" },
-  "activation_error_machine": { "text": "Лицензия бошқа компьютерга тегишли!", "reviewed": true, "reviewer": "metodist_uz" },
-  "activation_error_clock": { "text": "Тизим соати орқага сурилганлиги аниқланди!", "reviewed": true, "reviewer": "metodist_uz" },
-
-  "eula_title": { "text": "ФОЙДАЛАНУВЧИ ШАРТНОМАСИ ВА МАХФИЙЛИК (EULA)", "reviewed": true, "reviewer": "metodist_uz" },
-  "eula_agree_btn": { "text": "ШАРТЛАРГА РОЗИМАН", "reviewed": true, "reviewer": "metodist_uz" },
-
+  "app_title": {
+    "text": "АВТОМАТЛАШТИРИЛГАН ҲАЙДАШ ИМТИҲОНИ",
+    "reviewed": true,
+    "reviewer": "metodist_uz"
+  },
+  "app_subtitle": {
+    "text": "4-Камерали Offline AI Баҳолаш Тизими",
+    "reviewed": true,
+    "reviewer": "metodist_uz"
+  },
+  "car_id_label": {
+    "text": "Автомобиль:",
+    "reviewed": true,
+    "reviewer": "metodist_uz"
+  },
+  "student_label": {
+    "text": "Ҳайдовчи:",
+    "reviewed": true,
+    "reviewer": "metodist_uz"
+  },
+  "rules_ver_label": {
+    "text": "Қоидалар версияси:",
+    "reviewed": true,
+    "reviewer": "metodist_uz"
+  },
+  "btn_start_test": {
+    "text": "ТЕСТНИ БОШЛАШ",
+    "reviewed": true,
+    "reviewer": "metodist_uz"
+  },
+  "btn_precheck": {
+    "text": "ТИЗИМНИ ТЕКШИРИШ (PRE-CHECK)",
+    "reviewed": true,
+    "reviewer": "metodist_uz"
+  },
+  "btn_recheck": {
+    "text": "ҚАЙТА ТЕКШИРИШ",
+    "reviewed": true,
+    "reviewer": "metodist_uz"
+  },
+  "btn_proceed": {
+    "text": "ДАВОМ ЭТИШ",
+    "reviewed": true,
+    "reviewer": "metodist_uz"
+  },
+  "btn_finish_test": {
+    "text": "ТЕСТНИ ЯКУНЛАШ",
+    "reviewed": true,
+    "reviewer": "metodist_uz"
+  },
+  "btn_view_violations": {
+    "text": "ҚОИДАБУЗАРЛИКЛАР",
+    "reviewed": true,
+    "reviewer": "metodist_uz"
+  },
+  "btn_home": {
+    "text": "АСОСИЙ ЭКРАН",
+    "reviewed": true,
+    "reviewer": "metodist_uz"
+  },
+  "btn_settings": {
+    "text": "СОЗЛАМАЛАР",
+    "reviewed": true,
+    "reviewer": "metodist_uz"
+  },
+  "btn_back": {
+    "text": "ОРҚАГА",
+    "reviewed": true,
+    "reviewer": "metodist_uz"
+  },
+  "btn_view_photo": {
+    "text": "Далил",
+    "reviewed": true,
+    "reviewer": "metodist_uz"
+  },
+  "btn_view_video": {
+    "text": "Видео",
+    "reviewed": true,
+    "reviewer": "metodist_uz"
+  },
+  "btn_export_usb": {
+    "text": "USB ГА ЭКСПОРТ",
+    "reviewed": true,
+    "reviewer": "metodist_uz"
+  },
+  "btn_close": {
+    "text": "Ёпиш",
+    "reviewed": true,
+    "reviewer": "metodist_uz"
+  },
+  "btn_unlock": {
+    "text": "OK",
+    "reviewed": true,
+    "reviewer": "metodist_uz"
+  },
+  "btn_clear": {
+    "text": "C",
+    "reviewed": true,
+    "reviewer": "metodist_uz"
+  },
+  "btn_cancel": {
+    "text": "Бекор қилиш",
+    "reviewed": true,
+    "reviewer": "metodist_uz"
+  },
+  "btn_lock": {
+    "text": "ҚУЛФЛАШ",
+    "reviewed": true,
+    "reviewer": "metodist_uz"
+  },
+  "btn_export_db": {
+    "text": "БАЗАНИ USB ГА ЭКСПОРТ",
+    "reviewed": true,
+    "reviewer": "metodist_uz"
+  },
+  "btn_exit": {
+    "text": "ЧИҚИШ",
+    "reviewed": true,
+    "reviewer": "metodist_uz"
+  },
+  "home_title": {
+    "text": "ҲАЙДАШ МАЛАКАСИНИ БАҲОЛАШ",
+    "reviewed": true,
+    "reviewer": "metodist_uz"
+  },
+  "home_ready_msg": {
+    "text": "Барча тизимлар соз ҳолатда. Имтиҳонни бошлашга тайёр.",
+    "reviewed": true,
+    "reviewer": "metodist_uz"
+  },
+  "home_not_ready_msg": {
+    "text": "⚠️ Тизим ишга туширилди. Аввал ускуналар текширувини (Pre-check) ўтказинг.",
+    "reviewed": true,
+    "reviewer": "metodist_uz"
+  },
+  "precheck_title": {
+    "text": "УСКУНАЛАР ВА ТИЗИМ PRE-CHECK",
+    "reviewed": true,
+    "reviewer": "metodist_uz"
+  },
+  "precheck_in_progress": {
+    "text": "Диагностика ўтказилмоқда...",
+    "reviewed": true,
+    "reviewer": "metodist_uz"
+  },
+  "precheck_passed": {
+    "text": "Барча 12 та мажбурий компонент муваффақиятли текширилди.",
+    "reviewed": true,
+    "reviewer": "metodist_uz"
+  },
+  "precheck_blocked_title": {
+    "text": "TEST START BLOCKED",
+    "reviewed": true,
+    "reviewer": "metodist_uz"
+  },
+  "precheck_blocked_desc": {
+    "text": "Мажбурий компонент носозлиги сабабли тест бошланиши блокланди!",
+    "reviewed": true,
+    "reviewer": "metodist_uz"
+  },
+  "comp_cam_front": {
+    "text": "Олд Камера (FRONT)",
+    "reviewed": true,
+    "reviewer": "metodist_uz"
+  },
+  "comp_cam_rear": {
+    "text": "Орқа Камера (REAR)",
+    "reviewed": true,
+    "reviewer": "metodist_uz"
+  },
+  "comp_cam_left": {
+    "text": "Чап Камера (LEFT)",
+    "reviewed": true,
+    "reviewer": "metodist_uz"
+  },
+  "comp_cam_right": {
+    "text": "Ўнг Камера (RIGHT)",
+    "reviewed": true,
+    "reviewer": "metodist_uz"
+  },
+  "comp_cam_drift": {
+    "text": "Камералар Калибровкаси (Drift)",
+    "reviewed": true,
+    "reviewer": "metodist_uz"
+  },
+  "comp_ai_engine": {
+    "text": "AI Inference Двигатели",
+    "reviewed": true,
+    "reviewer": "metodist_uz"
+  },
+  "comp_gps": {
+    "text": "GPS / GNSS Модули",
+    "reviewed": true,
+    "reviewer": "metodist_uz"
+  },
+  "comp_imu": {
+    "text": "IMU Акселерометр / Гироскоп",
+    "reviewed": true,
+    "reviewer": "metodist_uz"
+  },
+  "comp_obd": {
+    "text": "OBD-II Телеметрия (CAN)",
+    "reviewed": true,
+    "reviewer": "metodist_uz"
+  },
+  "comp_storage": {
+    "text": "NVMe SSD Хотира Сиғими",
+    "reviewed": true,
+    "reviewer": "metodist_uz"
+  },
+  "comp_database": {
+    "text": "SQLite WAL Маълумотлар Базаси",
+    "reviewed": true,
+    "reviewer": "metodist_uz"
+  },
+  "comp_audio": {
+    "text": "Овозли Огоҳлантириш Тизими",
+    "reviewed": true,
+    "reviewer": "metodist_uz"
+  },
+  "status_checking": {
+    "text": "Текширилмоқда...",
+    "reviewed": true,
+    "reviewer": "metodist_uz"
+  },
+  "status_ready": {
+    "text": "ТАЙЁР",
+    "reviewed": true,
+    "reviewer": "metodist_uz"
+  },
+  "status_failed": {
+    "text": "НОСОЗ",
+    "reviewed": true,
+    "reviewer": "metodist_uz"
+  },
+  "system_ready_title": {
+    "text": "ИМТИҲОННИ БОШЛАШГА ТАЙЁР",
+    "reviewed": true,
+    "reviewer": "metodist_uz"
+  },
+  "system_ready_desc": {
+    "text": "Барча тизимлар соз ҳолатда. Автомобилни старт чизиғига олиб келиб ҳаракатни бошлашингиз мумкин.",
+    "reviewed": true,
+    "reviewer": "metodist_uz"
+  },
+  "system_ready_warning": {
+    "text": "⚠️ Диққат: 'ТЕСТНИ БОШЛАШ' босилмагунча жарима ҳисобланмайди.",
+    "reviewed": true,
+    "reviewer": "metodist_uz"
+  },
+  "hud_test_active": {
+    "text": "ТЕСТ ЖАРАЁНДА",
+    "reviewed": true,
+    "reviewer": "metodist_uz"
+  },
+  "hud_speed_unit": {
+    "text": "км/соат",
+    "reviewed": true,
+    "reviewer": "metodist_uz"
+  },
+  "hud_speed_label": {
+    "text": "ТЕЗЛИК",
+    "reviewed": true,
+    "reviewer": "metodist_uz"
+  },
+  "hud_time_label": {
+    "text": "ВАҚТ:",
+    "reviewed": true,
+    "reviewer": "metodist_uz"
+  },
+  "hud_exercise_label": {
+    "text": "ЖОРИЙ МАШҚ",
+    "reviewed": true,
+    "reviewer": "metodist_uz"
+  },
+  "hud_penalty_label": {
+    "text": "Жарима:",
+    "reviewed": true,
+    "reviewer": "metodist_uz"
+  },
+  "hud_errors_label": {
+    "text": "Хатолар:",
+    "reviewed": true,
+    "reviewer": "metodist_uz"
+  },
+  "hud_finish_prompt": {
+    "text": "Автомобиль тўхтади. Тестни якунлашингиз мумкин.",
+    "reviewed": true,
+    "reviewer": "metodist_uz"
+  },
+  "hud_moving_prompt": {
+    "text": "Машқ бажарилмоқда. Белгиланган чизиқларга эътибор беринг.",
+    "reviewed": true,
+    "reviewer": "metodist_uz"
+  },
+  "popup_violation_title": {
+    "text": "ҚОИДАБУЗАРЛИК ҚАЙД ЭТИЛДИ",
+    "reviewed": true,
+    "reviewer": "metodist_uz"
+  },
+  "popup_critical_title": {
+    "text": "КРИТИК ҚОИДАБУЗАРЛИК!",
+    "reviewed": true,
+    "reviewer": "metodist_uz"
+  },
+  "popup_suspect_badge": {
+    "text": "ШУБҲАЛИ",
+    "reviewed": true,
+    "reviewer": "metodist_uz"
+  },
+  "popup_queue_more": {
+    "text": "Навбатда яна: {0} та",
+    "reviewed": true,
+    "reviewer": "metodist_uz"
+  },
+  "result_title": {
+    "text": "ИМТИҲОН ЯКУНИЙ НАТИЖАСИ",
+    "reviewed": true,
+    "reviewer": "metodist_uz"
+  },
+  "result_pass": {
+    "text": "МУВАФФАҚИЯТЛИ ЎТДИ (PASS)",
+    "reviewed": true,
+    "reviewer": "metodist_uz"
+  },
+  "result_fail": {
+    "text": "ЙИҚИЛДИ (FAIL)",
+    "reviewed": true,
+    "reviewer": "metodist_uz"
+  },
+  "result_pass_desc": {
+    "text": "Барча машқлар белгиланган талабларга мувофиқ бажарилди.",
+    "reviewed": true,
+    "reviewer": "metodist_uz"
+  },
+  "result_fail_desc": {
+    "text": "Тўпланган балл ўтиш чегарасидан паст.",
+    "reviewed": true,
+    "reviewer": "metodist_uz"
+  },
+  "result_critical_desc": {
+    "text": "Критик қоидабузарлик сабабли тест бекор қилинди.",
+    "reviewed": true,
+    "reviewer": "metodist_uz"
+  },
+  "result_score_label": {
+    "text": "Якуний балл:",
+    "reviewed": true,
+    "reviewer": "metodist_uz"
+  },
+  "result_start_score": {
+    "text": "Бошланғич балл:",
+    "reviewed": true,
+    "reviewer": "metodist_uz"
+  },
+  "result_penalty_deducted": {
+    "text": "Айрилган жарима:",
+    "reviewed": true,
+    "reviewer": "metodist_uz"
+  },
+  "result_errors_count": {
+    "text": "Қоидабузарликлар сони:",
+    "reviewed": true,
+    "reviewer": "metodist_uz"
+  },
+  "result_critical_count": {
+    "text": "Критик хатолар:",
+    "reviewed": true,
+    "reviewer": "metodist_uz"
+  },
+  "result_duration": {
+    "text": "Умумий вақт:",
+    "reviewed": true,
+    "reviewer": "metodist_uz"
+  },
+  "result_hash_label": {
+    "text": "SHA-256 Хеш:",
+    "reviewed": true,
+    "reviewer": "metodist_uz"
+  },
+  "violations_list_title": {
+    "text": "ҚАЙД ЭТИЛГАН ҚОИДАБУЗАРЛИКЛАР",
+    "reviewed": true,
+    "reviewer": "metodist_uz"
+  },
+  "violations_list_subtitle": {
+    "text": "Жами: {0} та ҳодиса",
+    "reviewed": true,
+    "reviewer": "metodist_uz"
+  },
+  "violations_confirmed_header": {
+    "text": "ТАСДИҚЛАНГАН ЖАРИМАЛАР (БАЛЛДАН АЙРИЛГАН):",
+    "reviewed": true,
+    "reviewer": "metodist_uz"
+  },
+  "violations_suspect_header": {
+    "text": "ШУБҲАЛИ (SUSPECT) ҲОДИСАЛАР (ЖАРИМА ОЛИНМАГАН, ИНСПЕКТОР КЎРИШИ УЧУН):",
+    "reviewed": true,
+    "reviewer": "metodist_uz"
+  },
+  "violations_empty_title": {
+    "text": "Ҳеч қандай қоидабузарлик қайд этилмади!",
+    "reviewed": true,
+    "reviewer": "metodist_uz"
+  },
+  "violations_empty_desc": {
+    "text": "Барча талаблар намунали даражада бажарилди.",
+    "reviewed": true,
+    "reviewer": "metodist_uz"
+  },
+  "evidence_title": {
+    "text": "ДАЛИЛЛАРНИ КЎРИШ",
+    "reviewed": true,
+    "reviewer": "metodist_uz"
+  },
+  "evidence_subtitle": {
+    "text": "Ҳодиса ID: {0}",
+    "reviewed": true,
+    "reviewer": "metodist_uz"
+  },
+  "evidence_tab_before": {
+    "text": "Олдин",
+    "reviewed": true,
+    "reviewer": "metodist_uz"
+  },
+  "evidence_tab_event": {
+    "text": "Ҳодиса",
+    "reviewed": true,
+    "reviewer": "metodist_uz"
+  },
+  "evidence_tab_after": {
+    "text": "Кейин",
+    "reviewed": true,
+    "reviewer": "metodist_uz"
+  },
+  "evidence_tab_video": {
+    "text": "Видео",
+    "reviewed": true,
+    "reviewer": "metodist_uz"
+  },
+  "evidence_meta_title": {
+    "text": "ҲОДИСА МЕТАМАЪЛУМОТИ",
+    "reviewed": true,
+    "reviewer": "metodist_uz"
+  },
+  "evidence_not_found": {
+    "text": "Далил файли дискда топилмади.",
+    "reviewed": true,
+    "reviewer": "metodist_uz"
+  },
+  "evidence_ring_desc": {
+    "text": "Файл дискда хавфсиз сақланган (NVMe Ring Buffer)",
+    "reviewed": true,
+    "reviewer": "metodist_uz"
+  },
+  "settings_title": {
+    "text": "ТИЗИМ СОЗЛАМАЛАРИ",
+    "reviewed": true,
+    "reviewer": "metodist_uz"
+  },
+  "settings_subtitle_unlocked": {
+    "text": "Администратор режими фаол",
+    "reviewed": true,
+    "reviewer": "metodist_uz"
+  },
+  "settings_subtitle_locked": {
+    "text": "PIN билан ҳимояланган",
+    "reviewed": true,
+    "reviewer": "metodist_uz"
+  },
+  "settings_pin_prompt": {
+    "text": "АДМИН PIN КОДИНИ КИРИТИНГ",
+    "reviewed": true,
+    "reviewer": "metodist_uz"
+  },
+  "settings_pin_error": {
+    "text": "PIN код нотўғри!",
+    "reviewed": true,
+    "reviewer": "metodist_uz"
+  },
+  "settings_lockout_msg": {
+    "text": "БЛОКЛАНДИ ({0} сония)",
+    "reviewed": true,
+    "reviewer": "metodist_uz"
+  },
+  "settings_device_info": {
+    "text": "УСКУНАЛАР ВА ТИЗИМ ПАРАМЕТРЛАРИ",
+    "reviewed": true,
+    "reviewer": "metodist_uz"
+  },
+  "settings_logs_title": {
+    "text": "ТИЗИМ АУДИТ ЖУРНАЛИ (system_logs)",
+    "reviewed": true,
+    "reviewer": "metodist_uz"
+  },
+  "disconnect_overlay_title": {
+    "text": "АЛОҚА ТИКЛАНМОҚДА...",
+    "reviewed": true,
+    "reviewer": "metodist_uz"
+  },
+  "disconnect_overlay_desc": {
+    "text": "Backend хизмати билан алоқа йўқолди. Қайта уланиш кутилмоқда. Тест ҳисоби ва маълумотлар сақланмоқда.",
+    "reviewed": true,
+    "reviewer": "metodist_uz"
+  },
+  "activation_title": {
+    "text": "МАҲСУЛОТНИ АКТИВАЦИЯ ҚИЛИШ",
+    "reviewed": true,
+    "reviewer": "metodist_uz"
+  },
+  "activation_prompt": {
+    "text": "Тизимдан фойдаланиш учун лицензия кодини киритинг.",
+    "reviewed": true,
+    "reviewer": "metodist_uz"
+  },
+  "activation_machine_id": {
+    "text": "Ушбу компьютер ID (Machine ID):",
+    "reviewed": true,
+    "reviewer": "metodist_uz"
+  },
+  "activation_key_label": {
+    "text": "Лицензия коди:",
+    "reviewed": true,
+    "reviewer": "metodist_uz"
+  },
+  "activation_btn_paste": {
+    "text": "Хотирадан қўйиш",
+    "reviewed": true,
+    "reviewer": "metodist_uz"
+  },
+  "activation_btn_activate": {
+    "text": "АКТИВАЦИЯ ҚИЛИШ",
+    "reviewed": true,
+    "reviewer": "metodist_uz"
+  },
+  "activation_success": {
+    "text": "Лицензия муваффақиятли тасдиқланди!",
+    "reviewed": true,
+    "reviewer": "metodist_uz"
+  },
+  "activation_error_invalid": {
+    "text": "Лицензия коди нотўғри ёки бузилган!",
+    "reviewed": true,
+    "reviewer": "metodist_uz"
+  },
+  "activation_error_expired": {
+    "text": "Лицензия амал қилиш муддати тугаган!",
+    "reviewed": true,
+    "reviewer": "metodist_uz"
+  },
+  "activation_error_machine": {
+    "text": "Лицензия бошқа компьютерга тегишли!",
+    "reviewed": true,
+    "reviewer": "metodist_uz"
+  },
+  "activation_error_clock": {
+    "text": "Тизим соати орқага сурилганлиги аниқланди!",
+    "reviewed": true,
+    "reviewer": "metodist_uz"
+  },
+  "eula_title": {
+    "text": "ФОЙДАЛАНУВЧИ ШАРТНОМАСИ ВА МАХФИЙЛИК (EULA)",
+    "reviewed": true,
+    "reviewer": "metodist_uz"
+  },
+  "eula_agree_btn": {
+    "text": "ШАРТЛАРГА РОЗИМАН",
+    "reviewed": true,
+    "reviewer": "metodist_uz"
+  },
   "penalty_points_plural": {
     "other": "{n} балл",
     "reviewed": true,
@@ -141,6 +581,881 @@
   },
   "queue_items_plural": {
     "other": "{n} та",
+    "reviewed": true,
+    "reviewer": "metodist_uz"
+  },
+  "common.ok": {
+    "text": "OK",
+    "reviewed": true,
+    "reviewer": "metodist_uz"
+  },
+  "common.cancel": {
+    "text": "Бекор қилиш",
+    "reviewed": true,
+    "reviewer": "metodist_uz"
+  },
+  "common.back": {
+    "text": "Орқага",
+    "reviewed": true,
+    "reviewer": "metodist_uz"
+  },
+  "common.next": {
+    "text": "Кейинги",
+    "reviewed": true,
+    "reviewer": "metodist_uz"
+  },
+  "common.save": {
+    "text": "Сақлаш",
+    "reviewed": true,
+    "reviewer": "metodist_uz"
+  },
+  "common.close": {
+    "text": "Ёпиш",
+    "reviewed": true,
+    "reviewer": "metodist_uz"
+  },
+  "common.retry": {
+    "text": "Қайта уриниш",
+    "reviewed": true,
+    "reviewer": "metodist_uz"
+  },
+  "common.refresh": {
+    "text": "Янгилаш",
+    "reviewed": true,
+    "reviewer": "metodist_uz"
+  },
+  "common.export": {
+    "text": "Экспорт",
+    "reviewed": true,
+    "reviewer": "metodist_uz"
+  },
+  "common.search": {
+    "text": "Қидириш...",
+    "reviewed": true,
+    "reviewer": "metodist_uz"
+  },
+  "common.filter": {
+    "text": "Фильтр",
+    "reviewed": true,
+    "reviewer": "metodist_uz"
+  },
+  "common.status": {
+    "text": "Ҳолат",
+    "reviewed": true,
+    "reviewer": "metodist_uz"
+  },
+  "common.loading": {
+    "text": "Юкланмоқда...",
+    "reviewed": true,
+    "reviewer": "metodist_uz"
+  },
+  "common.details": {
+    "text": "Батафсил",
+    "reviewed": true,
+    "reviewer": "metodist_uz"
+  },
+  "common.confirm": {
+    "text": "Тасдиқлаш",
+    "reviewed": true,
+    "reviewer": "metodist_uz"
+  },
+  "common.all": {
+    "text": "Барчаси",
+    "reviewed": true,
+    "reviewer": "metodist_uz"
+  },
+  "nav.home": {
+    "text": "Бош саҳифа",
+    "reviewed": true,
+    "reviewer": "metodist_uz"
+  },
+  "nav.student_mode": {
+    "text": "Имтиҳон топширувчи",
+    "reviewed": true,
+    "reviewer": "metodist_uz"
+  },
+  "nav.inspector_mode": {
+    "text": "Инспектор / Натижалар",
+    "reviewed": true,
+    "reviewer": "metodist_uz"
+  },
+  "nav.admin_mode": {
+    "text": "Админ / Диагностика",
+    "reviewed": true,
+    "reviewer": "metodist_uz"
+  },
+  "nav.settings": {
+    "text": "Созламалар",
+    "reviewed": true,
+    "reviewer": "metodist_uz"
+  },
+  "nav.diagnostics": {
+    "text": "Аппарат диагностикаси",
+    "reviewed": true,
+    "reviewer": "metodist_uz"
+  },
+  "nav.wizard": {
+    "text": "Ўрнатиш устаси",
+    "reviewed": true,
+    "reviewer": "metodist_uz"
+  },
+  "exam.start": {
+    "text": "Имтиҳонни бошлаш",
+    "reviewed": true,
+    "reviewer": "metodist_uz"
+  },
+  "exam.pause": {
+    "text": "Тўхтатиб туриш",
+    "reviewed": true,
+    "reviewer": "metodist_uz"
+  },
+  "exam.finish": {
+    "text": "Имтиҳонни якунлаш",
+    "reviewed": true,
+    "reviewer": "metodist_uz"
+  },
+  "exam.result": {
+    "text": "Якуний натижа",
+    "reviewed": true,
+    "reviewer": "metodist_uz"
+  },
+  "exam.active": {
+    "text": "Имтиҳон жараёнда",
+    "reviewed": true,
+    "reviewer": "metodist_uz"
+  },
+  "exam.new_exam": {
+    "text": "ЯНГИ ИМТИҲОН",
+    "reviewed": true,
+    "reviewer": "metodist_uz"
+  },
+  "exam.ready_title": {
+    "text": "ИМТИҲОН ТАЙЁР",
+    "reviewed": true,
+    "reviewer": "metodist_uz"
+  },
+  "exam.ready_desc": {
+    "text": "Барча тизимлар соз ҳолатда. Автомобиль старт чизиғида тайёр.",
+    "reviewed": true,
+    "reviewer": "metodist_uz"
+  },
+  "exam.seatbelt_prompt": {
+    "text": "Хавфсизлик камарини тақинг.",
+    "reviewed": true,
+    "reviewer": "metodist_uz"
+  },
+  "exam.ignition_prompt": {
+    "text": "Автомобилни ишга туширинг ва ҳаракатни бошланг.",
+    "reviewed": true,
+    "reviewer": "metodist_uz"
+  },
+  "exam.vehicle_stopped_prompt": {
+    "text": "Автомобиль тўхтади. Имтиҳонни якунлашингиз мумкин.",
+    "reviewed": true,
+    "reviewer": "metodist_uz"
+  },
+  "exam.moving_prompt": {
+    "text": "Машқ бажарилмоқда. Белгиланган чизиқларга эътибор беринг.",
+    "reviewed": true,
+    "reviewer": "metodist_uz"
+  },
+  "exam.timer": {
+    "text": "Вақт:",
+    "reviewed": true,
+    "reviewer": "metodist_uz"
+  },
+  "exam.score": {
+    "text": "Жорий балл:",
+    "reviewed": true,
+    "reviewer": "metodist_uz"
+  },
+  "exam.speed": {
+    "text": "Тезлик:",
+    "reviewed": true,
+    "reviewer": "metodist_uz"
+  },
+  "exam.exercise": {
+    "text": "Жорий машқ:",
+    "reviewed": true,
+    "reviewer": "metodist_uz"
+  },
+  "exam.progress": {
+    "text": "Машқлар кетма-кетлиги",
+    "reviewed": true,
+    "reviewer": "metodist_uz"
+  },
+  "exam.passed_badge": {
+    "text": "МУВАФФАҚИЯТЛИ ЎТДИ",
+    "reviewed": true,
+    "reviewer": "metodist_uz"
+  },
+  "exam.failed_badge": {
+    "text": "ЙИҚИЛДИ",
+    "reviewed": true,
+    "reviewer": "metodist_uz"
+  },
+  "camera.front": {
+    "text": "Олд камера (FRONT)",
+    "reviewed": true,
+    "reviewer": "metodist_uz"
+  },
+  "camera.rear": {
+    "text": "Орқа камера (REAR)",
+    "reviewed": true,
+    "reviewer": "metodist_uz"
+  },
+  "camera.left": {
+    "text": "Чап камера (LEFT)",
+    "reviewed": true,
+    "reviewer": "metodist_uz"
+  },
+  "camera.right": {
+    "text": "Ўнг камера (RIGHT)",
+    "reviewed": true,
+    "reviewer": "metodist_uz"
+  },
+  "camera.connected": {
+    "text": "Уланган",
+    "reviewed": true,
+    "reviewer": "metodist_uz"
+  },
+  "camera.disconnected": {
+    "text": "Уланмаган",
+    "reviewed": true,
+    "reviewer": "metodist_uz"
+  },
+  "camera.fps": {
+    "text": "Кадр частотаси (FPS)",
+    "reviewed": true,
+    "reviewer": "metodist_uz"
+  },
+  "camera.latency": {
+    "text": "Кечикиш (ms)",
+    "reviewed": true,
+    "reviewer": "metodist_uz"
+  },
+  "camera.quality": {
+    "text": "Аниқлик сифати",
+    "reviewed": true,
+    "reviewer": "metodist_uz"
+  },
+  "camera.calibration": {
+    "text": "Калибровка сифати",
+    "reviewed": true,
+    "reviewer": "metodist_uz"
+  },
+  "camera.preview": {
+    "text": "Камера кўриниши",
+    "reviewed": true,
+    "reviewer": "metodist_uz"
+  },
+  "camera.setup_title": {
+    "text": "Камераларни созлаш ва калибровка",
+    "reviewed": true,
+    "reviewer": "metodist_uz"
+  },
+  "system.ready": {
+    "text": "ТИЗИМ ТАЙЁР",
+    "reviewed": true,
+    "reviewer": "metodist_uz"
+  },
+  "system.warning": {
+    "text": "ОГОҲЛАНТИРИШ",
+    "reviewed": true,
+    "reviewer": "metodist_uz"
+  },
+  "system.error": {
+    "text": "НОСОЗЛИК",
+    "reviewed": true,
+    "reviewer": "metodist_uz"
+  },
+  "system.checking": {
+    "text": "Диагностика ўтказилмоқда...",
+    "reviewed": true,
+    "reviewer": "metodist_uz"
+  },
+  "system.blocked": {
+    "text": "ТЕСТ СТАРТ БЛОКЛАНДИ",
+    "reviewed": true,
+    "reviewer": "metodist_uz"
+  },
+  "system.offline": {
+    "text": "100% Офлайн Ишчи Режим",
+    "reviewed": true,
+    "reviewer": "metodist_uz"
+  },
+  "system.standalone": {
+    "text": "Мустақил Автоном Тизим",
+    "reviewed": true,
+    "reviewer": "metodist_uz"
+  },
+  "system.storage": {
+    "text": "SSD Хотира",
+    "reviewed": true,
+    "reviewer": "metodist_uz"
+  },
+  "system.database": {
+    "text": "SQLite WAL Маълумотлар Базаси",
+    "reviewed": true,
+    "reviewer": "metodist_uz"
+  },
+  "system.audio": {
+    "text": "Овозли Огоҳлантириш",
+    "reviewed": true,
+    "reviewer": "metodist_uz"
+  },
+  "system.cpu": {
+    "text": "Процессор (CPU)",
+    "reviewed": true,
+    "reviewer": "metodist_uz"
+  },
+  "system.ram": {
+    "text": "Оператив хотира (RAM)",
+    "reviewed": true,
+    "reviewer": "metodist_uz"
+  },
+  "system.disk": {
+    "text": "Диск бўш жойи",
+    "reviewed": true,
+    "reviewer": "metodist_uz"
+  },
+  "system.temperature": {
+    "text": "Ҳарорат",
+    "reviewed": true,
+    "reviewer": "metodist_uz"
+  },
+  "system.precheck_title": {
+    "text": "УСКУНАЛАР PRE-CHECK ТЕКШИРУВИ",
+    "reviewed": true,
+    "reviewer": "metodist_uz"
+  },
+  "system.all_pass": {
+    "text": "Барча 12 та мажбурий компонент тайёр.",
+    "reviewed": true,
+    "reviewer": "metodist_uz"
+  },
+  "system.comp_failed": {
+    "text": "Мажбурий компонент носозлиги сабабли тест бошланиши блокланди!",
+    "reviewed": true,
+    "reviewer": "metodist_uz"
+  },
+  "violation.title": {
+    "text": "ҚОИДАБУЗАРЛИК ҚАЙД ЭТИЛДИ",
+    "reviewed": true,
+    "reviewer": "metodist_uz"
+  },
+  "violation.critical_title": {
+    "text": "КРИТИК ҚОИДАБУЗАРЛИК!",
+    "reviewed": true,
+    "reviewer": "metodist_uz"
+  },
+  "violation.suspect_title": {
+    "text": "ТЕКШИРУВГА ЮБОРИЛДИ (ШУБҲАЛИ)",
+    "reviewed": true,
+    "reviewer": "metodist_uz"
+  },
+  "violation.suspect_desc": {
+    "text": "Ҳодиса аниқлиги етарли эмас. Автоматик жарима қўлланилмади. Инспектор кўриб чиқади.",
+    "reviewed": true,
+    "reviewer": "metodist_uz"
+  },
+  "violation.critical_halt_msg": {
+    "text": "Автомобилни зудлик билан тўхтатинг. Ҳодиса ва далиллар сақланди.",
+    "reviewed": true,
+    "reviewer": "metodist_uz"
+  },
+  "violation.penalty_label": {
+    "text": "Жарима балли:",
+    "reviewed": true,
+    "reviewer": "metodist_uz"
+  },
+  "violation.confidence_label": {
+    "text": "Ишонч даражаси:",
+    "reviewed": true,
+    "reviewer": "metodist_uz"
+  },
+  "violation.recorded_label": {
+    "text": "Далил сақланди",
+    "reviewed": true,
+    "reviewer": "metodist_uz"
+  },
+  "violation.stop_line": {
+    "text": "Тўхташ чизиғи қоидаси бузилди",
+    "reviewed": true,
+    "reviewer": "metodist_uz"
+  },
+  "violation.cone": {
+    "text": "Конусга тегиш ҳолати",
+    "reviewed": true,
+    "reviewer": "metodist_uz"
+  },
+  "violation.speed": {
+    "text": "Тезлик меъёри оширилди",
+    "reviewed": true,
+    "reviewer": "metodist_uz"
+  },
+  "violation.seatbelt": {
+    "text": "Хавфсизлик камари тақилмаган",
+    "reviewed": true,
+    "reviewer": "metodist_uz"
+  },
+  "violation.handbrake": {
+    "text": "Қўл тормози туширилмаган",
+    "reviewed": true,
+    "reviewer": "metodist_uz"
+  },
+  "violation.start_signal": {
+    "text": "Стартда бурилиш чироғи ёқилмаган",
+    "reviewed": true,
+    "reviewer": "metodist_uz"
+  },
+  "violation.rollback": {
+    "text": "Эстакадада ортга қайтиш 20 см дан ошди",
+    "reviewed": true,
+    "reviewer": "metodist_uz"
+  },
+  "violation.parking_line": {
+    "text": "Парковка чизиғи босилди",
+    "reviewed": true,
+    "reviewer": "metodist_uz"
+  },
+  "inspector.title": {
+    "text": "ИНСПЕКТОР РЕЖИМИ",
+    "reviewed": true,
+    "reviewer": "metodist_uz"
+  },
+  "inspector.subtitle": {
+    "text": "Имтиҳон сессиялари, далиллар ва расмий ҳисоботлар",
+    "reviewed": true,
+    "reviewer": "metodist_uz"
+  },
+  "inspector.sessions_title": {
+    "text": "Ўтказилган имтиҳонлар рўйхати",
+    "reviewed": true,
+    "reviewer": "metodist_uz"
+  },
+  "inspector.filter_all": {
+    "text": "Барчаси",
+    "reviewed": true,
+    "reviewer": "metodist_uz"
+  },
+  "inspector.filter_pass": {
+    "text": "Муваффақиятли",
+    "reviewed": true,
+    "reviewer": "metodist_uz"
+  },
+  "inspector.filter_fail": {
+    "text": "Йиқилганлар",
+    "reviewed": true,
+    "reviewer": "metodist_uz"
+  },
+  "inspector.filter_suspect": {
+    "text": "Шубҳали (Suspect)",
+    "reviewed": true,
+    "reviewer": "metodist_uz"
+  },
+  "inspector.col_session": {
+    "text": "Сессия ID",
+    "reviewed": true,
+    "reviewer": "metodist_uz"
+  },
+  "inspector.col_candidate": {
+    "text": "Номзод паспорти",
+    "reviewed": true,
+    "reviewer": "metodist_uz"
+  },
+  "inspector.col_date": {
+    "text": "Сана ва вақт",
+    "reviewed": true,
+    "reviewer": "metodist_uz"
+  },
+  "inspector.col_score": {
+    "text": "Балл",
+    "reviewed": true,
+    "reviewer": "metodist_uz"
+  },
+  "inspector.col_status": {
+    "text": "Хулоса",
+    "reviewed": true,
+    "reviewer": "metodist_uz"
+  },
+  "inspector.col_actions": {
+    "text": "Амаллар",
+    "reviewed": true,
+    "reviewer": "metodist_uz"
+  },
+  "inspector.btn_view_violations": {
+    "text": "Қоидабузарликлар",
+    "reviewed": true,
+    "reviewer": "metodist_uz"
+  },
+  "inspector.btn_view_evidence": {
+    "text": "Далил видеоси",
+    "reviewed": true,
+    "reviewer": "metodist_uz"
+  },
+  "inspector.btn_view_replay": {
+    "text": "Replay кўриш",
+    "reviewed": true,
+    "reviewer": "metodist_uz"
+  },
+  "inspector.btn_pdf_report": {
+    "text": "PDF Баённома",
+    "reviewed": true,
+    "reviewer": "metodist_uz"
+  },
+  "inspector.btn_csv_export": {
+    "text": "CSV Экспорт",
+    "reviewed": true,
+    "reviewer": "metodist_uz"
+  },
+  "inspector.btn_verify_hash": {
+    "text": "Хешни текшириш",
+    "reviewed": true,
+    "reviewer": "metodist_uz"
+  },
+  "inspector.hash_verified": {
+    "text": "SHA-256 занжир ва Ed25519 имзо тасдиқланди (100% ҳақиқий)",
+    "reviewed": true,
+    "reviewer": "metodist_uz"
+  },
+  "inspector.hash_tampered": {
+    "text": "Диққат: Хеш занжири бузилган ёки сохталаштирилган!",
+    "reviewed": true,
+    "reviewer": "metodist_uz"
+  },
+  "inspector.suspect_review": {
+    "text": "Шубҳали ҳодисаларни кўриб чиқиш",
+    "reviewed": true,
+    "reviewer": "metodist_uz"
+  },
+  "inspector.audit_log": {
+    "text": "Тизим хавфсизлик аудит журнали",
+    "reviewed": true,
+    "reviewer": "metodist_uz"
+  },
+  "admin.title": {
+    "text": "АДМИНИСТРАТОР ВА ДИАГНОСТИКА РЕЖИМИ",
+    "reviewed": true,
+    "reviewer": "metodist_uz"
+  },
+  "admin.pin_title": {
+    "text": "АДМИН PIN КОДИНИ КИРИТИНГ",
+    "reviewed": true,
+    "reviewer": "metodist_uz"
+  },
+  "admin.tab_diagnostics": {
+    "text": "Диагностика",
+    "reviewed": true,
+    "reviewer": "metodist_uz"
+  },
+  "admin.tab_cameras": {
+    "text": "Камералар",
+    "reviewed": true,
+    "reviewer": "metodist_uz"
+  },
+  "admin.tab_polygon": {
+    "text": "Полигон",
+    "reviewed": true,
+    "reviewer": "metodist_uz"
+  },
+  "admin.tab_rules": {
+    "text": "Қоидалар",
+    "reviewed": true,
+    "reviewer": "metodist_uz"
+  },
+  "admin.tab_license": {
+    "text": "Лицензия",
+    "reviewed": true,
+    "reviewer": "metodist_uz"
+  },
+  "admin.tab_logs": {
+    "text": "Журнал (Logs)",
+    "reviewed": true,
+    "reviewer": "metodist_uz"
+  },
+  "admin.tab_wizard": {
+    "text": "Созлаш устаси",
+    "reviewed": true,
+    "reviewer": "metodist_uz"
+  },
+  "admin.btn_lock": {
+    "text": "ҚУЛФЛАШ",
+    "reviewed": true,
+    "reviewer": "metodist_uz"
+  },
+  "admin.btn_export_usb": {
+    "text": "USB ГА ЭКСПОРТ",
+    "reviewed": true,
+    "reviewer": "metodist_uz"
+  },
+  "admin.btn_calibrate": {
+    "text": "Қайта калибровка",
+    "reviewed": true,
+    "reviewer": "metodist_uz"
+  },
+  "admin.btn_save": {
+    "text": "Сақлаш",
+    "reviewed": true,
+    "reviewer": "metodist_uz"
+  },
+  "admin.btn_exit": {
+    "text": "Чиқиш",
+    "reviewed": true,
+    "reviewer": "metodist_uz"
+  },
+  "maintenance.metrics_title": {
+    "text": "Реал-вақт тизим кўрсаткичлари",
+    "reviewed": true,
+    "reviewer": "metodist_uz"
+  },
+  "maintenance.can_bus_status": {
+    "text": "OBD-II CAN автобус алоқаси",
+    "reviewed": true,
+    "reviewer": "metodist_uz"
+  },
+  "maintenance.gnss_fix_status": {
+    "text": "GPS/GNSS сигнали ва йўлдошлар",
+    "reviewed": true,
+    "reviewer": "metodist_uz"
+  },
+  "maintenance.imu_status": {
+    "text": "IMU гироскоп ва акселерометр",
+    "reviewed": true,
+    "reviewer": "metodist_uz"
+  },
+  "maintenance.ai_fps_latency": {
+    "text": "AI инференс FPS ва кечикиш",
+    "reviewed": true,
+    "reviewer": "metodist_uz"
+  },
+  "maintenance.storage_status": {
+    "text": "NVMe хотира ва WAL базаси",
+    "reviewed": true,
+    "reviewer": "metodist_uz"
+  },
+  "wizard.title": {
+    "text": "БОШЛАНҒИЧ СОЗЛАШ УСТАСИ",
+    "reviewed": true,
+    "reviewer": "metodist_uz"
+  },
+  "wizard.step_1": {
+    "text": "1. Тил ва EULA",
+    "reviewed": true,
+    "reviewer": "metodist_uz"
+  },
+  "wizard.step_2": {
+    "text": "2. Аппаратура",
+    "reviewed": true,
+    "reviewer": "metodist_uz"
+  },
+  "wizard.step_3": {
+    "text": "3. Камералар",
+    "reviewed": true,
+    "reviewer": "metodist_uz"
+  },
+  "wizard.step_4": {
+    "text": "4. Калибровка",
+    "reviewed": true,
+    "reviewer": "metodist_uz"
+  },
+  "wizard.step_5": {
+    "text": "5. Полигон",
+    "reviewed": true,
+    "reviewer": "metodist_uz"
+  },
+  "wizard.step_6": {
+    "text": "6. Овоз ва TTS",
+    "reviewed": true,
+    "reviewer": "metodist_uz"
+  },
+  "wizard.step_7": {
+    "text": "7. Якуний текширув",
+    "reviewed": true,
+    "reviewer": "metodist_uz"
+  },
+  "errors.technical_issue": {
+    "text": "Тизимда техник муаммо юз берди. Имтиҳонни давом эттириш мумкин эмас.",
+    "reviewed": true,
+    "reviewer": "metodist_uz"
+  },
+  "errors.contact_operator": {
+    "text": "Операторга мурожаат қилинг.",
+    "reviewed": true,
+    "reviewer": "metodist_uz"
+  },
+  "errors.error_id_prefix": {
+    "text": "Хато коди: {0}",
+    "reviewed": true,
+    "reviewer": "metodist_uz"
+  },
+  "errors.camera_lost": {
+    "text": "Камера билан алоқа йўқолди ({0})",
+    "reviewed": true,
+    "reviewer": "metodist_uz"
+  },
+  "errors.sensor_lost": {
+    "text": "Сенсор сигнали тўхтади ({0})",
+    "reviewed": true,
+    "reviewer": "metodist_uz"
+  },
+  "empty.no_violations": {
+    "text": "Ушбу сессияда қайд этилган қоидабузарлик топилмади.",
+    "reviewed": true,
+    "reviewer": "metodist_uz"
+  },
+  "empty.no_evidence": {
+    "text": "Далиллар мавжуд эмас.",
+    "reviewed": true,
+    "reviewer": "metodist_uz"
+  },
+  "empty.no_sessions": {
+    "text": "Ҳозирча ўтказилган имтиҳонлар мавжуд эмас.",
+    "reviewed": true,
+    "reviewer": "metodist_uz"
+  },
+  "admin.hardware_title": {
+    "text": "Аппарат воситалари ва датчиклар телеметрияси",
+    "reviewed": true,
+    "reviewer": "metodist_uz"
+  },
+  "admin.camera_grid_title": {
+    "text": "4-камера жонли кўриниши ва кадрлар таҳлили",
+    "reviewed": true,
+    "reviewer": "metodist_uz"
+  },
+  "admin.bev_title": {
+    "text": "BEV (Қуш парвози) проекцияси ва калибровка сифати",
+    "reviewed": true,
+    "reviewer": "metodist_uz"
+  },
+  "admin.polygon_title": {
+    "text": "Полигон конфигурацияси ва 8 та машқ зоналари",
+    "reviewed": true,
+    "reviewer": "metodist_uz"
+  },
+  "admin.rules_title": {
+    "text": "Имтиҳон қоидалари паспорти (rules.yaml)",
+    "reviewed": true,
+    "reviewer": "metodist_uz"
+  },
+  "admin.license_title": {
+    "text": "Лицензия, аппарат имзоси ва хавфсизлик",
+    "reviewed": true,
+    "reviewer": "metodist_uz"
+  },
+  "admin.logs_title": {
+    "text": "Тизим аудит журнали ва ҳодисалар тарихи",
+    "reviewed": true,
+    "reviewer": "metodist_uz"
+  },
+  "admin.wizard_title": {
+    "text": "Ускуналарни бошланғич созлаш устаси",
+    "reviewed": true,
+    "reviewer": "metodist_uz"
+  },
+  "admin.btn_refresh_diag": {
+    "text": "Диагностикани янгилаш",
+    "reviewed": true,
+    "reviewer": "metodist_uz"
+  },
+  "admin.btn_run_wizard": {
+    "text": "Созлаш устасини ишга тушириш",
+    "reviewed": true,
+    "reviewer": "metodist_uz"
+  },
+  "admin.btn_auto_calibrate": {
+    "text": "Автоматик қайта калибровка",
+    "reviewed": true,
+    "reviewer": "metodist_uz"
+  },
+  "admin.filter_all": {
+    "text": "Барчаси",
+    "reviewed": true,
+    "reviewer": "metodist_uz"
+  },
+  "admin.filter_errors": {
+    "text": "Хатолар",
+    "reviewed": true,
+    "reviewer": "metodist_uz"
+  },
+  "admin.filter_audit": {
+    "text": "Аудит",
+    "reviewed": true,
+    "reviewer": "metodist_uz"
+  },
+  "admin.calib_ok": {
+    "text": "Калибровка нормада",
+    "reviewed": true,
+    "reviewer": "metodist_uz"
+  },
+  "admin.calib_drift": {
+    "text": "Силжиш (Drift)",
+    "reviewed": true,
+    "reviewer": "metodist_uz"
+  },
+  "admin.active": {
+    "text": "Фаол",
+    "reviewed": true,
+    "reviewer": "metodist_uz"
+  },
+  "admin.maintenance": {
+    "text": "Таъмирда",
+    "reviewed": true,
+    "reviewer": "metodist_uz"
+  },
+  "wizard.step1": {
+    "text": "1. Тил ва EULA",
+    "reviewed": true,
+    "reviewer": "metodist_uz"
+  },
+  "wizard.step2": {
+    "text": "2. Аппарат ва USB",
+    "reviewed": true,
+    "reviewer": "metodist_uz"
+  },
+  "wizard.step3": {
+    "text": "3. 4 Камера оқими",
+    "reviewed": true,
+    "reviewer": "metodist_uz"
+  },
+  "wizard.step4": {
+    "text": "4. Калибровка ва BEV",
+    "reviewed": true,
+    "reviewer": "metodist_uz"
+  },
+  "wizard.step5": {
+    "text": "5. Полигон зоналари",
+    "reviewed": true,
+    "reviewer": "metodist_uz"
+  },
+  "wizard.step6": {
+    "text": "6. Аудио динамик тести",
+    "reviewed": true,
+    "reviewer": "metodist_uz"
+  },
+  "wizard.step7": {
+    "text": "7. Лицензия ва Якунлаш",
+    "reviewed": true,
+    "reviewer": "metodist_uz"
+  },
+  "wizard.eula_agree": {
+    "text": "Фойдаланувчи шартномасига тўлиқ розиман",
+    "reviewed": true,
+    "reviewer": "metodist_uz"
+  },
+  "wizard.btn_rescan": {
+    "text": "Қайта сканерлаш",
+    "reviewed": true,
+    "reviewer": "metodist_uz"
+  },
+  "wizard.btn_test_audio": {
+    "text": "Овозни синаш",
+    "reviewed": true,
+    "reviewer": "metodist_uz"
+  },
+  "wizard.btn_complete": {
+    "text": "Созлашни якунлаш",
     "reviewed": true,
     "reviewer": "metodist_uz"
   }
